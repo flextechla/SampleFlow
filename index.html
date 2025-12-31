@@ -12,6 +12,9 @@
 
     <title>Sample Tracker Pro</title>
     
+    <!-- Supabase SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
     <style>
         :root { --primary: #FE2C55; --dark: #121212; --bg: #F8F9FA; --surface: #FFFFFF; --green: #00C853; --yellow: #FFB300; --red: #FF3B30; --blue: #2196F3; --purple: #9C27B0; --border: #E0E0E0; --shadow: 0 4px 12px rgba(0,0,0,0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
@@ -384,6 +387,15 @@
             </div>
             
             <div class="form-group">
+                <label class="form-label">Cloud Storage Status</label>
+                <div id="cloudStatus" style="padding: 15px; background: #F5F5F5; border-radius: 12px; text-align: center; color: #666; margin-bottom: 10px;">
+                    <p style="margin-bottom: 5px; font-weight: 700;">⚠️ Cloud Storage Not Configured</p>
+                    <p style="font-size: 0.85rem;">Data only saved locally - may be lost on updates</p>
+                </div>
+                <button class="row-btn btn-secondary" onclick="showFirebaseInstructions()" style="background: var(--primary); color: white; border-color: var(--primary);">📦 Setup Cloud Storage</button>
+            </div>
+            
+            <div class="form-group">
                 <label class="form-label">Notification Settings (Coming Soon)</label>
                 <div style="padding: 20px; background: #F5F5F5; border-radius: 12px; text-align: center; color: #666;">
                     <p style="margin-bottom: 10px;">📱 SMS Notifications</p>
@@ -397,6 +409,91 @@
             </div>
             <div class="form-group">
                 <button class="row-btn btn-secondary" onclick="importData()">📁 Import Data</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Supabase Instructions Modal -->
+    <div id="firebaseModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📦 Cloud Storage Setup</h2>
+                <button class="modal-close" onclick="closeFirebaseInstructions()">×</button>
+            </div>
+            <div style="line-height: 1.6; color: #666;">
+                <p style="margin-bottom: 15px;">To enable cloud storage and prevent data loss:</p>
+                
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 1: Create Supabase Project</h3>
+                <ol style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>Go to <a href="https://supabase.com/dashboard" target="_blank" style="color: var(--primary);">Supabase Dashboard</a></li>
+                    <li>Click "New Project"</li>
+                    <li>Name it "Sample Tracker"</li>
+                    <li>Set a database password (save it somewhere safe)</li>
+                    <li>Choose your region (closest to your users)</li>
+                    <li>Click "Create Project" and wait ~2 minutes</li>
+                </ol>
+                
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 2: Create Database Table</h3>
+                <ol style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>In your project, go to "SQL Editor"</li>
+                    <li>Click "New Query"</li>
+                    <li>Paste this SQL and click "Run":
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 0.75rem; margin: 10px 0;">
+CREATE TABLE sample_tracker_data (
+  id BIGSERIAL PRIMARY KEY,
+  user_id UUID REFERENCES auth.users NOT NULL,
+  samples JSONB DEFAULT '[]'::jsonb,
+  settings JSONB DEFAULT '{}'::jsonb,
+  updated_at TIMESTAMPTZ DEFAULT NOW(),
+  UNIQUE(user_id)
+);
+
+-- Enable Row Level Security
+ALTER TABLE sample_tracker_data ENABLE ROW LEVEL SECURITY;
+
+-- Policy: Users can only see their own data
+CREATE POLICY "Users can view own data"
+  ON sample_tracker_data FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Policy: Users can insert their own data
+CREATE POLICY "Users can insert own data"
+  ON sample_tracker_data FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Policy: Users can update their own data
+CREATE POLICY "Users can update own data"
+  ON sample_tracker_data FOR UPDATE
+  USING (auth.uid() = user_id);
+                        </pre>
+                    </li>
+                </ol>
+                
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 3: Get Your Keys</h3>
+                <ol style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>Go to "Settings" → "API"</li>
+                    <li>Copy your <strong>Project URL</strong></li>
+                    <li>Copy your <strong>anon public</strong> key</li>
+                    <li>Open your HTML file in a text editor</li>
+                    <li>Find line ~515 and replace:
+                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 8px; font-size: 0.75rem; margin: 10px 0;">
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+                        </pre>
+                    </li>
+                    <li>Save the file and reload the app</li>
+                </ol>
+                
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 4: Enable Email Auth</h3>
+                <ol style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>Go to "Authentication" → "Providers"</li>
+                    <li>Enable "Email" provider</li>
+                    <li>Disable "Confirm email" (we're using anonymous auth)</li>
+                </ol>
+                
+                <p style="background: #E8F5E9; padding: 15px; border-radius: 8px; border-left: 3px solid var(--green); font-size: 0.85rem;">
+                    <strong>✓ Done!</strong> Your data will now automatically sync to the cloud. Users can access their data from any device!
+                </p>
             </div>
         </div>
     </div>
@@ -486,6 +583,14 @@
         <iframe id="browserFrame" class="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
     </div>
 
+    <!-- Photo Viewer Modal -->
+    <div id="photoViewerModal" class="modal" onclick="closePhotoViewer()">
+        <div class="modal-content" style="max-width: 90%; max-height: 90vh; padding: 0; background: transparent; box-shadow: none;" onclick="event.stopPropagation()">
+            <button class="browser-close" onclick="closePhotoViewer()" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border-radius: 50%; width: 50px; height: 50px; font-size: 2rem; z-index: 10;">×</button>
+            <img id="photoViewerImg" style="width: 100%; height: auto; max-height: 90vh; object-fit: contain; border-radius: 12px;">
+        </div>
+    </div>
+
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         let samples = [];
         let currentFilter = 'all';
@@ -497,9 +602,196 @@
         let settings = { defaultDays: 14, notificationsEnabled: false };
         let tempTags = [];
         let tempPhotos = [];
-        let analyticsFilter = 'all'; // Track which analytics section to show
+        let analyticsFilter = 'all';
+        
+        // Supabase Configuration - REPLACE WITH YOUR SUPABASE PROJECT DETAILS
+        const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xxxxx.supabase.co
+        const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Your public anon key
+        
+        let supabase = null;
+        let currentUser = null;
+        let useCloud = false;
+
+        // Initialize Supabase
+        function initSupabase() {
+            try {
+                // Check if config has been updated from defaults
+                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    
+                    // Check for existing session
+                    supabase.auth.getSession().then(({ data: { session } }) => {
+                        if (session) {
+                            currentUser = session.user;
+                            useCloud = true;
+                            loadFromCloud();
+                        } else {
+                            // Sign in anonymously
+                            signInAnonymously();
+                        }
+                    });
+                    
+                    // Listen for auth changes
+                    supabase.auth.onAuthStateChange((event, session) => {
+                        if (session) {
+                            currentUser = session.user;
+                            useCloud = true;
+                            if (event === 'SIGNED_IN') {
+                                migrateToCloud();
+                            }
+                        }
+                    });
+                } else {
+                    console.log('Supabase not configured - using localStorage only');
+                    useCloud = false;
+                }
+            } catch (e) {
+                console.error('Supabase initialization error:', e);
+                useCloud = false;
+            }
+        }
+
+        // Sign in anonymously (Supabase doesn't have anonymous auth, so we'll use a device ID)
+        async function signInAnonymously() {
+            try {
+                // Get or create device ID
+                let deviceId = localStorage.getItem('device_id');
+                if (!deviceId) {
+                    deviceId = 'device_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('device_id', deviceId);
+                }
+                
+                // Sign in with device-specific credentials
+                const email = `${deviceId}@sample-tracker.local`;
+                const password = deviceId + '_secure_password_' + deviceId;
+                
+                // Try to sign in
+                let { data, error } = await supabase.auth.signInWithPassword({
+                    email: email,
+                    password: password,
+                });
+                
+                // If user doesn't exist, sign up
+                if (error && error.message.includes('Invalid login')) {
+                    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                        email: email,
+                        password: password,
+                    });
+                    
+                    if (!signUpError) {
+                        currentUser = signUpData.user;
+                        useCloud = true;
+                        migrateToCloud();
+                    }
+                } else if (!error && data.user) {
+                    currentUser = data.user;
+                    useCloud = true;
+                    loadFromCloud();
+                }
+            } catch (e) {
+                console.error('Anonymous sign in error:', e);
+                useCloud = false;
+            }
+        }
+
+        // Migrate existing localStorage data to cloud
+        async function migrateToCloud() {
+            const localSamples = JSON.parse(localStorage.getItem('tiktok_samples') || '[]');
+            const localSettings = JSON.parse(localStorage.getItem('tiktok_settings') || '{}');
+            
+            if (localSamples.length > 0 || Object.keys(localSettings).length > 0) {
+                samples = localSamples;
+                settings = { ...settings, ...localSettings };
+                await saveToCloud();
+                render();
+                renderCalendar();
+            } else {
+                loadFromCloud();
+            }
+        }
+
+        // Save to cloud
+        async function saveToCloud() {
+            if (!useCloud || !currentUser || !supabase) {
+                saveSamplesLocal(); // Fallback to localStorage
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('sample_tracker_data')
+                    .upsert({
+                        user_id: currentUser.id,
+                        samples: samples,
+                        settings: settings,
+                        updated_at: new Date().toISOString()
+                    }, {
+                        onConflict: 'user_id'
+                    });
+                
+                if (error) throw error;
+                
+                console.log('Data synced to cloud');
+                // Also save to localStorage as backup
+                localStorage.setItem('tiktok_samples', JSON.stringify(samples));
+                localStorage.setItem('tiktok_settings', JSON.stringify(settings));
+            } catch (error) {
+                console.error('Cloud save error:', error);
+                saveSamplesLocal(); // Fallback to localStorage
+            }
+        }
+
+        // Load from cloud
+        async function loadFromCloud() {
+            if (!useCloud || !currentUser || !supabase) {
+                return;
+            }
+            
+            try {
+                const { data, error } = await supabase
+                    .from('sample_tracker_data')
+                    .select('*')
+                    .eq('user_id', currentUser.id)
+                    .single();
+                
+                if (error && error.code !== 'PGRST116') { // PGRST116 = no rows found
+                    throw error;
+                }
+                
+                if (data) {
+                    samples = data.samples || [];
+                    settings = data.settings || { defaultDays: 14, notificationsEnabled: false };
+                    document.getElementById('defaultDays').value = settings.defaultDays;
+                } else {
+                    // No cloud data, check localStorage
+                    samples = JSON.parse(localStorage.getItem('tiktok_samples')) || [];
+                    settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
+                    if (samples.length > 0) {
+                        await saveToCloud(); // Backup to cloud
+                    }
+                }
+                
+                render();
+                renderCalendar();
+            } catch (error) {
+                console.error('Cloud load error:', error);
+                // Fallback to localStorage
+                samples = JSON.parse(localStorage.getItem('tiktok_samples')) || [];
+                settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
+                render();
+                renderCalendar();
+            }
+        }
+
+        // Save to localStorage only (fallback)
+        function saveSamplesLocal() {
+            localStorage.setItem('tiktok_samples', JSON.stringify(samples));
+        }
 
         window.onload = () => {
+            initSupabase();
+            
+            // Load from localStorage as fallback while waiting for Supabase
             try { 
                 samples = JSON.parse(localStorage.getItem('tiktok_samples')) || []; 
                 settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
@@ -641,12 +933,16 @@
         // Compact one-line card for collapsible sections
         function renderCompactCard(s) {
             const info = getStatusInfo(s);
+            const thumbnail = s.photos && s.photos.length > 0 ? s.photos[0] : null;
+            
             return `
-                <div style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="openModal('${s.id}')">
-                    <div style="flex: 1;">
+                <div style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; gap: 12px; align-items: center;">
+                    ${thumbnail ? `<img src="${thumbnail}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 8px; cursor: pointer;" onclick="event.stopPropagation(); viewPhoto('${thumbnail}')">` : '<div style="width: 50px; height: 50px; background: #f0f0f0; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 0.7rem; color: #999;">No Photo</div>'}
+                    <div style="flex: 1; cursor: pointer;" onclick="openModal('${s.id}')">
                         <div style="font-weight: 700; font-size: 0.9rem; color: var(--dark);">${s.product}</div>
                         <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${s.brand} • ${info.text}</div>
                     </div>
+                    ${s.link ? `<button onclick="event.stopPropagation(); openInAppBrowser('${s.link}')" style="padding: 8px 16px; background: var(--primary); color: white; border: none; border-radius: 20px; font-weight: 700; font-size: 0.75rem; cursor: pointer; white-space: nowrap;">🛍️ Shop</button>` : ''}
                     <div style="padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; background: ${info.status === 'overdue' ? '#FFEBEE' : info.status === 'urgent' ? '#FFF8E1' : info.status === 'completed' ? '#E0E0E0' : '#E8F5E9'}; color: ${info.color};">
                         ${info.status === 'completed' ? '✓' : info.days + 'd'}
                     </div>
@@ -719,7 +1015,7 @@
                         ${!s.done ? `<button class="row-btn btn-full-width" onclick="event.stopPropagation(); markDone('${s.id}')">✓ Mark Video Posted</button>` : `<div class="row-btn btn-completed">Posted Successfully ✅</div>`}
                         
                         <div class="btn-row-3">
-                            ${s.link ? `<button class="row-btn btn-secondary" onclick="event.stopPropagation(); openInAppBrowser('${s.link}')">🛍️ Shop</button>` : '<span></span>'}
+                            ${s.link ? `<button class="row-btn btn-secondary" style="background: var(--primary); color: white; border-color: var(--primary);" onclick="event.stopPropagation(); openInAppBrowser('${s.link}')">🛍️ View Product</button>` : '<button class="row-btn btn-secondary" style="color: #999; border-color: #ddd;" disabled>No Link</button>'}
                             <button class="row-btn btn-secondary" onclick="event.stopPropagation(); openModal('${s.id}')">✏️ Edit</button>
                             <button class="row-btn btn-secondary" style="color: var(--red); border-color: var(--red);" onclick="event.stopPropagation(); confirmDelete('${s.id}')">🗑️ Delete</button>
                         </div>
@@ -905,7 +1201,12 @@
         }
 
         function viewPhoto(src) {
-            window.open(src, '_blank');
+            document.getElementById('photoViewerImg').src = src;
+            document.getElementById('photoViewerModal').classList.add('active');
+        }
+
+        function closePhotoViewer() {
+            document.getElementById('photoViewerModal').classList.remove('active');
         }
 
         // Modal Functions
@@ -1009,7 +1310,20 @@
         }
 
         function saveSamples() {
-            localStorage.setItem('tiktok_samples', JSON.stringify(samples));
+            if (useCloud) {
+                saveToCloud();
+            } else {
+                localStorage.setItem('tiktok_samples', JSON.stringify(samples));
+            }
+        }
+
+        function saveSettings() {
+            settings.defaultDays = parseInt(document.getElementById('defaultDays').value);
+            if (useCloud) {
+                saveToCloud();
+            } else {
+                localStorage.setItem('tiktok_settings', JSON.stringify(settings));
+            }
         }
 
         // Filters and Sorting
@@ -1235,11 +1549,6 @@
             document.getElementById('analyticsModal').classList.remove('active');
         }
 
-        // Settings
-        function openSettings() {
-            document.getElementById('settingsModal').classList.add('active');
-        }
-
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('active');
         }
@@ -1262,9 +1571,37 @@
             document.getElementById('helpModal').classList.remove('active');
         }
 
-        function saveSettings() {
-            settings.defaultDays = parseInt(document.getElementById('defaultDays').value);
-            localStorage.setItem('tiktok_settings', JSON.stringify(settings));
+        function showFirebaseInstructions() {
+            closeSettings();
+            document.getElementById('firebaseModal').classList.add('active');
+        }
+
+        function closeFirebaseInstructions() {
+            document.getElementById('firebaseModal').classList.remove('active');
+        }
+
+        function updateCloudStatus() {
+            const statusDiv = document.getElementById('cloudStatus');
+            if (useCloud && currentUser) {
+                statusDiv.innerHTML = `
+                    <p style="margin-bottom: 5px; font-weight: 700; color: var(--green);">✓ Cloud Storage Active</p>
+                    <p style="font-size: 0.85rem;">Data automatically syncing to cloud</p>
+                    <p style="font-size: 0.75rem; margin-top: 5px;">User ID: ${currentUser.uid.substring(0, 8)}...</p>
+                `;
+                statusDiv.style.background = '#E8F5E9';
+            } else {
+                statusDiv.innerHTML = `
+                    <p style="margin-bottom: 5px; font-weight: 700;">⚠️ Cloud Storage Not Configured</p>
+                    <p style="font-size: 0.85rem;">Data only saved locally - may be lost on updates</p>
+                `;
+                statusDiv.style.background = '#FFF8E1';
+            }
+        }
+
+        // Update status when opening settings
+        function openSettings() {
+            updateCloudStatus();
+            document.getElementById('settingsModal').classList.add('active');
         }
 
         function importData() {
@@ -1359,6 +1696,7 @@
     </script>
 </body>
 </html>
+
 
 
 
