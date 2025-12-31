@@ -1165,6 +1165,7 @@
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button class="row-btn btn-secondary" onclick="goToLanding(); closeMenu()">🏠 Home</button>
                 <button class="row-btn btn-secondary" onclick="openSettings(); closeMenu()">⚙️ Settings</button>
+                <button class="row-btn btn-secondary" onclick="openSupport(); closeMenu()">💬 Support</button>
                 <button class="row-btn btn-secondary" onclick="exportCSV(); closeMenu()">📥 Export CSV</button>
                 <button class="row-btn btn-secondary" onclick="clearCompleted(); closeMenu()">🧹 Clear Completed</button>
             </div>
@@ -1273,11 +1274,6 @@
                 </div>
                 <button class="row-btn btn-secondary" onclick="showCloudInfo()" style="background: var(--green); color: white; border-color: var(--green); margin-bottom: 10px;">ℹ️ Cloud Storage Info</button>
                 <button class="row-btn btn-secondary" onclick="signOut()" id="signOutBtn" style="display: none; background: var(--red); color: white; border-color: var(--red);">🚪 Sign Out</button>
-            </div>
-            
-            <div class="form-group">
-                <button class="row-btn btn-secondary" onclick="openPrivacy(); closeSettings()" style="margin-bottom: 10px;">🔒 Privacy Policy</button>
-                <button class="row-btn btn-secondary" onclick="openHelp(); closeSettings()">❓ Help & Support</button>
             </div>
             
             <div class="form-group">
@@ -1392,6 +1388,52 @@
         </div>
     </div>
 
+    <!-- Support Modal -->
+    <div id="supportModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">💬 Support</h2>
+                <button class="modal-close" onclick="closeSupport()">×</button>
+            </div>
+            <div style="line-height: 1.6; text-align: center;">
+                <div style="background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%); padding: 30px; border-radius: 16px; margin-bottom: 25px; color: white;">
+                    <div style="font-size: 3rem; margin-bottom: 10px;">📧</div>
+                    <h3 style="font-weight: 700; margin-bottom: 10px; font-size: 1.2rem;">Need Help?</h3>
+                    <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;">We're here to help you!</p>
+                    <a href="mailto:support@flextechla.com" style="display: inline-block; background: white; color: var(--primary); padding: 12px 24px; border-radius: 25px; font-weight: 700; text-decoration: none; font-size: 1rem;">
+                        support@flextechla.com
+                    </a>
+                </div>
+                
+                <div style="text-align: left;">
+                    <h3 style="font-weight: 700; margin-bottom: 15px; color: var(--dark);">📋 Quick Help</h3>
+                    <div style="background: #F5F5F5; padding: 15px; border-radius: 12px; margin-bottom: 12px;">
+                        <p style="font-weight: 600; margin-bottom: 5px; color: var(--dark);">Can't log in?</p>
+                        <p style="font-size: 0.85rem; color: #666;">Make sure you're using the same email and password you signed up with.</p>
+                    </div>
+                    <div style="background: #F5F5F5; padding: 15px; border-radius: 12px; margin-bottom: 12px;">
+                        <p style="font-weight: 600; margin-bottom: 5px; color: var(--dark);">Lost your data?</p>
+                        <p style="font-size: 0.85rem; color: #666;">If you're signed in, your data is safely stored in the cloud. Try refreshing the page.</p>
+                    </div>
+                    <div style="background: #F5F5F5; padding: 15px; border-radius: 12px; margin-bottom: 12px;">
+                        <p style="font-weight: 600; margin-bottom: 5px; color: var(--dark);">App not installing?</p>
+                        <p style="font-size: 0.85rem; color: #666;">Make sure you're using Chrome (Android) or Safari (iPhone). Check our install guide for help.</p>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 25px;">
+                    <button class="row-btn btn-secondary" onclick="closeSupport(); openHelp()">📖 View Full Help Guide</button>
+                </div>
+                
+                <div style="background: #E3F2FD; padding: 15px; border-radius: 12px; margin-top: 20px; text-align: left;">
+                    <p style="font-size: 0.85rem; color: #666;">
+                        <strong style="color: var(--dark);">Response Time:</strong> We typically respond within 24 hours on weekdays.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Help Modal -->
     <div id="helpModal" class="modal">
         <div class="modal-content">
@@ -1428,6 +1470,14 @@
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📱 Install as App</h3>
                 <p style="margin-bottom: 15px; color: #666;">On iOS: Tap Share → Add to Home Screen<br>On Android: Tap Menu → Install App</p>
+                
+                <div style="background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%); padding: 20px; border-radius: 12px; margin-top: 25px; color: white; text-align: center;">
+                    <p style="font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9;">Need more help?</p>
+                    <p style="font-weight: 700; font-size: 1.1rem;">Contact Support</p>
+                    <a href="mailto:support@flextechla.com" style="display: inline-block; background: white; color: var(--primary); padding: 10px 20px; border-radius: 20px; font-weight: 700; text-decoration: none; margin-top: 10px; font-size: 0.9rem;">
+                        support@flextechla.com
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -1777,30 +1827,44 @@
             
             if (isIOS) {
                 instructions = `
+                    <div style="background: #FFF3E0; padding: 15px; border-radius: 12px; margin-bottom: 20px; border-left: 3px solid var(--yellow);">
+                        <p style="font-weight: 700; color: var(--dark); margin-bottom: 8px;">⚠️ Important: Use Safari's Share Button</p>
+                        <p style="font-size: 0.85rem;">Look for the share button at the BOTTOM of your Safari browser (square with arrow pointing up).</p>
+                    </div>
                     <h3 style="font-weight: 700; margin-bottom: 15px;">Install on iPhone/iPad</h3>
                     <ol style="text-align: left; padding-left: 20px; line-height: 1.8;">
-                        <li>Tap the <strong>Share</strong> button (square with arrow)</li>
+                        <li>Look at the <strong>bottom</strong> of your screen in <strong>Safari</strong></li>
+                        <li>Tap the <strong>Share</strong> button<br><span style="font-size: 2rem;">⬆️</span> (square with arrow)</li>
                         <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
                         <li>Tap <strong>"Add"</strong> in the top right</li>
-                        <li>The app will appear on your home screen!</li>
+                        <li>Done! Check your home screen 🎉</li>
                     </ol>
                 `;
             } else if (isAndroid) {
                 instructions = `
+                    <div style="background: #FFF3E0; padding: 15px; border-radius: 12px; margin-bottom: 20px; border-left: 3px solid var(--yellow);">
+                        <p style="font-weight: 700; color: var(--dark); margin-bottom: 8px;">⚠️ Important: Use Chrome's Browser Menu</p>
+                        <p style="font-size: 0.85rem;">Look for the three dots at the TOP RIGHT of your Chrome browser window (NOT in this app).</p>
+                    </div>
                     <h3 style="font-weight: 700; margin-bottom: 15px;">Install on Android</h3>
                     <ol style="text-align: left; padding-left: 20px; line-height: 1.8;">
-                        <li>Tap the <strong>⋮</strong> menu (three dots)</li>
-                        <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></li>
+                        <li>Look at the <strong>top right</strong> of your <strong>Chrome browser</strong></li>
+                        <li>Tap the <strong>⋮</strong> (three vertical dots)</li>
+                        <li>Look for <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></li>
                         <li>Tap <strong>"Add"</strong> or <strong>"Install"</strong></li>
-                        <li>The app will appear on your home screen!</li>
+                        <li>Done! Check your home screen 🎉</li>
                     </ol>
+                    <div style="background: #E3F2FD; padding: 12px; border-radius: 8px; margin-top: 15px;">
+                        <p style="font-size: 0.8rem; font-weight: 600;">💡 Pro Tip:</p>
+                        <p style="font-size: 0.8rem;">If you don't see "Install app", try closing this popup first, then open your browser menu.</p>
+                    </div>
                 `;
             } else {
                 instructions = `
                     <h3 style="font-weight: 700; margin-bottom: 15px;">Install on Desktop</h3>
                     <ol style="text-align: left; padding-left: 20px; line-height: 1.8;">
-                        <li>Look for the install icon in your browser's address bar</li>
-                        <li>Or open your browser menu</li>
+                        <li>Look for the install icon (⊕ or ⬇️) in your browser's address bar</li>
+                        <li>Or open your browser menu (⋮ three dots)</li>
                         <li>Select <strong>"Install Sample Tracker"</strong></li>
                     </ol>
                 `;
@@ -1809,7 +1873,7 @@
             const modal = document.createElement('div');
             modal.className = 'modal active';
             modal.innerHTML = `
-                <div class="modal-content" style="max-width: 400px;">
+                <div class="modal-content" style="max-width: 450px;">
                     <div class="modal-header">
                         <h2 class="modal-title">📱 How to Install</h2>
                         <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
@@ -1817,13 +1881,17 @@
                     <div style="color: #666;">
                         ${instructions}
                         <div style="background: #E8F5E9; padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 3px solid var(--green);">
-                            <p style="font-size: 0.9rem; font-weight: 600; color: var(--dark);">✓ Benefits of Installing</p>
+                            <p style="font-size: 0.9rem; font-weight: 600; color: var(--dark);">✓ Why Install?</p>
                             <ul style="font-size: 0.85rem; margin-top: 10px; padding-left: 20px;">
                                 <li>Quick access from your home screen</li>
                                 <li>Works offline</li>
-                                <li>Fullscreen experience</li>
-                                <li>Faster loading</li>
+                                <li>No browser bars - fullscreen!</li>
+                                <li>Loads instantly</li>
                             </ul>
+                        </div>
+                        <div style="text-align: center; margin-top: 20px;">
+                            <p style="font-size: 0.8rem; color: #999;">Need help? Contact us:</p>
+                            <p style="font-size: 0.9rem; font-weight: 600; color: var(--primary); margin-top: 5px;">support@flextechla.com</p>
                         </div>
                     </div>
                 </div>
@@ -2597,6 +2665,14 @@
             document.getElementById('helpModal').classList.remove('active');
         }
 
+        function openSupport() {
+            document.getElementById('supportModal').classList.add('active');
+        }
+
+        function closeSupport() {
+            document.getElementById('supportModal').classList.remove('active');
+        }
+
         // ==================== UTILITIES ====================
         function openBrowser(url) {
             document.getElementById('browserFrame').src = url;
@@ -2683,6 +2759,7 @@
     </script>
 </body>
 </html>
+
 
 
 
