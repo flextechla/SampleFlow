@@ -608,7 +608,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
         const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xxxxx.supabase.co
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Your public anon key
         
-        let supabaseClient = null;
+        let sb_client = null;
         let currentUser = null;
         let useCloud = false;
 
@@ -623,11 +623,11 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
                 }
                 
                 // Check if config has been updated from defaults
-                if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                if (SUPABASE_URL !== 'https://eiigbmrjtwndanywrcqp.supabase.co' && SUPABASE_ANON_KEY !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpaWdibXJqdHduZGFueXdyY3FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMDQyMzQsImV4cCI6MjA4Mjc4MDIzNH0.bHCDscs-aeSukDeXAf9kuRC12WBC3zSqIQia-8cIc3s') {
+                    sb_client = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     
                     // Check for existing session
-                    const { data: { session } } = await supabaseClient.auth.getSession();
+                    const { data: { session } } = await sb_client.auth.getSession();
                     if (session) {
                         currentUser = session.user;
                         useCloud = true;
@@ -638,7 +638,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
                     }
                     
                     // Listen for auth changes
-                    supabaseClient.auth.onAuthStateChange(async (event, session) => {
+                    sb_client.auth.onAuthStateChange(async (event, session) => {
                         if (session) {
                             currentUser = session.user;
                             useCloud = true;
@@ -673,14 +673,14 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
                 const password = deviceId + '_secure_password_' + deviceId;
                 
                 // Try to sign in
-                let { data, error } = await supabaseClient.auth.signInWithPassword({
+                let { data, error } = await sb_client.auth.signInWithPassword({
                     email: email,
                     password: password,
                 });
                 
                 // If user doesn't exist, sign up
                 if (error && error.message.includes('Invalid login')) {
-                    const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
+                    const { data: signUpData, error: signUpError } = await sb_client.auth.signUp({
                         email: email,
                         password: password,
                     });
@@ -719,13 +719,13 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
         // Save to cloud
         async function saveToCloud() {
-            if (!useCloud || !currentUser || !supabaseClient) {
+            if (!useCloud || !currentUser || !sb_client) {
                 saveSamplesLocal(); // Fallback to localStorage
                 return;
             }
             
             try {
-                const { data, error } = await supabaseClient
+                const { data, error } = await sb_client
                     .from('sample_tracker_data')
                     .upsert({
                         user_id: currentUser.id,
@@ -750,12 +750,12 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
 
         // Load from cloud
         async function loadFromCloud() {
-            if (!useCloud || !currentUser || !supabaseClient) {
+            if (!useCloud || !currentUser || !sb_client) {
                 return;
             }
             
             try {
-                const { data, error } = await supabaseClient
+                const { data, error } = await sb_client
                     .from('sample_tracker_data')
                     .select('*')
                     .eq('user_id', currentUser.id)
@@ -1704,6 +1704,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
     </script>
 </body>
 </html>
+
 
 
 
