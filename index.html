@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -591,9 +593,7 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
-        console.log('Script started loading...');
-        
+    <script>
         let samples = [];
         let currentFilter = 'all';
         let currentSort = 'dueDate';
@@ -606,13 +606,11 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         let tempPhotos = [];
         let analyticsFilter = 'all';
         
-        console.log('Variables initialized...');
-        
         // Supabase Configuration - REPLACE WITH YOUR SUPABASE PROJECT DETAILS
         const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xxxxx.supabase.co
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Your public anon key
         
-        let supabase = null;
+        let supabaseClient = null;
         let currentUser = null;
         let useCloud = false;
 
@@ -628,10 +626,10 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
                 
                 // Check if config has been updated from defaults
                 if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
-                    supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                     
                     // Check for existing session
-                    const { data: { session } } = await supabase.auth.getSession();
+                    const { data: { session } } = await supabaseClient.auth.getSession();
                     if (session) {
                         currentUser = session.user;
                         useCloud = true;
@@ -642,7 +640,7 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
                     }
                     
                     // Listen for auth changes
-                    supabase.auth.onAuthStateChange(async (event, session) => {
+                    supabaseClient.auth.onAuthStateChange(async (event, session) => {
                         if (session) {
                             currentUser = session.user;
                             useCloud = true;
@@ -677,14 +675,14 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
                 const password = deviceId + '_secure_password_' + deviceId;
                 
                 // Try to sign in
-                let { data, error } = await supabase.auth.signInWithPassword({
+                let { data, error } = await supabaseClient.auth.signInWithPassword({
                     email: email,
                     password: password,
                 });
                 
                 // If user doesn't exist, sign up
                 if (error && error.message.includes('Invalid login')) {
-                    const { data: signUpData, error: signUpError } = await supabase.auth.signUp({
+                    const { data: signUpData, error: signUpError } = await supabaseClient.auth.signUp({
                         email: email,
                         password: password,
                     });
@@ -723,13 +721,13 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         // Save to cloud
         async function saveToCloud() {
-            if (!useCloud || !currentUser || !supabase) {
+            if (!useCloud || !currentUser || !supabaseClient) {
                 saveSamplesLocal(); // Fallback to localStorage
                 return;
             }
             
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('sample_tracker_data')
                     .upsert({
                         user_id: currentUser.id,
@@ -754,12 +752,12 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         // Load from cloud
         async function loadFromCloud() {
-            if (!useCloud || !currentUser || !supabase) {
+            if (!useCloud || !currentUser || !supabaseClient) {
                 return;
             }
             
             try {
-                const { data, error } = await supabase
+                const { data, error } = await supabaseClient
                     .from('sample_tracker_data')
                     .select('*')
                     .eq('user_id', currentUser.id)
@@ -1223,7 +1221,6 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         // Modal Functions
         function openModal(id = null) {
-            console.log('openModal called with id:', id);
             editId = id;
             tempTags = [];
             tempPhotos = [];
@@ -1689,7 +1686,6 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         // Menu
         function toggleMenu() {
-            console.log('toggleMenu called');
             document.getElementById('menuModal').classList.toggle('active');
         }
 
@@ -1710,7 +1706,6 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
     </script>
 </body>
 </html>
-
 
 
 
