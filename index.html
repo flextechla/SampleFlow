@@ -10,7 +10,7 @@
     <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3081/3081559.png">
     <link rel="manifest" href='data:application/manifest+json,{"name":"SampleTracker","short_name":"SampleTrack","display":"standalone","background_color":"#FE2C55","theme_color":"#FE2C55","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/3081/3081559.png","sizes":"512x512","type":"image/png"}]}'>
 
-    <title>SampleReminder - TikTok Ship Tracker</title>
+    <title>SampleReminder - TikTok Shop Tracker</title>
     
     <style>
         :root { --primary: #FE2C55; --dark: #121212; --bg: #F8F9FA; --surface: #FFFFFF; --green: #00C853; --yellow: #FFB300; --red: #FF3B30; --border: #E0E0E0; --shadow: 0 4px 12px rgba(0,0,0,0.08); }
@@ -65,6 +65,15 @@
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; }
         .modal.active { display: flex; }
         .modal-content { background: white; width: 100%; max-width: 400px; border-radius: 24px; padding: 24px; max-height: 90vh; overflow-y: auto; }
+        
+        /* Browser Overlay */
+        .browser-overlay { display: none; position: fixed; inset: 0; background: white; z-index: 2000; flex-direction: column; }
+        .browser-overlay.active { display: flex; }
+        .browser-header { background: var(--primary); color: white; padding: 15px; display: flex; align-items: center; justify-content: space-between; }
+        .browser-close { background: none; border: none; color: white; font-size: 1.5rem; font-weight: bold; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
+        .browser-title { font-size: 0.9rem; font-weight: 600; flex: 1; text-align: center; }
+        .browser-frame { flex: 1; border: none; width: 100%; }
+        
         .form-group { margin-bottom: 16px; }
         .form-label { display: block; font-weight: 700; font-size: 0.85rem; margin-bottom: 6px; }
         .form-input { width: 100%; padding: 12px; border: 1.5px solid #eee; border-radius: 12px; font-size: 1rem; background: #F9F9F9; }
@@ -74,7 +83,7 @@
     </style>
 </head>
 <body>
-    <div class="header"><h1><span>TikTok</span> Ship Tracker</h1></div>
+    <div class="header"><h1><span>TikTok</span> Shop Tracker</h1></div>
     
     <div class="container">
         <div class="stats-grid">
@@ -133,6 +142,15 @@
                 <div id="deleteZone"></div>
             </form>
         </div>
+    </div>
+
+    <div id="browserOverlay" class="browser-overlay">
+        <div class="browser-header">
+            <button class="browser-close" onclick="closeBrowser()">×</button>
+            <div class="browser-title">TikTok Shop</div>
+            <div style="width:40px;"></div>
+        </div>
+        <iframe id="browserFrame" class="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
     </div>
 
     <script>
@@ -202,7 +220,7 @@
                             ${!s.done ? `<button class="row-btn btn-full-width" onclick="markDone('${s.id}')">Mark Video Posted</button>` : `<div class="row-btn btn-completed">Posted Successfully ✅</div>`}
                             
                             <div class="btn-row-2">
-                                ${s.link ? `<button class="row-btn btn-secondary" onclick="openInTikTok('${s.link}')">📱 Open in TikTok</button>` : '<span></span>'}
+                                ${s.link ? `<button class="row-btn btn-secondary" onclick="openInAppBrowser('${s.link}')">🛍️ Shop</button>` : '<span></span>'}
                                 <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
                             </div>
                         </div>
@@ -238,29 +256,19 @@
         function deleteSample(id) { if (confirm("Delete this sample?")) { samples = samples.filter(s => s.id !== id); localStorage.setItem('tiktok_samples', JSON.stringify(samples)); render(); closeModal(); } }
         function setFilter(f) { currentFilter = f; document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.toggle('active', btn.id === 'f-'+f)); render(); }
         
-        function openInTikTok(link) {
-            // Try to open in TikTok app first
-            // Extract the path from the URL to construct a TikTok deep link
-            try {
-                const url = new URL(link);
-                const path = url.pathname + url.search;
-                const deepLink = 'snssdk1233://aweme/detail' + path;
-                
-                // Try to open in TikTok app
-                window.location.href = deepLink;
-                
-                // Fallback to web browser after a short delay if app doesn't open
-                setTimeout(() => {
-                    window.open(link, '_blank', 'noopener,noreferrer');
-                }, 1500);
-            } catch (e) {
-                // If URL parsing fails, just open in browser
-                window.open(link, '_blank', 'noopener,noreferrer');
-            }
+        function openInAppBrowser(link) {
+            document.getElementById('browserFrame').src = link;
+            document.getElementById('browserOverlay').classList.add('active');
+        }
+        
+        function closeBrowser() {
+            document.getElementById('browserOverlay').classList.remove('active');
+            document.getElementById('browserFrame').src = '';
         }
     </script>
 </body>
 </html>
+
 
 
 
