@@ -8,8 +8,41 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="mobile-web-app-capable" content="yes">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%23FE2C55'/%3E%3Cg transform='translate(106,80)'%3E%3Crect x='20' y='40' width='260' height='340' rx='20' fill='white' opacity='0.95'/%3E%3Crect x='90' y='20' width='120' height='50' rx='12' fill='white' opacity='0.95'/%3E%3Crect x='100' y='30' width='100' height='30' rx='8' fill='%23FE2C55'/%3E%3Cg transform='translate(50,100)'%3E%3Crect width='35' height='35' rx='7' fill='%2300C853' stroke='white' stroke-width='2'/%3E%3Cpath d='M 8 18 L 15 25 L 27 10' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='50' y='5' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='20' width='100' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='70' width='35' height='35' rx='7' fill='%2300C853' stroke='white' stroke-width='2'/%3E%3Cpath d='M 8 88 L 15 95 L 27 80' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='50' y='75' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='90' width='110' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='140' width='35' height='35' rx='7' fill='white' stroke='%23E0E0E0' stroke-width='3'/%3E%3Crect x='50' y='145' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='160' width='90' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='210' width='35' height='35' rx='7' fill='white' stroke='%23E0E0E0' stroke-width='3'/%3E%3Crect x='50' y='215' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='230' width='120' height='6' rx='3' fill='%23F0F0F0'/%3E%3C/g%3E%3C/g%3E%3Ccircle cx='400' cy='112' r='45' fill='white'/%3E%3Ctext x='400' y='130' text-anchor='middle' font-size='50' font-weight='bold' fill='%23FE2C55' font-family='Arial,sans-serif'%3E3%3C/text%3E%3C/svg%3E">
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%23FE2C55'/%3E%3Cg transform='translate(106,80)'%3E%3Crect x='20' y='40' width='260' height='340' rx='20' fill='white' opacity='0.95'/%3E%3Crect x='90' y='20' width='120' height='50' rx='12' fill='white' opacity='0.95'/%3E%3Crect x='100' y='30' width='100' height='30' rx='8' fill='%23FE2C55'/%3E%3Cg transform='translate(50,100)'%3E%3Crect width='35' height='35' rx='7' fill='%2300C853' stroke='white' stroke-width='2'/%3E%3Cpath d='M 8 18 L 15 25 L 27 10' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='50' y='5' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='20' width='100' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='70' width='35' height='35' rx='7' fill='%2300C853' stroke='white' stroke-width='2'/%3E%3Cpath d='M 8 88 L 15 95 L 27 80' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='50' y='75' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='90' width='110' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='140' width='35' height='35' rx='7' fill='white' stroke='%23E0E0E0' stroke-width='3'/%3E%3Crect x='50' y='145' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='160' width='90' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='210' width='35' height='35' rx='7' fill='white' stroke='%23E0E0E0' stroke-width='3'/%3E%3Crect x='50' y='215' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='230' width='120' height='6' rx='3' fill='%23F0F0F0'/%3E%3C/g%3E%3C/g%3E%3Ccircle cx='400' cy='112' r='45' fill='white'/%3E%3Ctext x='400' y='130' text-anchor='middle' font-size='50' font-weight='bold' fill='%23FE2C55' font-family='Arial,sans-serif'%3E3%3C/text%3E%3C/svg%3E">
+    <link rel="manifest" id="manifest-placeholder">
     
     <title>Sample Tracker Pro</title>
+    
+    <script>
+        // Generate manifest dynamically with proper icon
+        const manifestData = {
+            "name": "Sample Tracker Pro",
+            "short_name": "Samples",
+            "description": "Track your PR samples and never miss a deadline",
+            "start_url": "/",
+            "display": "standalone",
+            "background_color": "#FE2C55",
+            "theme_color": "#FE2C55",
+            "icons": [
+                {
+                    "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'%3E%3Crect width='512' height='512' rx='115' fill='%23FE2C55'/%3E%3Cg transform='translate(106,80)'%3E%3Crect x='20' y='40' width='260' height='340' rx='20' fill='white' opacity='0.95'/%3E%3Crect x='90' y='20' width='120' height='50' rx='12' fill='white' opacity='0.95'/%3E%3Crect x='100' y='30' width='100' height='30' rx='8' fill='%23FE2C55'/%3E%3Cg transform='translate(50,100)'%3E%3Crect width='35' height='35' rx='7' fill='%2300C853' stroke='white' stroke-width='2'/%3E%3Cpath d='M 8 18 L 15 25 L 27 10' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='50' y='5' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='20' width='100' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='70' width='35' height='35' rx='7' fill='%2300C853' stroke='white' stroke-width='2'/%3E%3Cpath d='M 8 88 L 15 95 L 27 80' stroke='white' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='50' y='75' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='90' width='110' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='140' width='35' height='35' rx='7' fill='white' stroke='%23E0E0E0' stroke-width='3'/%3E%3Crect x='50' y='145' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='160' width='90' height='6' rx='3' fill='%23F0F0F0'/%3E%3Crect y='210' width='35' height='35' rx='7' fill='white' stroke='%23E0E0E0' stroke-width='3'/%3E%3Crect x='50' y='215' width='140' height='8' rx='4' fill='%23E0E0E0'/%3E%3Crect x='50' y='230' width='120' height='6' rx='3' fill='%23F0F0F0'/%3E%3C/g%3E%3C/g%3E%3Ccircle cx='400' cy='112' r='45' fill='white'/%3E%3Ctext x='400' y='130' text-anchor='middle' font-size='50' font-weight='bold' fill='%23FE2C55' font-family='Arial,sans-serif'%3E3%3C/text%3E%3C/svg%3E",
+                    "sizes": "512x512",
+                    "type": "image/svg+xml",
+                    "purpose": "any maskable"
+                },
+                {
+                    "src": "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='43' fill='%23FE2C55'/%3E%3Cg transform='translate(40,30)'%3E%3Crect x='7' y='15' width='98' height='128' rx='8' fill='white' opacity='0.95'/%3E%3Crect x='34' y='7' width='45' height='19' rx='5' fill='white' opacity='0.95'/%3E%3Crect x='38' y='11' width='38' height='11' rx='3' fill='%23FE2C55'/%3E%3Cg transform='translate(19,38)'%3E%3Crect width='13' height='13' rx='3' fill='%2300C853' stroke='white' stroke-width='1'/%3E%3Cpath d='M 3 7 L 6 10 L 10 4' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='19' y='2' width='53' height='3' rx='2' fill='%23E0E0E0'/%3E%3Crect x='19' y='8' width='38' height='2' rx='1' fill='%23F0F0F0'/%3E%3Crect y='26' width='13' height='13' rx='3' fill='%2300C853' stroke='white' stroke-width='1'/%3E%3Cpath d='M 3 33 L 6 36 L 10 30' stroke='white' stroke-width='2' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3Crect x='19' y='28' width='53' height='3' rx='2' fill='%23E0E0E0'/%3E%3Crect x='19' y='34' width='42' height='2' rx='1' fill='%23F0F0F0'/%3E%3Crect y='53' width='13' height='13' rx='3' fill='white' stroke='%23E0E0E0' stroke-width='1'/%3E%3Crect x='19' y='55' width='53' height='3' rx='2' fill='%23E0E0E0'/%3E%3Crect x='19' y='60' width='34' height='2' rx='1' fill='%23F0F0F0'/%3E%3Crect y='79' width='13' height='13' rx='3' fill='white' stroke='%23E0E0E0' stroke-width='1'/%3E%3Crect x='19' y='81' width='53' height='3' rx='2' fill='%23E0E0E0'/%3E%3Crect x='19' y='87' width='45' height='2' rx='1' fill='%23F0F0F0'/%3E%3C/g%3E%3C/g%3E%3Ccircle cx='150' cy='42' r='17' fill='white'/%3E%3Ctext x='150' y='49' text-anchor='middle' font-size='19' font-weight='bold' fill='%23FE2C55' font-family='Arial,sans-serif'%3E3%3C/text%3E%3C/svg%3E",
+                    "sizes": "192x192",
+                    "type": "image/svg+xml"
+                }
+            ]
+        };
+        
+        const manifestBlob = new Blob([JSON.stringify(manifestData)], { type: 'application/json' });
+        const manifestURL = URL.createObjectURL(manifestBlob);
+        document.getElementById('manifest-placeholder').setAttribute('href', manifestURL);
+    </script>
     
     <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
@@ -1031,7 +1064,7 @@
                 </div>
             </div>
             
-            <button class="landing-btn btn-primary" onclick="showAuth('signup')">Create Free Account</button>
+            <button class="landing-btn btn-primary" onclick="showAuth('signup')">Create Account</button>
             <button class="landing-btn btn-secondary" onclick="showAuth('signin')">Sign In</button>
             
             <div class="landing-links">
@@ -1660,6 +1693,161 @@
             document.getElementById('appContainer').classList.add('active');
             render();
             renderCalendar();
+            
+            // Show install prompt if not already installed
+            setTimeout(() => {
+                checkAndShowInstallPrompt();
+            }, 2000);
+        }
+
+        // PWA Install Prompt
+        let deferredPrompt;
+        
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+        });
+
+        function checkAndShowInstallPrompt() {
+            // Check if already installed
+            if (window.matchMedia('(display-mode: standalone)').matches) {
+                return; // Already installed
+            }
+            
+            // Check if user dismissed before
+            if (localStorage.getItem('install_dismissed')) {
+                return;
+            }
+            
+            // Show custom install prompt
+            showInstallModal();
+        }
+
+        function showInstallModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'installModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px; text-align: center;">
+                    <div style="font-size: 4rem; margin-bottom: 15px;">📱</div>
+                    <h2 style="font-weight: 800; font-size: 1.5rem; margin-bottom: 10px;">Install Sample Tracker</h2>
+                    <p style="color: #666; margin-bottom: 25px; line-height: 1.5;">
+                        Add this app to your home screen for quick access and offline use. It works just like a native app!
+                    </p>
+                    <button class="row-btn btn-full-width" onclick="installApp()" style="margin-bottom: 10px;">
+                        ⬇️ Install Now
+                    </button>
+                    <button class="row-btn btn-secondary" onclick="dismissInstall()">
+                        Maybe Later
+                    </button>
+                    <p style="font-size: 0.75rem; color: #999; margin-top: 15px;">
+                        You can always install later from your browser menu
+                    </p>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        async function installApp() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response: ${outcome}`);
+                deferredPrompt = null;
+            } else {
+                // Show manual install instructions
+                showManualInstallInstructions();
+            }
+            
+            const modal = document.getElementById('installModal');
+            if (modal) modal.remove();
+        }
+
+        function dismissInstall() {
+            localStorage.setItem('install_dismissed', 'true');
+            const modal = document.getElementById('installModal');
+            if (modal) modal.remove();
+        }
+
+        function showManualInstallInstructions() {
+            const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+            const isAndroid = /Android/.test(navigator.userAgent);
+            
+            let instructions = '';
+            
+            if (isIOS) {
+                instructions = `
+                    <h3 style="font-weight: 700; margin-bottom: 15px;">Install on iPhone/iPad</h3>
+                    <ol style="text-align: left; padding-left: 20px; line-height: 1.8;">
+                        <li>Tap the <strong>Share</strong> button (square with arrow)</li>
+                        <li>Scroll down and tap <strong>"Add to Home Screen"</strong></li>
+                        <li>Tap <strong>"Add"</strong> in the top right</li>
+                        <li>The app will appear on your home screen!</li>
+                    </ol>
+                `;
+            } else if (isAndroid) {
+                instructions = `
+                    <h3 style="font-weight: 700; margin-bottom: 15px;">Install on Android</h3>
+                    <ol style="text-align: left; padding-left: 20px; line-height: 1.8;">
+                        <li>Tap the <strong>⋮</strong> menu (three dots)</li>
+                        <li>Tap <strong>"Add to Home screen"</strong> or <strong>"Install app"</strong></li>
+                        <li>Tap <strong>"Add"</strong> or <strong>"Install"</strong></li>
+                        <li>The app will appear on your home screen!</li>
+                    </ol>
+                `;
+            } else {
+                instructions = `
+                    <h3 style="font-weight: 700; margin-bottom: 15px;">Install on Desktop</h3>
+                    <ol style="text-align: left; padding-left: 20px; line-height: 1.8;">
+                        <li>Look for the install icon in your browser's address bar</li>
+                        <li>Or open your browser menu</li>
+                        <li>Select <strong>"Install Sample Tracker"</strong></li>
+                    </ol>
+                `;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">📱 How to Install</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div style="color: #666;">
+                        ${instructions}
+                        <div style="background: #E8F5E9; padding: 15px; border-radius: 12px; margin-top: 20px; border-left: 3px solid var(--green);">
+                            <p style="font-size: 0.9rem; font-weight: 600; color: var(--dark);">✓ Benefits of Installing</p>
+                            <ul style="font-size: 0.85rem; margin-top: 10px; padding-left: 20px;">
+                                <li>Quick access from your home screen</li>
+                                <li>Works offline</li>
+                                <li>Fullscreen experience</li>
+                                <li>Faster loading</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        // Add install button to menu
+        function addInstallToMenu() {
+            if (!window.matchMedia('(display-mode: standalone)').matches) {
+                // Not installed, show install option in menu
+                const menuContent = document.querySelector('#menuModal .modal-content > div');
+                if (menuContent && !document.getElementById('installMenuItem')) {
+                    const installBtn = document.createElement('button');
+                    installBtn.id = 'installMenuItem';
+                    installBtn.className = 'row-btn btn-secondary';
+                    installBtn.innerHTML = '📱 Install App';
+                    installBtn.onclick = () => {
+                        closeMenu();
+                        showManualInstallInstructions();
+                    };
+                    menuContent.insertBefore(installBtn, menuContent.firstChild);
+                }
+            }
         }
 
         function goToLanding() {
@@ -2026,7 +2214,11 @@
             await saveSamples();
             render();
             renderCalendar();
-            closeModal();
+            
+            // Force close modal
+            setTimeout(() => {
+                closeModal();
+            }, 100);
         }
 
         function calcDuePreview() {
@@ -2382,6 +2574,7 @@
         // ==================== MENU ====================
         function toggleMenu() {
             document.getElementById('menuModal').classList.add('active');
+            addInstallToMenu();
         }
 
         function closeMenu() {
@@ -2490,6 +2683,7 @@
     </script>
 </body>
 </html>
+
 
 
 
