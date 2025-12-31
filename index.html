@@ -282,7 +282,8 @@
         .container { 
             max-width: 600px; 
             margin: 0 auto; 
-            padding: 12px; 
+            padding: 12px;
+            padding-top: 0;
         }
         
         .view-toggle { 
@@ -318,7 +319,8 @@
             background: white; 
             border-radius: 12px; 
             padding: 15px; 
-            margin-bottom: 12px; 
+            margin-bottom: 12px;
+            margin-top: 12px;
             box-shadow: var(--shadow); 
             border: 1px solid var(--border); 
         }
@@ -1400,8 +1402,8 @@
                     <div style="font-size: 3rem; margin-bottom: 10px;">📧</div>
                     <h3 style="font-weight: 700; margin-bottom: 10px; font-size: 1.2rem;">Need Help?</h3>
                     <p style="font-size: 0.9rem; opacity: 0.9; margin-bottom: 15px;">We're here to help you!</p>
-                    <a href="mailto:support@flextechla.com" style="display: inline-block; background: white; color: var(--primary); padding: 12px 24px; border-radius: 25px; font-weight: 700; text-decoration: none; font-size: 1rem;">
-                        support@flextechla.com
+                    <a href="/cdn-cgi/l/email-protection#a9dadcd9d9c6dbdde9cfc5ccd1ddcccac1c5c887cac6c4" style="display: inline-block; background: white; color: var(--primary); padding: 12px 24px; border-radius: 25px; font-weight: 700; text-decoration: none; font-size: 1rem;">
+                        <span class="__cf_email__" data-cfemail="7e0d0b0e0e110c0a3e18121b060a1b1d16121f501d1113">[email&#160;protected]</span>
                     </a>
                 </div>
                 
@@ -1474,8 +1476,8 @@
                 <div style="background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%); padding: 20px; border-radius: 12px; margin-top: 25px; color: white; text-align: center;">
                     <p style="font-size: 0.9rem; margin-bottom: 10px; opacity: 0.9;">Need more help?</p>
                     <p style="font-weight: 700; font-size: 1.1rem;">Contact Support</p>
-                    <a href="mailto:support@flextechla.com" style="display: inline-block; background: white; color: var(--primary); padding: 10px 20px; border-radius: 20px; font-weight: 700; text-decoration: none; margin-top: 10px; font-size: 0.9rem;">
-                        support@flextechla.com
+                    <a href="/cdn-cgi/l/email-protection#abd8dedbdbc4d9dfebcdc7ced3dfcec8c3c7ca85c8c4c6" style="display: inline-block; background: white; color: var(--primary); padding: 10px 20px; border-radius: 20px; font-weight: 700; text-decoration: none; margin-top: 10px; font-size: 0.9rem;">
+                        <span class="__cf_email__" data-cfemail="9ae9efeaeaf5e8eedafcf6ffe2eefff9f2f6fbb4f9f5f7">[email&#160;protected]</span>
                     </a>
                 </div>
             </div>
@@ -1500,7 +1502,7 @@
         </div>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ==================== CONFIGURATION ====================
         const SUPABASE_URL = 'https://eiigbmrjtwndanywrcqp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpaWdibXJqdHduZGFueXdyY3FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMDQyMzQsImV4cCI6MjA4Mjc4MDIzNH0.bHCDscs-aeSukDeXAf9kuRC12WBC3zSqIQia-8cIc3s';
@@ -2746,19 +2748,6 @@
                     }
                 };
                 reader.readAsText(file);
-            };
-            input.click();
-        }
-
-        function toggleFiltered() {
-            const content = document.getElementById('filteredContent');
-            const arrow = document.getElementById('filteredArrow');
-            content.classList.toggle('active');
-            arrow.innerText = content.classList.contains('active') ? '▲' : '▼';
-        }
-    </script>
-</body>
-</html>
 
 
 
