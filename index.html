@@ -15,7 +15,7 @@
     <style>
         :root { --primary: #FE2C55; --dark: #121212; --bg: #F8F9FA; --surface: #FFFFFF; --green: #00C853; --yellow: #FFB300; --red: #FF3B30; --blue: #2196F3; --purple: #9C27B0; --border: #E0E0E0; --shadow: 0 4px 12px rgba(0,0,0,0.08); }
         * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--dark); padding-bottom: 120px; overflow-x: hidden; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: var(--dark); padding-bottom: 20px; overflow-x: hidden; }
         
         .header { background: var(--surface); padding: 15px; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid var(--border); }
         .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
@@ -23,6 +23,8 @@
         .header h1 span { color: var(--primary); }
         .header-actions { display: flex; gap: 8px; }
         .icon-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 5px; }
+        .add-sample-btn { background: var(--primary); color: white; border: none; padding: 12px 20px; border-radius: 25px; font-weight: 700; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; margin-bottom: 10px; width: 100%; justify-content: center; box-shadow: var(--shadow); transition: transform 0.2s; }
+        .add-sample-btn:active { transform: scale(0.95); }
         
         /* Search Bar */
         .search-bar { width: 100%; padding: 10px 15px; border: 1.5px solid var(--border); border-radius: 25px; font-size: 0.9rem; background: #F9F9F9; }
@@ -53,18 +55,14 @@
         .filter-btn.active { background: var(--primary); color: white; border-color: var(--primary); }
 
         /* Batch Actions Bar */
-        .batch-bar { position: fixed; bottom: 80px; left: 0; right: 0; background: var(--dark); color: white; padding: 15px; display: none; justify-content: space-between; align-items: center; z-index: 99; box-shadow: 0 -4px 12px rgba(0,0,0,0.2); }
+        .batch-bar { position: fixed; bottom: 0; left: 0; right: 0; background: var(--dark); color: white; padding: 15px; display: none; justify-content: space-between; align-items: center; z-index: 99; box-shadow: 0 -4px 12px rgba(0,0,0,0.2); }
         .batch-bar.active { display: flex; }
         .batch-actions { display: flex; gap: 10px; }
         .batch-btn { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
 
-        /* Card Styles with Swipe */
-        .sample-card { background: var(--surface); border-radius: 16px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; transition: transform 0.3s, opacity 0.3s; touch-action: pan-y; }
+        /* Card Styles */
+        .sample-card { background: var(--surface); border-radius: 16px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; }
         .sample-card.selecting { border: 2px solid var(--primary); }
-        .sample-card.swiping { transition: none; }
-        .swipe-indicator { position: absolute; top: 0; bottom: 0; width: 100px; display: flex; align-items: center; justify-content: center; font-size: 2rem; opacity: 0; transition: opacity 0.2s; z-index: 1; }
-        .swipe-left { left: 0; background: linear-gradient(to right, var(--green), transparent); }
-        .swipe-right { right: 0; background: linear-gradient(to left, var(--red), transparent); }
         
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .card-checkbox { width: 20px; height: 20px; cursor: pointer; }
@@ -116,14 +114,6 @@
         .btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
         .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
         .btn-secondary { background: white; color: var(--dark); border: 1.5px solid var(--border); }
-
-        /* FAB Menu */
-        .fab-container { position: fixed; bottom: 30px; right: 20px; z-index: 999; }
-        .fab { width: 60px; height: 60px; background: var(--primary); color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 30px; box-shadow: 0 4px 15px rgba(254, 44, 85, 0.4); border: none; cursor: pointer; transition: transform 0.2s; }
-        .fab:active { transform: scale(0.9); }
-        .fab-menu { position: absolute; bottom: 70px; right: 0; display: none; flex-direction: column; gap: 10px; }
-        .fab-menu.active { display: flex; }
-        .fab-item { background: white; padding: 12px 20px; border-radius: 25px; box-shadow: var(--shadow); font-weight: 700; font-size: 0.85rem; white-space: nowrap; cursor: pointer; border: 1px solid var(--border); }
 
         /* Modal Styles */
         .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(4px); z-index: 1000; align-items: center; justify-content: center; padding: 20px; overflow-y: auto; }
@@ -196,9 +186,13 @@
             <h1><span>TikTok</span> Shop Tracker</h1>
             <div class="header-actions">
                 <button class="icon-btn" onclick="openAnalytics()" title="Analytics">📊</button>
-                <button class="icon-btn" onclick="openSettings()" title="Settings">⚙️</button>
+                <button class="icon-btn" onclick="toggleMenu()" title="Menu">⋮</button>
             </div>
         </div>
+        <button class="add-sample-btn" onclick="openModal()">
+            <span style="font-size: 1.2rem;">+</span>
+            <span>Add New Sample</span>
+        </button>
         <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
     </div>
     
@@ -287,14 +281,19 @@
         </div>
     </div>
 
-    <!-- FAB Menu -->
-    <div class="fab-container">
-        <div class="fab-menu" id="fabMenu">
-            <div class="fab-item" onclick="openModal(); toggleFab()">➕ Add Sample</div>
-            <div class="fab-item" onclick="exportCSV(); toggleFab()">📥 Export CSV</div>
-            <div class="fab-item" onclick="clearCompleted(); toggleFab()">🧹 Clear Completed</div>
+    <!-- Menu Modal -->
+    <div id="menuModal" class="modal">
+        <div class="modal-content" style="max-width: 300px;">
+            <div class="modal-header">
+                <h2 class="modal-title">Menu</h2>
+                <button class="modal-close" onclick="closeMenu()">×</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 10px;">
+                <button class="row-btn btn-secondary" onclick="openSettings(); closeMenu()">⚙️ Settings</button>
+                <button class="row-btn btn-secondary" onclick="exportCSV(); closeMenu()">📥 Export CSV</button>
+                <button class="row-btn btn-secondary" onclick="clearCompleted(); closeMenu()">🧹 Clear Completed</button>
+            </div>
         </div>
-        <button class="fab" onclick="toggleFab()">+</button>
     </div>
 
     <!-- Sample Modal -->
@@ -355,7 +354,6 @@
                 </div>
                 
                 <button type="submit" class="row-btn btn-full-width">Save Sample</button>
-                <div id="deleteZone"></div>
             </form>
         </div>
     </div>
@@ -443,13 +441,14 @@
             </div>
             <div style="line-height: 1.6;">
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📋 Getting Started</h3>
-                <p style="margin-bottom: 15px; color: #666;">Tap the <strong>+</strong> button to add a new sample. Fill in the product details, received date, and deadline.</p>
+                <p style="margin-bottom: 15px; color: #666;">Click <strong>Add New Sample</strong> at the top to add a product. Fill in the product details, received date, and deadline.</p>
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">🎯 Quick Actions</h3>
                 <ul style="margin-bottom: 15px; padding-left: 20px; color: #666;">
-                    <li><strong>Swipe Right:</strong> Mark sample as posted ✓</li>
-                    <li><strong>Swipe Left:</strong> Delete sample 🗑️</li>
+                    <li><strong>Edit:</strong> Update sample details</li>
+                    <li><strong>Delete:</strong> Remove a sample (confirmation required)</li>
                     <li><strong>Checkbox:</strong> Select multiple samples for batch actions</li>
+                    <li><strong>Mark Posted:</strong> Mark video as completed</li>
                 </ul>
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">🔍 Filtering & Sorting</h3>
@@ -465,13 +464,13 @@
                 <p style="margin-bottom: 15px; color: #666;">Tap the chart icon in the header to view your completion stats and top brands.</p>
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">💾 Export & Backup</h3>
-                <p style="margin-bottom: 15px; color: #666;">Export your data as CSV from the + menu. You can also import previously exported data from Settings.</p>
+                <p style="margin-bottom: 15px; color: #666;">Export your data as CSV from the menu. You can also import previously exported data from Settings.</p>
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📱 Install as App</h3>
                 <p style="margin-bottom: 15px; color: #666;">On iOS: Tap Share → Add to Home Screen<br>On Android: Tap Menu → Install App</p>
                 
-                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Need More Help?</h3>
-                <p style="color: #666;">Contact support or report issues through your TikTok Shop creator dashboard.</p>
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📧 Need More Help?</h3>
+                <p style="color: #666;">Contact us at <strong style="color: var(--primary);">support@flextechla.com</strong></p>
             </div>
         </div>
     </div>
@@ -609,12 +608,7 @@
             const checklist = s.checklist || { filmed: false, edited: false, posted: false };
             
             return `
-            <div class="sample-card ${isSelected ? 'selecting' : ''}" id="card-${s.id}" 
-                 ontouchstart="handleTouchStart(event, '${s.id}')" 
-                 ontouchmove="handleTouchMove(event, '${s.id}')" 
-                 ontouchend="handleTouchEnd(event, '${s.id}')">
-                <div class="swipe-indicator swipe-left">✓</div>
-                <div class="swipe-indicator swipe-right">🗑</div>
+            <div class="sample-card ${isSelected ? 'selecting' : ''}" id="card-${s.id}">
                 <div class="card-body">
                     <div class="card-header">
                         <div>
@@ -673,8 +667,8 @@
                         
                         <div class="btn-row-3">
                             ${s.link ? `<button class="row-btn btn-secondary" onclick="event.stopPropagation(); openInAppBrowser('${s.link}')">🛍️ Shop</button>` : '<span></span>'}
-                            <button class="row-btn btn-secondary" onclick="event.stopPropagation(); duplicateSample('${s.id}')">📋 Copy</button>
                             <button class="row-btn btn-secondary" onclick="event.stopPropagation(); openModal('${s.id}')">✏️ Edit</button>
+                            <button class="row-btn btn-secondary" style="color: var(--red); border-color: var(--red);" onclick="event.stopPropagation(); confirmDelete('${s.id}')">🗑️ Delete</button>
                         </div>
                     </div>
                 </div>
@@ -884,14 +878,8 @@
                 tempPhotos = s.photos || [];
                 renderTags();
                 renderPhotoGrid();
-                document.getElementById('deleteZone').innerHTML = `
-                    <button type="button" onclick="deleteSample('${id}')" 
-                            style="color:red; margin-top:20px; background:none; border:none; width:100%; font-weight:bold; cursor:pointer;">
-                        Delete Permanently
-                    </button>`;
             } else {
                 document.getElementById('modalTitle').innerText = 'Add Sample';
-                document.getElementById('deleteZone').innerHTML = '';
                 renderTags();
                 renderPhotoGrid();
             }
@@ -940,12 +928,16 @@
         }
 
         function deleteSample(id) {
-            if (confirm("Delete this sample?")) {
-                samples = samples.filter(s => s.id !== id);
-                saveSamples();
-                render();
-                renderCalendar();
-                closeModal();
+            samples = samples.filter(s => s.id !== id);
+            saveSamples();
+            render();
+            renderCalendar();
+            closeModal();
+        }
+
+        function confirmDelete(id) {
+            if (confirm("Delete this sample? This cannot be undone.")) {
+                deleteSample(id);
             }
         }
 
@@ -1249,9 +1241,13 @@
             arrow.innerText = content.classList.contains('active') ? '▲' : '▼';
         }
 
-        // FAB Menu
-        function toggleFab() {
-            document.getElementById('fabMenu').classList.toggle('active');
+        // Menu
+        function toggleMenu() {
+            document.getElementById('menuModal').classList.toggle('active');
+        }
+
+        function closeMenu() {
+            document.getElementById('menuModal').classList.remove('active');
         }
 
         // Browser
@@ -1267,6 +1263,7 @@
     </script>
 </body>
 </html>
+
 
 
 
