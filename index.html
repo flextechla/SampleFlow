@@ -61,8 +61,9 @@
         .batch-btn { padding: 8px 16px; border-radius: 8px; border: none; font-weight: 700; cursor: pointer; font-size: 0.85rem; }
 
         /* Card Styles */
-        .sample-card { background: var(--surface); border-radius: 16px; margin-bottom: 15px; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; }
+        .sample-card { background: var(--surface); border-radius: 16px; margin-bottom: 20px; box-shadow: var(--shadow); border: 1px solid var(--border); position: relative; }
         .sample-card.selecting { border: 2px solid var(--primary); }
+        .sample-card:not(:last-child)::after { content: ''; position: absolute; bottom: -10px; left: 5%; width: 90%; height: 1px; background: linear-gradient(to right, transparent, var(--border), transparent); }
         
         .card-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 8px; }
         .card-checkbox { width: 20px; height: 20px; cursor: pointer; }
@@ -199,15 +200,15 @@
     <div class="container">
         <!-- Stats Dashboard -->
         <div class="stats-grid">
-            <div class="stat-card" onclick="setFilter('overdue')">
+            <div class="stat-card" onclick="setFilter('overdue'); analyticsFilter='overdue';">
                 <div class="stat-number" style="color:var(--red)" id="statOverdue">0</div>
                 <div class="stat-label">Overdue</div>
             </div>
-            <div class="stat-card" onclick="setFilter('urgent')">
+            <div class="stat-card" onclick="setFilter('urgent'); analyticsFilter='urgent';">
                 <div class="stat-number" style="color:var(--yellow)" id="statUrgent">0</div>
                 <div class="stat-label">Due Soon</div>
             </div>
-            <div class="stat-card" onclick="setFilter('good')">
+            <div class="stat-card" onclick="setFilter('good'); analyticsFilter='good';">
                 <div class="stat-number" style="color:var(--green)" id="statGood">0</div>
                 <div class="stat-label">On Track</div>
             </div>
@@ -245,13 +246,13 @@
                 </select>
             </div>
 
-            <!-- Completed Section (Collapsible) -->
-            <div class="collapsible-section" id="completedSection" style="display:none;">
-                <div class="collapsible-header" onclick="toggleCompleted()">
-                    <span>✅ Completed Samples (<span id="completedCount">0</span>)</span>
-                    <span id="completedArrow">▼</span>
+            <!-- Dynamic Filtered Section (Collapsible) -->
+            <div class="collapsible-section" id="filteredSection" style="display:none;">
+                <div class="collapsible-header" onclick="toggleFiltered()">
+                    <span id="filteredTitle">Samples (<span id="filteredCount">0</span>)</span>
+                    <span id="filteredArrow">▼</span>
                 </div>
-                <div class="collapsible-content" id="completedContent"></div>
+                <div class="collapsible-content" id="filteredContent"></div>
             </div>
 
             <div id="sampleGrid"></div>
@@ -470,7 +471,7 @@
                 <p style="margin-bottom: 15px; color: #666;">On iOS: Tap Share → Add to Home Screen<br>On Android: Tap Menu → Install App</p>
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📧 Need More Help?</h3>
-                <p style="color: #666;">Contact us at <strong style="color: var(--primary);">support@flextechla.com</strong></p>
+                <p style="color: #666;">Contact us at <strong style="color: var(--primary);"><a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="4e3d3b3e3e213c3a0e28222b363a2b2d26222f602d2123">[email&#160;protected]</a></strong></p>
             </div>
         </div>
     </div>
@@ -485,7 +486,7 @@
         <iframe id="browserFrame" class="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
     </div>
 
-    <script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         let samples = [];
         let currentFilter = 'all';
         let currentSort = 'dueDate';
@@ -496,6 +497,7 @@
         let settings = { defaultDays: 14, notificationsEnabled: false };
         let tempTags = [];
         let tempPhotos = [];
+        let analyticsFilter = 'all'; // Track which analytics section to show
 
         window.onload = () => {
             try { 
@@ -579,26 +581,77 @@
                 return 0;
             });
 
-            // Handle completed section
-            const completed = samples.filter(s => s.done);
-            const completedSection = document.getElementById('completedSection');
-            const completedContent = document.getElementById('completedContent');
-            document.getElementById('completedCount').innerText = completed.length;
+            // Handle dynamic collapsible section - show samples matching current filter
+            const filteredSection = document.getElementById('filteredSection');
+            const filteredContent = document.getElementById('filteredContent');
+            const filteredTitle = document.getElementById('filteredTitle');
             
-            if (completed.length > 0 && currentFilter !== 'completed') {
-                completedSection.style.display = 'block';
-                completedContent.innerHTML = completed.map(s => renderCard(s)).join('');
+            // Determine which samples to show in collapsible
+            let collapsibleSamples = [];
+            let sectionTitle = '';
+            
+            if (currentFilter === 'all') {
+                // Show completed samples when viewing "All"
+                collapsibleSamples = samples.filter(s => s.done);
+                sectionTitle = '✅ Posted Samples';
+            } else if (currentFilter === 'completed') {
+                // Don't show collapsible when already viewing completed
+                filteredSection.style.display = 'none';
             } else {
-                completedSection.style.display = 'none';
+                // When viewing a specific filter, show those items in collapsible
+                collapsibleSamples = filtered;
+                const filterNames = {
+                    'overdue': '🔥 Overdue Samples',
+                    'urgent': '⚠️ Due Soon Samples',
+                    'good': '✅ On Track Samples'
+                };
+                sectionTitle = filterNames[currentFilter] || 'Samples';
+            }
+            
+            document.getElementById('filteredCount').innerText = collapsibleSamples.length;
+            filteredTitle.innerHTML = `${sectionTitle} (<span id="filteredCount">${collapsibleSamples.length}</span>)`;
+            
+            if (collapsibleSamples.length > 0 && currentFilter !== 'completed') {
+                filteredSection.style.display = 'block';
+                filteredContent.innerHTML = collapsibleSamples.map(s => renderCompactCard(s)).join('');
+            } else {
+                filteredSection.style.display = 'none';
             }
 
-            // Render main grid
-            if (!filtered.length) { 
+            // Render main grid - when viewing a specific filter, show empty state, otherwise show active samples
+            let mainDisplay = [];
+            if (currentFilter === 'all') {
+                mainDisplay = filtered; // Show active samples
+            } else if (currentFilter === 'completed') {
+                mainDisplay = filtered; // Show completed samples
+            } else {
+                // For specific filters (overdue/urgent/good), items are in collapsible
+                mainDisplay = [];
+            }
+
+            if (!mainDisplay.length && currentFilter !== 'all' && currentFilter !== 'completed') {
+                grid.innerHTML = `<div class="empty-state"><h3>Check the section above</h3><p>Tap to expand and view items.</p></div>`;
+            } else if (!mainDisplay.length) { 
                 grid.innerHTML = `<div class="empty-state"><h3>Nothing here</h3><p>Try another filter or search.</p></div>`; 
-                return; 
+            } else {
+                grid.innerHTML = mainDisplay.map(s => renderCard(s)).join('');
             }
+        }
 
-            grid.innerHTML = filtered.map(s => renderCard(s)).join('');
+        // Compact one-line card for collapsible sections
+        function renderCompactCard(s) {
+            const info = getStatusInfo(s);
+            return `
+                <div style="padding: 12px; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="openModal('${s.id}')">
+                    <div style="flex: 1;">
+                        <div style="font-weight: 700; font-size: 0.9rem; color: var(--dark);">${s.product}</div>
+                        <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${s.brand} • ${info.text}</div>
+                    </div>
+                    <div style="padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 700; background: ${info.status === 'overdue' ? '#FFEBEE' : info.status === 'urgent' ? '#FFF8E1' : info.status === 'completed' ? '#E0E0E0' : '#E8F5E9'}; color: ${info.color};">
+                        ${info.status === 'completed' ? '✓' : info.days + 'd'}
+                    </div>
+                </div>
+            `;
         }
 
         function renderCard(s) {
@@ -1058,11 +1111,14 @@
         }
 
         // Analytics
-        function openAnalytics() {
+        function openAnalytics(filter = 'all') {
+            analyticsFilter = filter;
             const total = samples.length;
             const completed = samples.filter(s => s.done).length;
             const active = total - completed;
             const overdue = samples.filter(s => !s.done && getStatusInfo(s).status === 'overdue').length;
+            const urgent = samples.filter(s => !s.done && getStatusInfo(s).status === 'urgent').length;
+            const good = samples.filter(s => !s.done && getStatusInfo(s).status === 'good').length;
             
             const avgDays = samples.filter(s => s.done).reduce((sum, s) => {
                 const received = new Date(s.date + 'T00:00:00');
@@ -1073,30 +1129,50 @@
             
             const completionRate = total > 0 ? Math.round((completed / total) * 100) : 0;
             
-            const brandStats = {};
-            samples.forEach(s => {
-                if (!brandStats[s.brand]) brandStats[s.brand] = { total: 0, completed: 0 };
-                brandStats[s.brand].total++;
-                if (s.done) brandStats[s.brand].completed++;
-            });
+            // Filter samples based on analyticsFilter
+            let displaySamples = [];
+            let listTitle = 'All Samples';
             
-            const topBrands = Object.entries(brandStats)
-                .sort((a, b) => b[1].total - a[1].total)
-                .slice(0, 5);
+            switch(analyticsFilter) {
+                case 'all':
+                    displaySamples = samples;
+                    listTitle = 'All Samples';
+                    break;
+                case 'overdue':
+                    displaySamples = samples.filter(s => !s.done && getStatusInfo(s).status === 'overdue');
+                    listTitle = '🔥 Overdue Samples';
+                    break;
+                case 'urgent':
+                    displaySamples = samples.filter(s => !s.done && getStatusInfo(s).status === 'urgent');
+                    listTitle = '⚠️ Due Soon Samples';
+                    break;
+                case 'good':
+                    displaySamples = samples.filter(s => !s.done && getStatusInfo(s).status === 'good');
+                    listTitle = '✅ On Track Samples';
+                    break;
+                case 'completed':
+                    displaySamples = samples.filter(s => s.done);
+                    listTitle = '🏁 Posted Samples';
+                    break;
+                case 'active':
+                    displaySamples = samples.filter(s => !s.done);
+                    listTitle = '⚡ Active Samples';
+                    break;
+            }
             
             document.getElementById('analyticsContent').innerHTML = `
                 <div class="analytics-section">
                     <div class="analytics-title">Overview</div>
                     <div class="analytics-grid">
-                        <div class="analytics-card">
+                        <div class="analytics-card" onclick="openAnalytics('all')" style="cursor: pointer;">
                             <div class="analytics-number">${total}</div>
                             <div class="analytics-label">Total Samples</div>
                         </div>
-                        <div class="analytics-card">
+                        <div class="analytics-card" onclick="openAnalytics('completed')" style="cursor: pointer;">
                             <div class="analytics-number">${completed}</div>
                             <div class="analytics-label">Completed</div>
                         </div>
-                        <div class="analytics-card">
+                        <div class="analytics-card" onclick="openAnalytics('active')" style="cursor: pointer;">
                             <div class="analytics-number">${active}</div>
                             <div class="analytics-label">Active</div>
                         </div>
@@ -1108,11 +1184,19 @@
                 </div>
                 
                 <div class="analytics-section">
-                    <div class="analytics-title">Performance</div>
+                    <div class="analytics-title">Status Breakdown</div>
                     <div class="analytics-grid">
-                        <div class="analytics-card">
+                        <div class="analytics-card" onclick="openAnalytics('overdue')" style="cursor: pointer;">
                             <div class="analytics-number" style="color: var(--red)">${overdue}</div>
                             <div class="analytics-label">Overdue</div>
+                        </div>
+                        <div class="analytics-card" onclick="openAnalytics('urgent')" style="cursor: pointer;">
+                            <div class="analytics-number" style="color: var(--yellow)">${urgent}</div>
+                            <div class="analytics-label">Due Soon</div>
+                        </div>
+                        <div class="analytics-card" onclick="openAnalytics('good')" style="cursor: pointer;">
+                            <div class="analytics-number" style="color: var(--green)">${good}</div>
+                            <div class="analytics-label">On Track</div>
                         </div>
                         <div class="analytics-card">
                             <div class="analytics-number" style="color: var(--green)">${Math.round(avgDays)}</div>
@@ -1122,13 +1206,20 @@
                 </div>
                 
                 <div class="analytics-section">
-                    <div class="analytics-title">Top Brands</div>
-                    ${topBrands.map(([brand, stats]) => `
-                        <div style="display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border);">
-                            <span style="font-weight: 700;">${brand}</span>
-                            <span>${stats.completed}/${stats.total} completed</span>
-                        </div>
-                    `).join('')}
+                    <div class="analytics-title">${listTitle} (${displaySamples.length})</div>
+                    ${displaySamples.length > 0 ? displaySamples.map(s => {
+                        const info = getStatusInfo(s);
+                        return `
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border); cursor: pointer;" onclick="closeAnalytics(); openModal('${s.id}')">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 700; font-size: 0.9rem;">${s.product}</div>
+                                <div style="font-size: 0.75rem; color: #888; margin-top: 2px;">${s.brand}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 0.75rem; font-weight: 700; color: ${info.color};">${info.text}</div>
+                            </div>
+                        </div>`;
+                    }).join('') : '<div style="text-align: center; padding: 20px; color: #999;">No samples in this category</div>'}
                 </div>
             `;
             
@@ -1233,10 +1324,10 @@
             }
         }
 
-        // Toggle Completed Section
-        function toggleCompleted() {
-            const content = document.getElementById('completedContent');
-            const arrow = document.getElementById('completedArrow');
+        // Toggle Filtered Section
+        function toggleFiltered() {
+            const content = document.getElementById('filteredContent');
+            const arrow = document.getElementById('filteredArrow');
             content.classList.toggle('active');
             arrow.innerText = content.classList.contains('active') ? '▲' : '▼';
         }
@@ -1253,16 +1344,7 @@
         // Browser
         function openInAppBrowser(link) {
             document.getElementById('browserFrame').src = link;
-            document.getElementById('browserOverlay').classList.add('active');
-        }
-
-        function closeBrowser() {
-            document.getElementById('browserOverlay').classList.remove('active');
-            document.getElementById('browserFrame').src = '';
-        }
-    </script>
-</body>
-</html>
+            document.getElementById('browserOverlay').classList.add('active
 
 
 
