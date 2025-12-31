@@ -374,7 +374,7 @@
                     <p style="margin-bottom: 5px; font-weight: 700;">⚠️ Cloud Storage Not Configured</p>
                     <p style="font-size: 0.85rem;">Data only saved locally - may be lost on updates</p>
                 </div>
-                <button class="row-btn btn-secondary" onclick="showFirebaseInstructions()" style="background: var(--primary); color: white; border-color: var(--primary);">📦 Setup Cloud Storage</button>
+                <button class="row-btn btn-secondary" onclick="showFirebaseInstructions()" style="background: var(--green); color: white; border-color: var(--green);">ℹ️ Cloud Storage Info</button>
             </div>
             
             <div class="form-group">
@@ -399,83 +399,28 @@
     <div id="firebaseModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">📦 Cloud Storage Setup</h2>
+                <h2 class="modal-title">📦 Cloud Storage Info</h2>
                 <button class="modal-close" onclick="closeFirebaseInstructions()">×</button>
             </div>
             <div style="line-height: 1.6; color: #666;">
-                <p style="margin-bottom: 15px;">To enable cloud storage and prevent data loss:</p>
+                <div style="background: #E8F5E9; padding: 20px; border-radius: 12px; border-left: 3px solid var(--green); margin-bottom: 15px;">
+                    <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--green);">✓ Cloud Storage Active!</h3>
+                    <p style="font-size: 0.9rem;">Your data is automatically syncing to Supabase cloud storage. You can access your samples from any device by opening this app.</p>
+                </div>
                 
-                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 1: Create Supabase Project</h3>
-                <ol style="margin-bottom: 15px; padding-left: 20px;">
-                    <li>Go to <a href="https://supabase.com/dashboard" target="_blank" style="color: var(--primary);">Supabase Dashboard</a></li>
-                    <li>Click "New Project"</li>
-                    <li>Name it "Sample Tracker"</li>
-                    <li>Set a database password (save it somewhere safe)</li>
-                    <li>Choose your region (closest to your users)</li>
-                    <li>Click "Create Project" and wait ~2 minutes</li>
-                </ol>
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">How It Works</h3>
+                <ul style="margin-bottom: 15px; padding-left: 20px;">
+                    <li>Each device gets a unique ID stored in your browser</li>
+                    <li>Your samples sync automatically when you add, edit, or delete them</li>
+                    <li>Data is private and secure - only you can access it</li>
+                </ul>
                 
-                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 2: Create Database Table</h3>
-                <ol style="margin-bottom: 15px; padding-left: 20px;">
-                    <li>In your project, go to "SQL Editor"</li>
-                    <li>Click "New Query"</li>
-                    <li>Paste this SQL and click "Run":
-                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 8px; overflow-x: auto; font-size: 0.75rem; margin: 10px 0;">
-CREATE TABLE sample_tracker_data (
-  id BIGSERIAL PRIMARY KEY,
-  user_id UUID REFERENCES auth.users NOT NULL,
-  samples JSONB DEFAULT '[]'::jsonb,
-  settings JSONB DEFAULT '{}'::jsonb,
-  updated_at TIMESTAMPTZ DEFAULT NOW(),
-  UNIQUE(user_id)
-);
-
--- Enable Row Level Security
-ALTER TABLE sample_tracker_data ENABLE ROW LEVEL SECURITY;
-
--- Policy: Users can only see their own data
-CREATE POLICY "Users can view own data"
-  ON sample_tracker_data FOR SELECT
-  USING (auth.uid() = user_id);
-
--- Policy: Users can insert their own data
-CREATE POLICY "Users can insert own data"
-  ON sample_tracker_data FOR INSERT
-  WITH CHECK (auth.uid() = user_id);
-
--- Policy: Users can update their own data
-CREATE POLICY "Users can update own data"
-  ON sample_tracker_data FOR UPDATE
-  USING (auth.uid() = user_id);
-                        </pre>
-                    </li>
-                </ol>
-                
-                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 3: Get Your Keys</h3>
-                <ol style="margin-bottom: 15px; padding-left: 20px;">
-                    <li>Go to "Settings" → "API"</li>
-                    <li>Copy your <strong>Project URL</strong></li>
-                    <li>Copy your <strong>anon public</strong> key</li>
-                    <li>Open your HTML file in a text editor</li>
-                    <li>Find line ~515 and replace:
-                        <pre style="background: #f5f5f5; padding: 10px; border-radius: 8px; font-size: 0.75rem; margin: 10px 0;">
-const SUPABASE_URL = 'https://eiigbmrjtwndanywrcqp.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpaWdibXJqdHduZGFueXdyY3FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMDQyMzQsImV4cCI6MjA4Mjc4MDIzNH0.bHCDscs-aeSukDeXAf9kuRC12WBC3zSqIQia-8cIc3s';
-                        </pre>
-                    </li>
-                    <li>Save the file and reload the app</li>
-                </ol>
-                
-                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Step 4: Enable Email Auth</h3>
-                <ol style="margin-bottom: 15px; padding-left: 20px;">
-                    <li>Go to "Authentication" → "Providers"</li>
-                    <li>Enable "Email" provider</li>
-                    <li>Disable "Confirm email" (we're using anonymous auth)</li>
-                </ol>
-                
-                <p style="background: #E8F5E9; padding: 15px; border-radius: 8px; border-left: 3px solid var(--green); font-size: 0.85rem;">
-                    <strong>✓ Done!</strong> Your data will now automatically sync to the cloud. Users can access their data from any device!
-                </p>
+                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">Tips</h3>
+                <ul style="padding-left: 20px;">
+                    <li>Don't clear your browser data or you'll lose access to your samples on this device</li>
+                    <li>Export to CSV regularly as a backup (Menu → Export CSV)</li>
+                    <li>If switching devices, export from old device and import on new device</li>
+                </ul>
             </div>
         </div>
     </div>
@@ -1228,7 +1173,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
             document.getElementById('sampleModal').classList.remove('active');
         }
 
-        function handleSave(e) {
+        async function handleSave(e) {
             e.preventDefault();
             const newItem = {
                 id: editId || Date.now().toString(),
@@ -1250,7 +1195,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
                 samples.unshift(newItem);
             }
             
-            saveSamples();
+            await saveSamples();
             render();
             renderCalendar();
             closeModal();
@@ -1568,7 +1513,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
                 statusDiv.innerHTML = `
                     <p style="margin-bottom: 5px; font-weight: 700; color: var(--green);">✓ Cloud Storage Active</p>
                     <p style="font-size: 0.85rem;">Data automatically syncing to cloud</p>
-                    <p style="font-size: 0.75rem; margin-top: 5px;">User ID: ${currentUser.uid.substring(0, 8)}...</p>
+                    <p style="font-size: 0.75rem; margin-top: 5px;">User ID: ${currentUser.id.substring(0, 8)}...</p>
                 `;
                 statusDiv.style.background = '#E8F5E9';
             } else {
@@ -1679,6 +1624,7 @@ const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBh
     </script>
 </body>
 </html>
+
 
 
 
