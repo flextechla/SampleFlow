@@ -592,6 +592,8 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
     </div>
 
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+        console.log('Script started loading...');
+        
         let samples = [];
         let currentFilter = 'all';
         let currentSort = 'dueDate';
@@ -604,6 +606,8 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         let tempPhotos = [];
         let analyticsFilter = 'all';
         
+        console.log('Variables initialized...');
+        
         // Supabase Configuration - REPLACE WITH YOUR SUPABASE PROJECT DETAILS
         const SUPABASE_URL = 'YOUR_SUPABASE_URL'; // e.g., https://xxxxx.supabase.co
         const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY'; // Your public anon key
@@ -615,6 +619,13 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
         // Initialize Supabase
         async function initSupabase() {
             try {
+                // Check if Supabase SDK is loaded
+                if (typeof window.supabase === 'undefined') {
+                    console.log('Supabase SDK not loaded - using localStorage only');
+                    useCloud = false;
+                    return;
+                }
+                
                 // Check if config has been updated from defaults
                 if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
                     supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
@@ -1212,6 +1223,7 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         // Modal Functions
         function openModal(id = null) {
+            console.log('openModal called with id:', id);
             editId = id;
             tempTags = [];
             tempPhotos = [];
@@ -1677,6 +1689,7 @@ const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
 
         // Menu
         function toggleMenu() {
+            console.log('toggleMenu called');
             document.getElementById('menuModal').classList.toggle('active');
         }
 
