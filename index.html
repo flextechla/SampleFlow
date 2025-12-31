@@ -1992,7 +1992,13 @@
                 samples = []; 
             }
             
-            await initSupabase();
+            try {
+                await initSupabase();
+            } catch (e) {
+                console.error('Failed to initialize:', e);
+                // Failsafe: Always show landing page if everything else fails
+                showLanding();
+            }
         };
 
         // ==================== STATUS INFO ====================
