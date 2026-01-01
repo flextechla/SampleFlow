@@ -1953,7 +1953,8 @@
         function setFilter(filter) {
             currentFilter = filter;
             document.querySelectorAll('.filter-tab').forEach(tab => tab.classList.remove('active'));
-            event.target.classList.add('active');
+            const clickedTab = window.event ? window.event.target : null;
+            if (clickedTab) clickedTab.classList.add('active');
             render();
         }
 
@@ -2092,7 +2093,8 @@
         function switchTab(tab) {
             currentTab = tab;
             document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
-            event.target.closest('.nav-item').classList.add('active');
+            const clickedItem = window.event ? window.event.currentTarget : null;
+            if (clickedItem) clickedItem.classList.add('active');
             
             if (tab === 'samples') {
                 document.getElementById('samplesContainer').style.display = 'block';
