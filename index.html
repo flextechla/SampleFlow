@@ -38,7 +38,6 @@
     
     <title>Sample Tracker Pro</title>
     
-    <!-- Supabase SDK -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     
     <style>
@@ -959,7 +958,7 @@
         .collapsible-content { 
             max-height: 0; 
             overflow: hidden; 
-            transition: max-height 0.3s; 
+            transition: max-height(0.3s); 
         }
         
         .collapsible-content.active { 
@@ -1014,14 +1013,12 @@
     </style>
 </head>
 <body>
-    <!-- Landing Page -->
     <div id="landingPage">
         <div class="landing-content">
             <div class="app-icon">
                 <svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
                     <rect x="10" y="15" width="80" height="75" rx="5" fill="#FE2C55" opacity="0.1"/>
                     <rect x="15" y="5" width="70" height="10" rx="3" fill="#FE2C55"/>
-                    <!-- Checkboxes -->
                     <rect x="20" y="25" width="10" height="10" rx="2" fill="#00C853"/>
                     <path d="M 22 30 L 25 33 L 28 27" stroke="white" stroke-width="2" fill="none"/>
                     <rect x="35" y="26" width="45" height="3" rx="1.5" fill="#E0E0E0"/>
@@ -1065,12 +1062,11 @@
             
             <div class="landing-links">
                 <a href="#" class="landing-link" onclick="showPrivacyFromLanding(); return false;">Privacy Policy</a>
-                <a href="#" class="landing-link" onclick="showHelpFromLanding(); return false;">Help & Support</a>
+                <a href="#" class="landing-link" onclick="showHelpFromLanding(); return false;">Help</a>
             </div>
         </div>
     </div>
 
-    <!-- App Container -->
     <div id="appContainer">
         <div class="header">
             <div class="header-top">
@@ -1100,7 +1096,6 @@
         </div>
         
         <div class="container">
-            <!-- List View -->
             <div id="listView">
                 <div class="control-section">
                     <div class="section-title">Filter Samples</div>
@@ -1126,7 +1121,6 @@
                 <div id="sampleGrid"></div>
             </div>
 
-            <!-- Calendar View -->
             <div id="calendarView" style="display:none;">
                 <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
                     <button class="icon-btn" onclick="changeMonth(-1)">◀</button>
@@ -1139,7 +1133,6 @@
         </div>
     </div>
 
-    <!-- Batch Actions Bar -->
     <div class="batch-bar" id="batchBar">
         <div>
             <strong><span id="selectedCount">0</span> selected</strong>
@@ -1151,7 +1144,6 @@
         </div>
     </div>
 
-    <!-- Menu Modal -->
     <div id="menuModal" class="modal">
         <div class="modal-content" style="max-width: 300px;">
             <div class="modal-header">
@@ -1161,8 +1153,9 @@
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button class="row-btn btn-secondary" onclick="goToLanding(); closeMenu()">🏠 Home</button>
                 <button class="row-btn btn-secondary" onclick="openSettings(); closeMenu()">⚙️ Settings</button>
+                <button class="row-btn btn-secondary" id="installBtnMenu" onclick="installApp(); closeMenu()">📲 Install App</button>
                 <button class="row-btn btn-secondary" onclick="openSupport(); closeMenu()">💬 Contact Support</button>
-                <button class="row-btn btn-secondary" onclick="openHelp(); closeMenu()">❓ Help & Guide</button>
+                <button class="row-btn btn-secondary" onclick="openHelp(); closeMenu()">❓ Help</button>
                 <button class="row-btn btn-secondary" onclick="openPrivacy(); closeMenu()">🔒 Privacy Policy</button>
                 <button class="row-btn btn-secondary" onclick="exportCSV(); closeMenu()">📥 Export Data</button>
                 <button class="row-btn btn-secondary" onclick="importData(); closeMenu()">📁 Import Data</button>
@@ -1172,7 +1165,6 @@
         </div>
     </div>
 
-    <!-- Sample Modal -->
     <div id="sampleModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1247,7 +1239,6 @@
         </div>
     </div>
 
-    <!-- Analytics Modal -->
     <div id="analyticsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1258,7 +1249,6 @@
         </div>
     </div>
 
-    <!-- Settings Modal -->
     <div id="settingsModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1278,7 +1268,7 @@
             
             <div class="form-group">
                 <button class="row-btn btn-secondary" onclick="openPrivacy(); closeSettings()" style="margin-bottom: 10px;">🔒 Privacy Policy</button>
-                <button class="row-btn btn-secondary" onclick="openHelp(); closeSettings()">❓ Help & Support</button>
+                <button class="row-btn btn-secondary" onclick="openHelp(); closeSettings()">❓ Help</button>
             </div>
             
             <div class="form-group">
@@ -1317,7 +1307,6 @@
         </div>
     </div>
 
-    <!-- Cloud Info Modal -->
     <div id="cloudInfoModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1357,7 +1346,6 @@
         </div>
     </div>
 
-    <!-- Privacy Modal -->
     <div id="privacyModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1389,7 +1377,6 @@
         </div>
     </div>
 
-    <!-- Support Modal -->
     <div id="supportModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
@@ -1422,14 +1409,20 @@
         </div>
     </div>
 
-    <!-- Help Modal -->
     <div id="helpModal" class="modal">
         <div class="modal-content">
             <div class="modal-header">
-                <h2 class="modal-title">❓ Help & Support</h2>
+                <h2 class="modal-title">❓ Help</h2>
                 <button class="modal-close" onclick="closeHelp()">×</button>
             </div>
             <div style="line-height: 1.6;">
+                <div style="background: #FFF8E1; padding: 15px; border-radius: 12px; border-left: 4px solid var(--yellow); margin-bottom: 20px;">
+                    <h3 style="font-weight: 800; margin-bottom: 10px; color: var(--dark);">📲 Install as an App</h3>
+                    <p style="font-size: 0.95rem; margin-bottom: 10px;">For the best experience, add Sample Tracker to your home screen:</p>
+                    <p style="margin-bottom: 10px; color: #444;"><strong>iOS (iPhone/iPad):</strong> Tap the <span style="font-size: 1.2rem;">⎋</span> (Share) button in Safari, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
+                    <p style="color: #444;"><strong>Android:</strong> Tap the <span style="font-size: 1.2rem;">⋮</span> menu in Chrome and select <strong>"Install App"</strong> or <strong>"Add to Home Screen"</strong>.</p>
+                </div>
+
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📋 Getting Started</h3>
                 <p style="margin-bottom: 15px; color: #666;">Click <strong>Add New Sample</strong> at the top to add a product. Fill in the product details, received date, and deadline.</p>
                 
@@ -1455,14 +1448,10 @@
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">💾 Export & Backup</h3>
                 <p style="margin-bottom: 15px; color: #666;">Export your data as CSV from the menu.</p>
-                
-                <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📱 Install as App</h3>
-                <p style="margin-bottom: 15px; color: #666;">On iOS: Tap Share → Add to Home Screen<br>On Android: Tap Menu → Install App</p>
             </div>
         </div>
     </div>
 
-    <!-- Browser Overlay -->
     <div id="browserOverlay" class="browser-overlay">
         <div class="browser-header">
             <button class="browser-close" onclick="closeBrowser()">×</button>
@@ -1472,7 +1461,6 @@
         <iframe id="browserFrame" class="browser-frame" sandbox="allow-same-origin allow-scripts allow-popups allow-forms"></iframe>
     </div>
 
-    <!-- Photo Viewer Modal -->
     <div id="photoViewerModal" class="modal" onclick="closePhotoViewer()">
         <div class="modal-content" style="max-width: 90%; max-height: 90vh; padding: 0; background: transparent; box-shadow: none;" onclick="event.stopPropagation()">
             <button class="browser-close" onclick="closePhotoViewer()" style="position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.7); color: white; border-radius: 50%; width: 50px; height: 50px; font-size: 2rem; z-index: 10;">×</button>
@@ -1773,6 +1761,9 @@
                 deferredPrompt.prompt();
                 await deferredPrompt.userChoice;
                 deferredPrompt = null;
+            } else {
+                // If deferredPrompt is null, show the instructions in the help modal
+                openHelp();
             }
             const modal = document.getElementById('installModal');
             if (modal) modal.remove();
