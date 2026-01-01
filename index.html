@@ -75,9 +75,8 @@
             min-height: 100vh;
             background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%);
             display: none;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
+            flex-direction: column;
+            padding: 20px 20px 140px 20px; /* Added padding for sticky footer */
         }
         
         #landingPage.active {
@@ -89,8 +88,25 @@
             width: 100%;
             text-align: center;
             color: white;
+            margin: auto; /* Center content vertically */
         }
         
+        /* Sticky Footer for Landing Page */
+        .landing-sticky-bar {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            padding: 20px;
+            border-radius: 30px 30px 0 0;
+            box-shadow: 0 -10px 30px rgba(0,0,0,0.2);
+            z-index: 100;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
         .app-icon {
             width: 120px;
             height: 120px;
@@ -157,7 +173,7 @@
             font-weight: 700;
             cursor: pointer;
             transition: transform 0.2s;
-            margin-bottom: 15px;
+            margin-bottom: 5px; /* Reduced margin since we are in flex gap */
         }
         
         .landing-btn:active {
@@ -165,18 +181,18 @@
         }
         
         .btn-primary {
-            background: white;
-            color: var(--primary);
+            background: var(--primary);
+            color: white;
         }
         
         .btn-secondary {
-            background: rgba(255,255,255,0.2);
-            color: white;
-            border: 2px solid white;
+            background: #F0F0F0;
+            color: var(--dark);
+            border: 1px solid var(--border);
         }
         
         .landing-links {
-            margin-top: 30px;
+            margin-top: 10px;
             display: flex;
             justify-content: center;
             gap: 20px;
@@ -184,10 +200,10 @@
         }
         
         .landing-link {
-            color: white;
+            color: #666;
             text-decoration: none;
             opacity: 0.9;
-            border-bottom: 1px solid rgba(255,255,255,0.3);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
         }
         
         /* App Container */
@@ -958,7 +974,7 @@
         .collapsible-content { 
             max-height: 0; 
             overflow: hidden; 
-            transition: max-height(0.3s); 
+            transition: max-height 0.3s; 
         }
         
         .collapsible-content.active { 
@@ -1057,6 +1073,9 @@
                 </div>
             </div>
             
+            </div>
+
+        <div class="landing-sticky-bar">
             <button class="landing-btn btn-primary" onclick="showAuth('signup')">Create Free Account</button>
             <button class="landing-btn btn-secondary" onclick="showAuth('signin')">Sign In</button>
             
@@ -1153,7 +1172,7 @@
             <div style="display: flex; flex-direction: column; gap: 10px;">
                 <button class="row-btn btn-secondary" onclick="goToLanding(); closeMenu()">🏠 Home</button>
                 <button class="row-btn btn-secondary" onclick="openSettings(); closeMenu()">⚙️ Settings</button>
-                <button class="row-btn btn-secondary" id="installBtnMenu" onclick="installApp(); closeMenu()">📲 Install App</button>
+                <button class="row-btn btn-secondary" id="installBtnMenu" onclick="openInstall(); closeMenu()">📲 Install App</button>
                 <button class="row-btn btn-secondary" onclick="openSupport(); closeMenu()">💬 Contact Support</button>
                 <button class="row-btn btn-secondary" onclick="openHelp(); closeMenu()">❓ Help</button>
                 <button class="row-btn btn-secondary" onclick="openPrivacy(); closeMenu()">🔒 Privacy Policy</button>
@@ -1416,13 +1435,6 @@
                 <button class="modal-close" onclick="closeHelp()">×</button>
             </div>
             <div style="line-height: 1.6;">
-                <div style="background: #FFF8E1; padding: 15px; border-radius: 12px; border-left: 4px solid var(--yellow); margin-bottom: 20px;">
-                    <h3 style="font-weight: 800; margin-bottom: 10px; color: var(--dark);">📲 Install as an App</h3>
-                    <p style="font-size: 0.95rem; margin-bottom: 10px;">For the best experience, add Sample Tracker to your home screen:</p>
-                    <p style="margin-bottom: 10px; color: #444;"><strong>iOS (iPhone/iPad):</strong> Tap the <span style="font-size: 1.2rem;">⎋</span> (Share) button in Safari, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
-                    <p style="color: #444;"><strong>Android:</strong> Tap the <span style="font-size: 1.2rem;">⋮</span> menu in Chrome and select <strong>"Install App"</strong> or <strong>"Add to Home Screen"</strong>.</p>
-                </div>
-
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">📋 Getting Started</h3>
                 <p style="margin-bottom: 15px; color: #666;">Click <strong>Add New Sample</strong> at the top to add a product. Fill in the product details, received date, and deadline.</p>
                 
@@ -1448,6 +1460,22 @@
                 
                 <h3 style="font-weight: 700; margin-bottom: 10px; color: var(--dark);">💾 Export & Backup</h3>
                 <p style="margin-bottom: 15px; color: #666;">Export your data as CSV from the menu.</p>
+            </div>
+        </div>
+    </div>
+
+    <div id="installModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📲 Install as an App</h2>
+                <button class="modal-close" onclick="closeInstall()">×</button>
+            </div>
+            <div style="line-height: 1.6;">
+                <div style="background: #FFF8E1; padding: 15px; border-radius: 12px; border-left: 4px solid var(--yellow); margin-bottom: 20px;">
+                    <p style="font-size: 0.95rem; margin-bottom: 10px;">For the best experience, add Sample Tracker to your home screen:</p>
+                    <p style="margin-bottom: 10px; color: #444;"><strong>iOS (iPhone/iPad):</strong> Tap the <span style="font-size: 1.2rem;">⎋</span> (Share) button in Safari, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
+                    <p style="color: #444;"><strong>Android:</strong> Tap the <span style="font-size: 1.2rem;">⋮</span> menu in Chrome and select <strong>"Install App"</strong> or <strong>"Add to Home Screen"</strong>.</p>
+                </div>
             </div>
         </div>
     </div>
@@ -1559,6 +1587,12 @@
                             <label class="form-label">Password</label>
                             <input type="password" id="authPassword" class="form-input" placeholder="Min 6 characters" required>
                         </div>
+                        ${mode === 'signup' ? `
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <input type="password" id="authConfirm" class="form-input" placeholder="Confirm your password" required>
+                        </div>
+                        ` : ''}
                         <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
                             <input type="checkbox" id="rememberMe" checked style="width: 18px; height: 18px; cursor: pointer;">
                             <label for="rememberMe" style="margin: 0; cursor: pointer; font-size: 0.9rem;">Keep me logged in</label>
@@ -1592,6 +1626,15 @@
                 errorDiv.textContent = 'Password must be at least 6 characters';
                 errorDiv.style.display = 'block';
                 return;
+            }
+
+            if (mode === 'signup') {
+                const confirmPassword = document.getElementById('authConfirm').value;
+                if (password !== confirmPassword) {
+                    errorDiv.textContent = 'Passwords do not match';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
             }
             
             try {
@@ -1762,8 +1805,7 @@
                 await deferredPrompt.userChoice;
                 deferredPrompt = null;
             } else {
-                // If deferredPrompt is null, show the instructions in the help modal
-                openHelp();
+                openInstall(); // Opens the instruction modal if prompt not available
             }
             const modal = document.getElementById('installModal');
             if (modal) modal.remove();
@@ -2518,6 +2560,14 @@
 
         function closeHelp() {
             document.getElementById('helpModal').classList.remove('active');
+        }
+
+        function openInstall() {
+            document.getElementById('installModal').classList.add('active');
+        }
+
+        function closeInstall() {
+            document.getElementById('installModal').classList.remove('active');
         }
 
         function openSupport() {
