@@ -954,6 +954,10 @@
                 <button class="filter-btn" onclick="setSort('brand')">🏷️ Brand Name</button>
                 <button class="filter-btn" onclick="setSort('received')">📦 Received Date</button>
             </div>
+            
+            <div id="filterHeading" style="position: sticky; top: 0; z-index: 50; background: var(--bg); padding: 12px 15px; margin: 0 -15px; font-weight: 700; font-size: 1.1rem; color: var(--text-main); border-bottom: 2px solid var(--border); display: none;">
+                📦 All Samples
+            </div>
         </div>
         
         <div class="container">
@@ -1873,6 +1877,19 @@
             currentFilter = f;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('f-' + f).classList.add('active');
+            
+            // Update filter heading
+            const headings = {
+                'all': '📦 All Samples',
+                'overdue': '🔥 Overdue Samples',
+                'urgent': '⚠️ Due Soon',
+                'good': '✅ On Track',
+                'completed': '🏁 Posted Samples'
+            };
+            const heading = document.getElementById('filterHeading');
+            heading.textContent = headings[f];
+            heading.style.display = 'block';
+            
             document.getElementById('filterDropdown').style.display = 'none';
             document.getElementById('filterToggleBtn').classList.remove('active');
             render();
