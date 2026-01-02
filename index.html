@@ -1,3 +1,8 @@
+Almost there. When you are signed in, you should be able to go back to your work area without signing in again. Maybe when you close the app, you will have to sign in. On the sample cards there is a box in the top right corner and when that is checked, it brings up 2 buttons below, one for mark done which is checked and green and one for delete and cancel. If I hit mark done, it seems to actually delete it. It probably shouldn't even have a box for that or it should just say delete next to the box and confirm before you actually delete. You could put a done field separately if you think taht would be good, but when they check off posted, that should be the same result and should go under a done the Posted tab for filtering purposes. I'm not sure if taptic feedback is working on Android anyway, but I'm not certain. Finally, should we should have an option for forgot password and an option to delete account.
+
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -445,11 +450,9 @@
             margin-bottom: 8px; 
         }
         
-        .card-checkbox { 
-            width: 20px; 
-            height: 20px; 
-            cursor: pointer; 
-        }
+        .delete-icon-btn { background: none; border: none; font-size: 1.3rem; cursor: pointer; padding: 4px; opacity: 0.6; transition: opacity 0.2s, transform 0.2s; }
+        .delete-icon-btn:hover { opacity: 1; }
+        .delete-icon-btn:active { transform: scale(0.9); }
         
         .card-body { 
             padding: 16px; 
@@ -1894,7 +1897,7 @@
                                 <div class="brand-name">${s.brand}</div>
                                 <div class="product-name">${s.product}</div>
                             </div>
-                            <input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection('${s.id}')">
+                            <button class="delete-icon-btn" onclick="deleteSample('${s.id}')" title="Delete">🗑️</button>
                         </div>
                         
                         <div class="days-badge ${info.status}">${info.text}</div>
@@ -1936,10 +1939,6 @@
                         </div>
                         
                         <div class="action-container">
-                            ${s.done ? 
-                                '<button class="row-btn btn-completed">✓ Posted</button>' :
-                                '<button class="row-btn btn-full-width" onclick="markDone(\''+s.id+'\')">✓ Mark as Posted</button>'
-                            }
                             ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
                             <div class="btn-row-2">
                                 <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
@@ -1973,7 +1972,9 @@
             triggerHaptic();
             samples = samples.map(s => {
                 if (s.id === id) {
-                    return {...s, checklist: {...s.checklist, [field]: !s.checklist[field]}};
+                    const newChecklist = {...s.checklist, [field]: !s.checklist[field]};
+                    const isDone = field === 'posted' ? newChecklist.posted : s.done;
+                    return {...s, checklist: newChecklist, done: isDone};
                 }
                 return s;
             });
