@@ -349,6 +349,38 @@
             border-color: var(--primary); 
         }
         
+        .dropdown-btn {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 12px 15px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            color: var(--text-main);
+            transition: all 0.2s;
+        }
+        
+        .dropdown-btn:active {
+            transform: scale(0.98);
+        }
+        
+        .dropdown-panel {
+            background: var(--surface);
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            padding: 12px;
+            margin-top: 8px;
+            animation: slideDown 0.2s ease;
+        }
+        
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
         .control-section { 
             background: var(--surface); 
             border-radius: 12px; 
@@ -534,23 +566,79 @@
         [data-theme="dark"] .notes-section { background: rgba(255, 255, 255, 0.05); color: #ddd; border-left-color: var(--yellow); }
         
         .checklist { 
-            background: var(--bg); 
-            padding: 12px; 
-            border-radius: 10px; 
-            margin-bottom: 10px; 
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            margin-bottom: 12px;
         }
         
-        .checklist-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 8px; 
-            margin-bottom: 6px; 
-            font-size: 0.85rem; 
-            color: var(--text-main);
+        .progress-toggle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 8px;
+            border: 2px solid var(--border);
+            border-radius: 12px;
+            background: var(--surface);
+            cursor: pointer;
+            transition: all 0.25s ease;
+            position: relative;
         }
         
-        .checklist-item:last-child { margin-bottom: 0; }
-        .checklist-checkbox { width: 18px; height: 18px; cursor: pointer; }
+        .progress-toggle:active {
+            transform: scale(0.96);
+        }
+        
+        .progress-toggle.active {
+            background: linear-gradient(135deg, #00C853 0%, #00E676 100%);
+            border-color: #00C853;
+            box-shadow: 0 4px 12px rgba(0, 200, 83, 0.3);
+        }
+        
+        .toggle-icon {
+            font-size: 1.3rem;
+            transition: transform 0.25s ease;
+        }
+        
+        .progress-toggle.active .toggle-icon {
+            transform: scale(1.1);
+        }
+        
+        .toggle-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            color: var(--text-secondary);
+            transition: color 0.25s ease;
+        }
+        
+        .progress-toggle.active .toggle-label {
+            color: white;
+        }
+        
+        .toggle-check {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: #00C853;
+            font-weight: bold;
+            animation: checkPop 0.3s ease;
+        }
+        
+        @keyframes checkPop {
+            0% { transform: scale(0); opacity: 0; }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        
         
         .meta-grid { 
             display: grid; 
@@ -862,29 +950,39 @@
                 <button class="view-btn" id="view-calendar" onclick="setView('calendar')">📅 Calendar View</button>
             </div>
             
-            <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px;">
+                <button class="dropdown-btn" onclick="toggleFilterDropdown()" id="filterDropdownBtn">
+                    🔍 Filter
+                    <span style="margin-left: auto;">▼</span>
+                </button>
+                <button class="dropdown-btn" onclick="toggleSortDropdown()" id="sortDropdownBtn">
+                    📊 Sort
+                    <span style="margin-left: auto;">▼</span>
+                </button>
+            </div>
             
-            <select id="sortSelect" class="form-input" onchange="setSort(this.value)" style="padding: 12px; border: 2px solid var(--border); font-weight: 600; width: 100%;">
-                <option value="dueDate">📅 Sort by: Due Date</option>
-                <option value="brand">🏷️ Sort by: Brand Name</option>
-                <option value="received">📦 Sort by: Received Date</option>
-            </select>
+            <div id="filterDropdown" class="dropdown-panel" style="display: none;">
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                    <button class="filter-btn active" id="f-active" onclick="setFilter('active')">📋 Active</button>
+                    <button class="filter-btn" id="f-all" onclick="setFilter('all')">📦 All</button>
+                    <button class="filter-btn" id="f-overdue" onclick="setFilter('overdue')">🔥 Overdue (<span id="statOverdue">0</span>)</button>
+                    <button class="filter-btn" id="f-urgent" onclick="setFilter('urgent')">⚠️ Due Soon (<span id="statUrgent">0</span>)</button>
+                    <button class="filter-btn" id="f-good" onclick="setFilter('good')">✅ On Track (<span id="statGood">0</span>)</button>
+                    <button class="filter-btn" id="f-completed" onclick="setFilter('completed')">🏁 Posted</button>
+                </div>
+            </div>
+            
+            <div id="sortDropdown" class="dropdown-panel" style="display: none;">
+                <button class="filter-btn" onclick="setSort('dueDate')">📅 Due Date</button>
+                <button class="filter-btn" onclick="setSort('brand')">🏷️ Brand Name</button>
+                <button class="filter-btn" onclick="setSort('received')">📦 Received Date</button>
+            </div>
+            
+            <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()" style="margin-top: 12px;">
         </div>
         
         <div class="container">
             <div id="listView">
-                <div class="control-section">
-                    <div class="section-title">Filter Samples</div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 8px;">
-                        <button class="filter-btn active" id="f-all" onclick="setFilter('all')">All</button>
-                        <button class="filter-btn" id="f-overdue" onclick="setFilter('overdue')">🔥 Overdue (<span id="statOverdue">0</span>)</button>
-                        <button class="filter-btn" id="f-urgent" onclick="setFilter('urgent')">⚠️ Due Soon (<span id="statUrgent">0</span>)</button>
-                    </div>
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                        <button class="filter-btn" id="f-good" onclick="setFilter('good')">✅ On Track (<span id="statGood">0</span>)</button>
-                        <button class="filter-btn" id="f-completed" onclick="setFilter('completed')">🏁 Posted</button>
-                    </div>
-                </div>
 
                 <div class="collapsible-section" id="filteredSection" style="display:none;">
                     <div class="collapsible-header" onclick="toggleFiltered()">
@@ -1282,7 +1380,7 @@
         let samples = [];
         let settings = { defaultDays: 14 };
         let currentView = 'list';
-        let currentFilter = 'all';
+        let currentFilter = 'active';
         let currentSort = 'dueDate';
         let searchQuery = '';
         let selectedSamples = new Set();
@@ -1765,16 +1863,32 @@
         }
 
         // ==================== FILTERING & SORTING ====================
+
+        function toggleFilterDropdown() {
+            const dropdown = document.getElementById('filterDropdown');
+            const sortDropdown = document.getElementById('sortDropdown');
+            sortDropdown.style.display = 'none';
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
+
+        function toggleSortDropdown() {
+            const dropdown = document.getElementById('sortDropdown');
+            const filterDropdown = document.getElementById('filterDropdown');
+            filterDropdown.style.display = 'none';
+            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+        }
         function setFilter(f) {
             triggerHaptic();
             currentFilter = f;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('f-' + f).classList.add('active');
             render();
+            document.getElementById('filterDropdown').style.display = 'none';
         }
 
         function setSort(s) {
             currentSort = s;
+            document.getElementById('sortDropdown').style.display = 'none';
             render();
         }
 
@@ -1791,6 +1905,7 @@
                 if (!matchSearch) return false;
                 
                 const info = getStatusInfo(s);
+                if (currentFilter === 'active') return !s.done;
                 if (currentFilter === 'all') return true;
                 if (currentFilter === 'completed') return s.done;
                 if (currentFilter === 'overdue') return !s.done && info.status === 'overdue';
@@ -1904,18 +2019,21 @@
                         ${s.notes ? `<div class="notes-section">${s.notes}</div>` : ''}
                         
                         <div class="checklist">
-                            <div class="checklist-item">
-                                <input type="checkbox" class="checklist-checkbox" ${s.checklist.filmed ? 'checked' : ''} onchange="toggleCheckbox('${s.id}', 'filmed')">
-                                <span>🎥 Filmed</span>
-                            </div>
-                            <div class="checklist-item">
-                                <input type="checkbox" class="checklist-checkbox" ${s.checklist.edited ? 'checked' : ''} onchange="toggleCheckbox('${s.id}', 'edited')">
-                                <span>✂️ Edited</span>
-                            </div>
-                            <div class="checklist-item">
-                                <input type="checkbox" class="checklist-checkbox" ${s.checklist.posted ? 'checked' : ''} onchange="toggleCheckbox('${s.id}', 'posted')">
-                                <span>📱 Posted</span>
-                            </div>
+                            <button class="progress-toggle ${s.checklist.filmed ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'filmed')">
+                                <span class="toggle-icon">🎥</span>
+                                <span class="toggle-label">Filmed</span>
+                                ${s.checklist.filmed ? '<span class="toggle-check">✓</span>' : ''}
+                            </button>
+                            <button class="progress-toggle ${s.checklist.edited ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'edited')">
+                                <span class="toggle-icon">✂️</span>
+                                <span class="toggle-label">Edited</span>
+                                ${s.checklist.edited ? '<span class="toggle-check">✓</span>' : ''}
+                            </button>
+                            <button class="progress-toggle ${s.checklist.posted ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'posted')">
+                                <span class="toggle-icon">📱</span>
+                                <span class="toggle-label">Posted</span>
+                                ${s.checklist.posted ? '<span class="toggle-check">✓</span>' : ''}
+                            </button>
                         </div>
                         
                         <div class="progress-container">
