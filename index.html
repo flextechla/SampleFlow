@@ -711,13 +711,11 @@
         }
         [data-theme="dark"] .btn-completed { background: rgba(0, 200, 83, 0.2); }
         
-        .btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        
-        .btn-secondary { 
-            background: var(--surface); 
-            color: var(--text-main); 
-            border: 1.5px solid var(--border); 
+            
+            <div class="view-toggle" style="margin-top: 12px;">
+                <button class="view-btn" id="filterToggleBtn" onclick="toggleFilterDropdown()">🔍 Filter</button>
+                <button class="view-btn" id="sortToggleBtn" onclick="toggleSortDropdown()">📊 Sort</button>
+            </div>
         }
         
         .modal { 
@@ -959,8 +957,12 @@
                 <span>Add New Sample</span>
             </button>
             
+            <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
+            
             <div class="view-toggle">
                 <button class="view-btn active" id="view-list" onclick="setView('list')">📋 List View</button>
+                <button class="view-btn" id="view-calendar" onclick="setView('calendar')">📅 Calendar View</button>
+            </div>
                 <button class="view-btn" id="view-calendar" onclick="setView('calendar')">📅 Calendar View</button>
             </div>
             
@@ -991,7 +993,6 @@
                 <button class="filter-btn" onclick="setSort('received')">📦 Received Date</button>
             </div>
             
-            <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()" style="margin-top: 12px;">
         </div>
         
         <div class="container">
@@ -1006,6 +1007,7 @@
                     <div class="collapsible-content" id="filteredContent"></div>
                 </div>
 
+                <h2 id="filterHeading" style="font-weight: 700; margin-bottom: 15px; color: var(--text-main); display: none;"></h2>
                 <div id="sampleGrid"></div>
             </div>
 
@@ -1881,22 +1883,42 @@
 
         // ==================== FILTERING & SORTING ====================
 
+
         function toggleFilterDropdown() {
             const dropdown = document.getElementById('filterDropdown');
             const sortDropdown = document.getElementById('sortDropdown');
+            const filterBtn = document.getElementById('filterToggleBtn');
+            const sortBtn = document.getElementById('sortToggleBtn');
+            
             sortDropdown.style.display = 'none';
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            sortBtn.classList.remove('active');
+            
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+                filterBtn.classList.remove('active');
+            } else {
+                dropdown.style.display = 'block';
+                filterBtn.classList.add('active');
+            }
         }
 
         function toggleSortDropdown() {
             const dropdown = document.getElementById('sortDropdown');
             const filterDropdown = document.getElementById('filterDropdown');
+            const filterBtn = document.getElementById('filterToggleBtn');
+            const sortBtn = document.getElementById('sortToggleBtn');
+            
             filterDropdown.style.display = 'none';
-            dropdown.style.display = dropdown.style.display === 'block' ? 'none' : 'block';
+            filterBtn.classList.remove('active');
+            
+            if (dropdown.style.display === 'block') {
+                dropdown.style.display = 'none';
+                sortBtn.classList.remove('active');
+            } else {
+                dropdown.style.display = 'block';
+                sortBtn.classList.add('active');
+            }
         }
-        function setFilter(f) {
-            triggerHaptic();
-            currentFilter = f;
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('filterDropdown').style.display = 'none';
             document.getElementById('f-' + f).classList.add('active');
@@ -1906,7 +1928,9 @@
         function setSort(s) {
             currentSort = s;
             document.getElementById('sortDropdown').style.display = 'none';
+            document.getElementById('sortToggleBtn').classList.remove('active');
             render();
+        }
         }
 
         function handleSearch() {
