@@ -1886,6 +1886,8 @@
         }
 
         function renderSampleCard(s) {
+            // Ensure checklist exists
+            if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
             const info = getStatusInfo(s);
             const isSelected = selectedSamples.has(s.id);
             const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
