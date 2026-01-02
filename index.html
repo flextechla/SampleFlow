@@ -963,12 +963,12 @@
             
             <div id="filterDropdown" class="dropdown-panel" style="display: none;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <button class="filter-btn" id="f-active" onclick="setFilter('active')">📋 Active</button>
-                    <button class="filter-btn active" id="f-all" onclick="setFilter('all')">📦 All</button>
+                    <button class="filter-btn" id="f-active" onclick="setFilter('active')">📋 Active (<span id="statActive">0</span>)</button>
+                    <button class="filter-btn active" id="f-all" onclick="setFilter('all')">📦 All (<span id="statAll">0</span>)</button>
                     <button class="filter-btn" id="f-overdue" onclick="setFilter('overdue')">🔥 Overdue (<span id="statOverdue">0</span>)</button>
                     <button class="filter-btn" id="f-urgent" onclick="setFilter('urgent')">⚠️ Due Soon (<span id="statUrgent">0</span>)</button>
                     <button class="filter-btn" id="f-good" onclick="setFilter('good')">✅ On Track (<span id="statGood">0</span>)</button>
-                    <button class="filter-btn" id="f-completed" onclick="setFilter('completed')">🏁 Posted</button>
+                    <button class="filter-btn" id="f-completed" onclick="setFilter('completed')">🏁 Posted (<span id="statCompleted">0</span>)</button>
                 </div>
             </div>
             
@@ -1278,14 +1278,14 @@
                     <div style="font-size: 4rem; margin-bottom: 15px;">📧</div>
                     <h3 style="font-weight: 700; margin-bottom: 15px; font-size: 1.3rem;">Need Help?</h3>
                     <p style="font-size: 1rem; opacity: 0.95; margin-bottom: 25px;">Click below to email our support team</p>
-                    <a href="mailto:support@flextechla.com" style="display: inline-block; background: white; color: var(--primary); padding: 15px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                    <a href="/cdn-cgi/l/email-protection#483b3d3838273a3c082e242d303c2d2b202429662b2725" style="display: inline-block; background: white; color: var(--primary); padding: 15px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
                         📧 Email Support
                     </a>
                 </div>
                 
                 <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; text-align: left;">
                     <p style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                        <strong style="color: var(--dark);">Email:</strong> support@flextechla.com
+                        <strong style="color: var(--dark);">Email:</strong> <a href="/cdn-cgi/l/email-protection" class="__cf_email__" data-cfemail="463533363629343206202a233e3223252e2a276825292b">[email&#160;protected]</a>
                     </p>
                     <p style="font-size: 0.9rem; color: #666;">
                         <strong style="color: var(--dark);">Response Time:</strong> We typically respond within 24 hours on weekdays
@@ -1367,7 +1367,7 @@
         </div>
     </div>
 
-    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
         // ==================== CONFIGURATION ====================
         const SUPABASE_URL = 'https://eiigbmrjtwndanywrcqp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpaWdibXJqdHduZGFueXdyY3FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMDQyMzQsImV4cCI6MjA4Mjc4MDIzNH0.bHCDscs-aeSukDeXAf9kuRC12WBC3zSqIQia-8cIc3s';
@@ -1850,6 +1850,7 @@
 
         function updateStats() {
             const activeSamples = samples.filter(s => !s.done);
+            const completedSamples = samples.filter(s => s.done);
             const stats = { overdue: 0, urgent: 0, good: 0 };
             activeSamples.forEach(s => {
                 const info = getStatusInfo(s);
@@ -1857,6 +1858,9 @@
                 else if (info.status === 'urgent') stats.urgent++;
                 else stats.good++;
             });
+            document.getElementById('statActive').innerText = activeSamples.length;
+            document.getElementById('statAll').innerText = samples.length;
+            document.getElementById('statCompleted').innerText = completedSamples.length;
             document.getElementById('statOverdue').innerText = stats.overdue;
             document.getElementById('statUrgent').innerText = stats.urgent;
             document.getElementById('statGood').innerText = stats.good;
@@ -1984,6 +1988,7 @@
             updateStats();
             updateCloudStatus();
             const filtered = getFilteredSamples();
+            console.log("Render - Current filter:", currentFilter, "Total samples:", samples.length, "Filtered samples:", filtered.length, "Done samples:", samples.filter(s => s.done).length);
             const grid = document.getElementById('sampleGrid');
             
             if (filtered.length === 0) {
@@ -2092,6 +2097,7 @@
                 return s;
             });
             await saveSamples();
+            console.log("After toggle - field:", field, "Total samples:", samples.length, "Done samples:", samples.filter(s => s.done).length, "Sample data:", samples.find(s => s.id === id));
             render();
         }
 
@@ -2643,11 +2649,4 @@
         }
 
         function toggleFiltered() {
-            const content = document.getElementById("filteredContent");
-            const arrow = document.getElementById("filteredArrow");
-            content.classList.toggle("active");
-            arrow.innerText = content.classList.contains("active") ? "▲" : "▼";
-        }
-    </script>
-</body>
-</html>
+            const content = document.get
