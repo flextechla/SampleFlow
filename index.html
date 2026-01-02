@@ -963,8 +963,8 @@
             
             <div id="filterDropdown" class="dropdown-panel" style="display: none;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                    <button class="filter-btn active" id="f-active" onclick="setFilter('active')">📋 Active</button>
-                    <button class="filter-btn" id="f-all" onclick="setFilter('all')">📦 All</button>
+                    <button class="filter-btn" id="f-active" onclick="setFilter('active')">📋 Active</button>
+                    <button class="filter-btn active" id="f-all" onclick="setFilter('all')">📦 All</button>
                     <button class="filter-btn" id="f-overdue" onclick="setFilter('overdue')">🔥 Overdue (<span id="statOverdue">0</span>)</button>
                     <button class="filter-btn" id="f-urgent" onclick="setFilter('urgent')">⚠️ Due Soon (<span id="statUrgent">0</span>)</button>
                     <button class="filter-btn" id="f-good" onclick="setFilter('good')">✅ On Track (<span id="statGood">0</span>)</button>
@@ -1380,7 +1380,7 @@
         let samples = [];
         let settings = { defaultDays: 14 };
         let currentView = 'list';
-        let currentFilter = 'active';
+        let currentFilter = 'all';
         let currentSort = 'dueDate';
         let searchQuery = '';
         let selectedSamples = new Set();
