@@ -1559,25 +1559,41 @@
             }
         }
 
-        async function saveToCloud() {
-            if (!useCloud || !currentUser || !sb_client) return;
+       async function saveToCloud() {
+    if (!useCloud || !currentUser || !sb_client) return;
+    
+    try {
+        // First, try to update existing row
+        const { data, error } = await sb_client
+            .from('sample_tracker_data')
+            .update({
+                samples: samples,
+                settings: settings,
+                updated_at: new Date().toISOString()
+            })
+            .eq('user_id', currentUser.id)
+            .select();
+        
+        // If no row was updated, insert new one
+        if (data && data.length === 0) {
+            const { error: insertError } = await sb_client
+                .from('sample_tracker_data')
+                .insert({
+                    user_id: currentUser.id,
+                    samples: samples,
+                    settings: settings,
+                    updated_at: new Date().toISOString()
+                });
             
-            try {
-                const { error } = await sb_client
-                    .from('sample_tracker_data')
-                    .upsert({
-                        user_id: currentUser.id,
-                        samples: samples,
-                        settings: settings,
-                        updated_at: new Date().toISOString()
-                    });
-                
-                if (error) throw error;
-            } catch (e) {
-                console.error('Save to cloud failed:', e);
-            }
+            if (insertError) throw insertError;
         }
-
+        
+        if (error) throw error;
+    } catch (e) {
+        console.error('Save to cloud failed:', e);
+    }
+}
+        
         async function loadFromCloud() {
             if (!useCloud || !currentUser || !sb_client) return;
             
