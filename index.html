@@ -2704,8 +2704,8 @@ function updateUIForTier() {
         }
 
         // ==================== NOTIFICATIONS ====================
-/*     async function toggleNotifications(enabled) {
-            const reminderSettings = document.getElementById('reminderSettings');
+            async function toggleNotifications(enabled) 
+            {const reminderSettings = document.getElementById('reminderSettings');
             
            if (enabled) {
                 if (!('Notification' in window)) {
@@ -2739,39 +2739,6 @@ function updateUIForTier() {
                 reminderSettings.style.display = 'none';
                 clearNotifications();
             } 
-        }
-
-        function saveReminderSettings() {
-            const reminderDays = document.getElementById('reminderDays').value;
-            localStorage.setItem('reminder_days', reminderDays);
-            scheduleNotifications();
-        }
-
-        function showNotification(title, body) {
-            if (Notification.permission === 'granted') {
-                new Notification(title, {
-                    body: body,
-                    icon: 'data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><rect fill="%23FE2C55" width="100" height="100" rx="20"/><text x="50" y="70" font-size="60" text-anchor="middle" fill="white">📦</text></svg>'
-                });
-            }
-        }
-
-        function scheduleNotifications() {
-            const checkInterval = setInterval(() => {
-                checkDueSamples();
-            }, 3600000);
-            
-            localStorage.setItem('notification_interval', checkInterval);
-            checkDueSamples();
-        }
-
-        function clearNotifications() {
-            const intervalId = localStorage.getItem('notification_interval');
-            if (intervalId) {
-                clearInterval(parseInt(intervalId));
-                localStorage.removeItem('notification_interval');
-            }
-        }   */
 
         function checkDueSamples() {
             const globalReminderDays = parseInt(localStorage.getItem('reminder_days') || '1');
