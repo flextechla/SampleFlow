@@ -1353,75 +1353,84 @@
 
     <script>
         // ==================== UPGRADE MODAL ====================
-        function showUpgradeModal(title, message, targetTier) {
-            const tierPrices = {
-                basic: '$9.95/month',
-                pro: '$14.95/month'
-            };
+    function showUpgradeModal(title, message, targetTier) {
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.id = 'upgradeModal';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 600px;">
+            <div class="modal-header">
+                <h2 class="modal-title">✨ Upgrade Your Plan</h2>
+                <button class="modal-close" onclick="closeUpgradeModal()">×</button>
+            </div>
             
-            const tierNames = {
-                basic: 'Basic',
-                pro: 'Pro'
-            };
+            <div style="text-align: center; margin-bottom: 25px;">
+                <div style="font-size: 2.5rem; margin-bottom: 10px;">🚀</div>
+                <h3 style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; color: var(--text-main);">${title}</h3>
+                <p style="color: var(--text-secondary);">${message}</p>
+            </div>
             
-            const tierFeatures = {
-                basic: [
-                    '✓ Unlimited samples',
-                    '✓ Calendar view',
-                    '✓ 2 photos per sample',
-                    '✓ Batch actions',
-                    '✓ Custom reminders'
-                ],
-                pro: [
-                    '✓ Everything in Basic',
-                    '✓ Analytics dashboard',
-                    '✓ Export to CSV',
-                    '✓ Import data',
-                    '✓ Email alerts',
-                    '✓ Ready-to-Film button',
-                    '✓ 3 photos per sample'
-                ]
-            };
-            
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.id = 'upgradeModal';
-            modal.innerHTML = `
-                <div class="modal-content" style="max-width: 450px; text-align: center;">
-                    <div class="modal-header">
-                        <h2 class="modal-title">✨ Upgrade to ${tierNames[targetTier]}</h2>
-                        <button class="modal-close" onclick="closeUpgradeModal()">×</button>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                <!-- BASIC PLAN -->
+                <div style="background: ${targetTier === 'basic' ? 'linear-gradient(135deg, #E8F5E9, #C8E6C9)' : 'var(--bg)'}; border: ${targetTier === 'basic' ? '3px solid #00C853' : '2px solid var(--border)'}; border-radius: 12px; padding: 20px; position: relative;">
+                    ${targetTier === 'basic' ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #00C853; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">RECOMMENDED</div>' : ''}
+                    
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <h4 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 5px;">💎 Basic</h4>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">$9.95</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">per month</div>
                     </div>
                     
-                    <div style="font-size: 3rem; margin: 20px 0;">🚀</div>
-                    
-                    <h3 style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; color: var(--text-main);">${title}</h3>
-                    <p style="color: var(--text-secondary); margin-bottom: 25px;">${message}</p>
-                    
-                    <div style="background: linear-gradient(135deg, var(--primary), #FF6B8A); color: white; padding: 20px; border-radius: 16px; margin-bottom: 20px;">
-                        <div style="font-size: 2.5rem; font-weight: 800; margin-bottom: 5px;">${tierPrices[targetTier]}</div>
-                        <div style="font-size: 0.9rem; opacity: 0.9;">Billed monthly • Cancel anytime</div>
+                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 15px;">
+                        <div style="margin-bottom: 6px;">✓ Unlimited samples</div>
+                        <div style="margin-bottom: 6px;">✓ Calendar view</div>
+                        <div style="margin-bottom: 6px;">✓ 2 photos per sample</div>
+                        <div style="margin-bottom: 6px;">✓ Batch actions</div>
+                        <div style="margin-bottom: 6px;">✓ Custom reminders</div>
                     </div>
                     
-                    <div style="background: var(--bg); padding: 15px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
-                        ${tierFeatures[targetTier].map(f => `<div style="margin-bottom: 8px; font-size: 0.9rem;">${f}</div>`).join('')}
-                    </div>
-                    
-                    <button class="row-btn btn-full-width" onclick="startUpgrade('${targetTier}')" style="margin-bottom: 10px; font-size: 1.1rem;">
-                        Upgrade to ${tierNames[targetTier]} →
+                    <button class="row-btn btn-full-width" onclick="startUpgrade('basic')" style="background: ${targetTier === 'basic' ? 'linear-gradient(135deg, #00C853, #00E676)' : 'var(--primary)'}; color: white; font-weight: 700;">
+                        Choose Basic
                     </button>
-                    <button class="row-btn btn-secondary" onclick="closeUpgradeModal()">
-                        Maybe Later
-                    </button>
-                    
-                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 15px;">
-                        ✓ Cancel anytime • ✓ 14-day money-back guarantee
-                    </p>
                 </div>
-            `;
-            document.body.appendChild(modal);
-        }
-
+                
+                <!-- PRO PLAN -->
+                <div style="background: ${targetTier === 'pro' ? 'linear-gradient(135deg, #FFF8E1, #FFECB3)' : 'var(--bg)'}; border: ${targetTier === 'pro' ? '3px solid #FFB300' : '2px solid var(--border)'}; border-radius: 12px; padding: 20px; position: relative;">
+                    ${targetTier === 'pro' ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #FFB300; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">RECOMMENDED</div>' : ''}
+                    
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <h4 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 5px;">👑 Pro</h4>
+                        <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">$14.95</div>
+                        <div style="font-size: 0.8rem; color: var(--text-secondary);">per month</div>
+                    </div>
+                    
+                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 15px;">
+                        <div style="margin-bottom: 6px; font-weight: 700;">Everything in Basic, plus:</div>
+                        <div style="margin-bottom: 6px;">✓ Analytics dashboard</div>
+                        <div style="margin-bottom: 6px;">✓ Export to CSV</div>
+                        <div style="margin-bottom: 6px;">✓ Import data</div>
+                        <div style="margin-bottom: 6px;">✓ Ready-to-Film button</div>
+                        <div style="margin-bottom: 6px;">✓ 3 photos per sample</div>
+                    </div>
+                    
+                    <button class="row-btn btn-full-width" onclick="startUpgrade('pro')" style="background: ${targetTier === 'pro' ? 'linear-gradient(135deg, #FFB300, #FFC107)' : 'var(--primary)'}; color: white; font-weight: 700;">
+                        Choose Pro
+                    </button>
+                </div>
+            </div>
+            
+            <button class="row-btn btn-secondary btn-full-width" onclick="closeUpgradeModal()" style="margin-top: 10px;">
+                Maybe Later
+            </button>
+            
+            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 15px; text-align: center;">
+                ✓ Cancel anytime • ✓ 14-day money-back guarantee
+            </p>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}      
+        
         function closeUpgradeModal() {
             const modal = document.getElementById('upgradeModal');
             if (modal) modal.remove();
