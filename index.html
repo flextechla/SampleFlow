@@ -2730,10 +2730,10 @@ function updateUIForTier() {
     clearNotifications();
 }    */
 
-        async function toggleNotifications(enabled) {
+     async function toggleNotifications(enabled) {
             const reminderSettings = document.getElementById('reminderSettings');
             
-            if (enabled) {
+           if (enabled) {
                 if (!('Notification' in window)) {
                     alert('Your browser doesn\'t support notifications');
                     document.getElementById('notificationsToggle').checked = false;
