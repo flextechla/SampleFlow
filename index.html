@@ -2704,6 +2704,7 @@ function updateUIForTier() {
         }
 
         // ==================== NOTIFICATIONS ====================
+ /* --------------------------
         async function toggleNotifications(enabled) {
     // Gate to Pro tier - feature coming soon for Pro users
     if (userTier !== 'pro') {
@@ -2727,7 +2728,43 @@ function updateUIForTier() {
     const reminderSettings = document.getElementById('reminderSettings');
     reminderSettings.style.display = 'none';
     clearNotifications();
-}
+}    */
+
+        async function toggleNotifications(enabled) {
+            const reminderSettings = document.getElementById('reminderSettings');
+            
+            if (enabled) {
+                if (!('Notification' in window)) {
+                    alert('Your browser doesn\'t support notifications');
+                    document.getElementById('notificationsToggle').checked = false;
+                    return;
+                }
+                
+                if (Notification.permission === 'granted') {
+                    reminderSettings.style.display = 'block';
+                    scheduleNotifications();
+                    showNotification('Reminders Enabled', 'You\'ll get notified when samples are due soon!');
+                } else if (Notification.permission !== 'denied') {
+                    document.getElementById('notificationStatus').style.display = 'block';
+                    const permission = await Notification.requestPermission();
+                    document.getElementById('notificationStatus').style.display = 'none';
+                    
+                    if (permission === 'granted') {
+                        reminderSettings.style.display = 'block';
+                        scheduleNotifications();
+                        showNotification('Reminders Enabled', 'You\'ll get notified when samples are due soon!');
+                    } else {
+                        document.getElementById('notificationsToggle').checked = false;
+                        alert('Notifications blocked. Enable them in your browser settings.');
+                    }
+                } else {
+                    document.getElementById('notificationsToggle').checked = false;
+                    alert('Notifications are blocked. Please enable them in your browser settings.');
+                }
+            } else {
+                reminderSettings.style.display = 'none';
+                clearNotifications();
+            }
         }
 
         function saveReminderSettings() {
