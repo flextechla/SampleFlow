@@ -1791,14 +1791,17 @@ function updateUIForTier() {
             document.getElementById('appContainer').classList.remove('active');
         }
 
-        function showApp() {
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('landingPage').classList.remove('active');
-            document.getElementById('appContainer').classList.add('active');
-            render();
-            renderCalendar();
-            // PWA prompt logic handled in load or signup
-        }
+      function showApp() {
+    document.getElementById('landingPage').classList.add('hidden');
+    document.getElementById('landingPage').classList.remove('active');
+    document.getElementById('appContainer').classList.add('active');
+    
+    // Load subscription tier then render
+    loadUserTier().then(() => {
+        render();
+        renderCalendar();
+    });
+}
 
         // ==================== THEME HANDLING ====================
         function toggleTheme(isDark) {
