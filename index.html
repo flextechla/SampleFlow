@@ -1801,22 +1801,66 @@ function updateUIForTier() {
         }
 
         // ==================== UI STATE ====================
-        function showLanding() {
-            document.getElementById('landingPage').classList.remove('hidden');
-            document.getElementById('landingPage').classList.add('active');
-            document.getElementById('appContainer').classList.remove('active');
-        }
+       // ===== UI State Management =====
 
-      function showApp() {
+function showLanding() {
+    // If user is signed in, show app instead of landing
+    if (currentUser) {
+        showApp();
+    } else {
+        // Not signed in - show landing page
+        document.getElementById('landingPage').classList.remove('hidden');
+        document.getElementById('landingPage').classList.add('active');
+        document.getElementById('appContainer').classList.remove('active');
+    }
+}
+
+function showApp() {
     document.getElementById('landingPage').classList.add('hidden');
     document.getElementById('landingPage').classList.remove('active');
     document.getElementById('appContainer').classList.add('active');
+    document.getElementById('authSection').style.display = 'none';
+    document.getElementById('appSection').style.display = 'block';
     
-    // Load subscription tier then render
+    // Load user tier and render
     loadUserTier().then(() => {
         render();
         renderCalendar();
+        updateStats();
     });
+}
+function goToLanding() {
+    showLanding();
+}
+// Check for existing session on page load (STAY SIGNED IN)
+async function checkExistingSession() {
+    try {
+        const { data: { session }, error } = await supabase.auth.getSession();
+        
+        if (session && session.user) {
+            // User has active session - auto sign in!
+            currentUser = {
+                id: session.user.id,
+                email: session.user.email
+            };
+            
+            console.log('Auto-signed in:', currentUser.email);
+            
+            // Load user's tier and data
+            await loadUserTier();
+            await loadSamples();
+            
+            // Show app (not login screen)
+            showApp();
+            
+            return true;
+        }
+        
+        return false;
+    } catch (error) {
+        console.error('Session check error:', error);
+        return false;
+    }
 }
 
         // ==================== THEME HANDLING ====================
@@ -1964,47 +2008,46 @@ function updateUIForTier() {
 
         // ==================== WINDOW LOAD ====================
         window.onload = async () => {
-            // Failsafe: Ensure landing page is visible if JS crashes later
-            document.getElementById('landingPage').classList.remove('hidden');
+    // Failsafe: Ensure landing page is visible if JS crashes later
+    document.getElementById('landingPage').classList.remove('hidden');
 
-            loadTheme();
-            
-            const savedHaptic = localStorage.getItem('haptic') === 'true';
-            hapticEnabled = savedHaptic;
-            document.getElementById('hapticToggle').checked = savedHaptic;
+    loadTheme();
+    
+    const savedHaptic = localStorage.getItem('haptic') === 'true';
+    hapticEnabled = savedHaptic;
+    document.getElementById('hapticToggle').checked = savedHaptic;
 
-            const savedCompact = localStorage.getItem('compact') === 'true';
-            toggleCompact(savedCompact);
-            document.getElementById('compactToggle').checked = savedCompact;
+    const savedCompact = localStorage.getItem('compact') === 'true';
+    toggleCompact(savedCompact);
+    document.getElementById('compactToggle').checked = savedCompact;
 
-            try { 
-                samples = JSON.parse(localStorage.getItem('tiktok_samples')) || []; 
-                settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
-                document.getElementById('defaultDays').value = settings.defaultDays;
-                
-                const savedReminderDays = localStorage.getItem('reminder_days');
-                if (savedReminderDays) {
-                    document.getElementById('reminderDays').value = savedReminderDays;
-                }
-                
-                const notifToggle = document.getElementById('notificationsToggle');
-                if (Notification.permission === 'granted') {
-                    notifToggle.checked = true;
-                    document.getElementById('reminderSettings').style.display = 'block';
-                    scheduleNotifications();
-                }
-            } catch(e) { 
-                samples = []; 
-            }
-            
-            try {
-                await initSupabase();
-            } catch(e) {
-                console.error("Critical Init Error:", e);
-                // Even if init fails, we stay on landing page (default visible)
-            }
-        };
-
+    try { 
+        samples = JSON.parse(localStorage.getItem('tiktok_samples')) || []; 
+        settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
+        document.getElementById('defaultDays').value = settings.defaultDays;
+        
+        const savedReminderDays = localStorage.getItem('reminder_days');
+        if (savedReminderDays) {
+            document.getElementById('reminderDays').value = savedReminderDays;
+        }
+        
+        const notifToggle = document.getElementById('notificationsToggle');
+        if (Notification.permission === 'granted') {
+            notifToggle.checked = true;
+            document.getElementById('reminderSettings').style.display = 'block';
+            scheduleNotifications();
+        }
+    } catch(e) { 
+        samples = []; 
+    }
+    
+    try {
+        sb_client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+        await checkExistingSession();  // ← ADD THIS LINE!
+    } catch(e) {
+        console.error("Critical Init Error:", e);
+    }
+};
         // ==================== STATUS INFO ====================
         function getStatusInfo(s) {
             if (s.done) return { status: 'completed', days: 0, percent: 100, color: '#E0E0E0', text: 'Posted' };
