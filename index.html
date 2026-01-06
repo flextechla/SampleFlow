@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="theme-color" content="#FE2C55">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
     
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg width='1024' height='1024' viewBox='0 0 1024 1024' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Crect width='1024' height='1024' fill='%23FE2C55'/%3E%3Cpath d='M213.333 426.667L106.667 640V853.333C106.667 876.667 128 896 149.333 896H874.667C896 896 917.333 876.667 917.333 853.333V640L810.667 426.667H213.333Z' fill='white' fill-opacity='0.9'/%3E%3Cpath d='M106.667 640L213.333 426.667H810.667L917.333 640' stroke='%23FE2C55' stroke-width='40' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M213.333 640V896' stroke='%23FE2C55' stroke-width='40' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M810.667 640V896' stroke='%23FE2C55' stroke-width='40' stroke-linecap='round' stroke-linejoin='round'/%3E%3Cpath d='M320 512L470 662L720 260' stroke='%2300C853' stroke-width='120' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
@@ -1715,12 +1715,21 @@ function updateUIForTier() {
                         await migrateToCloud();
                         // Prompt install for new users
                         setTimeout(() => checkAndShowInstallPrompt(), 3000); 
-                    } else {
-                        await loadFromCloud();
-                    }
+                   } else {
+    // Show app immediately, load data in background
+    closeAuthModal();
+    showApp();
+    // Load data in background without blocking
+    loadUserTier().then(() => {
+        loadFromCloud().then(() => {
+            render();
+            renderCalendar();
+        });
+    });
+    return; // Exit early since we already called showApp above
+}
                     
-                    closeAuthModal();
-                    showApp();
+                   
                 }
             } catch (e) {
                 console.error('Auth error:', e);
@@ -1848,7 +1857,7 @@ async function checkExistingSession() {
             
             // Load user's tier and data
             await loadUserTier();
-            await loadSamples();
+            await loadFromCloud();
             
             // Show app (not login screen)
             showApp();
