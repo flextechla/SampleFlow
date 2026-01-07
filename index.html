@@ -1725,17 +1725,14 @@ function updateUIForTier() {
                         // Prompt install for new users
                         setTimeout(() => checkAndShowInstallPrompt(), 3000); 
                    } else {
-    // Show app immediately, load data in background
-    closeAuthModal();
-    showApp();
-    // Load data in background without blocking
-    loadUserTier().then(() => {
-        loadFromCloud().then(() => {
-            render();
-            renderCalendar();
-        });
-    });
-    return; // Exit early since we already called showApp above
+    // Load user tier and data first, then show app
+closeAuthModal();
+await loadUserTier();
+await loadFromCloud();
+showApp();
+render();
+renderCalendar();
+return;
 }
                     
                    
