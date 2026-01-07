@@ -95,10 +95,8 @@
         #landingPage {
             min-height: 100vh;
             background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%);
-            /* FIX: Visible by default to prevent blank screen, hidden by class later */
             display: flex;
             flex-direction: column;
-            /* FIX: Increased bottom padding so text clears the sticky footer */
             padding: 20px 20px 140px 20px; 
         }
         
@@ -232,7 +230,7 @@
         #appContainer {
             display: none;
             min-height: 100vh;
-            padding-bottom: 80px; /* Space for batch bar */
+            padding-bottom: 80px;
         }
         
         #appContainer.active {
@@ -858,21 +856,22 @@
         input:checked + .slider { background-color: var(--green); }
         input:checked + .slider:before { transform: translateX(26px); }
 
-.pro-badge {
-    background: linear-gradient(135deg, #FFD700, #FFA500);
-    color: white;
-    padding: 2px 8px;
-    border-radius: 6px;
-    font-size: 0.65rem;
-    font-weight: 800;
-    margin-left: 5px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-    @keyframes loading {
-    0%, 100% { transform: translateX(-100%); }
-    50% { transform: translateX(100%); }
-}
+        .pro-badge {
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 0.65rem;
+            font-weight: 800;
+            margin-left: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        @keyframes loading {
+            0%, 100% { transform: translateX(-100%); }
+            50% { transform: translateX(100%); }
+        }
     </style>
 </head>
 <body>
@@ -1189,6 +1188,11 @@
             </div>
 
             <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <label class="form-label">Account Security</label>
+                <button class="row-btn btn-secondary" onclick="openChangePassword()" style="margin-bottom: 10px;">🔒 Change Password</button>
+            </div>
+
+            <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
                 <label class="form-label">Data Management</label>
                 <button class="row-btn btn-secondary" onclick="exportCSV(); closeSettings();" style="margin-bottom: 10px;">📥 Export to CSV</button>
                 <button class="row-btn btn-secondary" onclick="importData(); closeSettings();" style="margin-bottom: 10px;">📁 Import Data</button>
@@ -1264,56 +1268,57 @@
     </div>
 
     <div id="supportModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h2 class="modal-title">💬 Contact Support</h2>
-            <button class="modal-close" onclick="closeSupport()">×</button>
-        </div>
-        <div style="line-height: 1.6; text-align: center;">
-            <div style="background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%); padding: 40px; border-radius: 16px; margin-bottom: 25px; color: white;">
-                <div style="font-size: 4rem; margin-bottom: 15px;">📧</div>
-                <h3 style="font-weight: 700; margin-bottom: 15px; font-size: 1.3rem;">Need Help?</h3>
-                <p style="font-size: 1rem; opacity: 0.95; margin-bottom: 25px;">Click below to email our support team</p>
-                <a href="mailto:support@lazybstudios.com?subject=SampleFlow Support Request" style="display: inline-block; background: white; color: var(--primary); padding: 15px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
-                    📧 Email Support
-                </a>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">💬 Contact Support</h2>
+                <button class="modal-close" onclick="closeSupport()">×</button>
             </div>
-            <div id="changePasswordModal" class="modal">
-    <div class="modal-content" style="max-width: 400px;">
-        <div class="modal-header">
-            <h2 class="modal-title">🔒 Change Password</h2>
-            <button class="modal-close" onclick="closeChangePassword()">×</button>
-        </div>
-        <div class="form-group">
-            <label class="form-label">New Password</label>
-            <div style="position: relative;">
-                <input type="password" id="newPassword" class="form-input" placeholder="Min 6 characters" style="padding-right: 45px;">
-                <button type="button" onclick="togglePasswordVisibility('newPassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
-            </div>
-        </div>
-        <div class="form-group">
-            <label class="form-label">Confirm New Password</label>
-            <div style="position: relative;">
-                <input type="password" id="confirmNewPassword" class="form-input" placeholder="Confirm password" style="padding-right: 45px;">
-                <button type="button" onclick="togglePasswordVisibility('confirmNewPassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
-            </div>
-        </div>
-        <div id="changePasswordError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
-        <button class="row-btn btn-full-width" onclick="handleChangePassword()">Update Password</button>
-    </div>
-</div>
+            <div style="line-height: 1.6; text-align: center;">
+                <div style="background: linear-gradient(135deg, #FE2C55 0%, #FF6B8A 100%); padding: 40px; border-radius: 16px; margin-bottom: 25px; color: white;">
+                    <div style="font-size: 4rem; margin-bottom: 15px;">📧</div>
+                    <h3 style="font-weight: 700; margin-bottom: 15px; font-size: 1.3rem;">Need Help?</h3>
+                    <p style="font-size: 1rem; opacity: 0.95; margin-bottom: 25px;">Click below to email our support team</p>
+                    <a href="mailto:support@lazybstudios.com?subject=SampleFlow Support Request" style="display: inline-block; background: white; color: var(--primary); padding: 15px 30px; border-radius: 30px; font-weight: 700; text-decoration: none; font-size: 1.1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.2);">
+                        📧 Email Support
+                    </a>
+                </div>
 
-            <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; text-align: left;">
-                <p style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
-                    <strong style="color: var(--dark);">Email:</strong> <a href="mailto:support@lazybstudios.com">support@lazybstudios.com</a>
-                </p>
-                <p style="font-size: 0.9rem; color: #666;">
-                    <strong style="color: var(--dark);">Response Time:</strong> We typically respond within 24 hours on weekdays
-                </p>
+                <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; text-align: left;">
+                    <p style="font-size: 0.9rem; color: #666; margin-bottom: 8px;">
+                        <strong style="color: var(--dark);">Email:</strong> <a href="mailto:support@lazybstudios.com">support@lazybstudios.com</a>
+                    </p>
+                    <p style="font-size: 0.9rem; color: #666;">
+                        <strong style="color: var(--dark);">Response Time:</strong> We typically respond within 24 hours on weekdays
+                    </p>
+                </div>
             </div>
         </div>
     </div>
-</div>
+
+    <div id="changePasswordModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">🔒 Change Password</h2>
+                <button class="modal-close" onclick="closeChangePassword()">×</button>
+            </div>
+            <div class="form-group">
+                <label class="form-label">New Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="newPassword" class="form-input" placeholder="Min 6 characters" style="padding-right: 45px;">
+                    <button type="button" onclick="togglePasswordVisibility('newPassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Confirm New Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="confirmNewPassword" class="form-input" placeholder="Confirm password" style="padding-right: 45px;">
+                    <button type="button" onclick="togglePasswordVisibility('confirmNewPassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+                </div>
+            </div>
+            <div id="changePasswordError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
+            <button class="row-btn btn-full-width" onclick="handleChangePassword()">Update Password</button>
+        </div>
+    </div>
 
     <div id="helpModal" class="modal">
         <div class="modal-content">
@@ -1385,210 +1390,159 @@
 
     <script>
         // ==================== UPGRADE MODAL ====================
-    function showUpgradeModal(title, message, targetTier) {
-    const modal = document.createElement('div');
-    modal.className = 'modal active';
-    modal.id = 'upgradeModal';
-    modal.innerHTML = `
-        <div class="modal-content" style="max-width: 600px;">
-            <div class="modal-header">
-                <h2 class="modal-title">✨ Upgrade Your Plan</h2>
-                <button class="modal-close" onclick="closeUpgradeModal()">×</button>
-            </div>
-            
-            <div style="text-align: center; margin-bottom: 25px;">
-                <div style="font-size: 2.5rem; margin-bottom: 10px;">🚀</div>
-                <h3 style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; color: var(--text-main);">${title}</h3>
-                <p style="color: var(--text-secondary);">${message}</p>
-            </div>
-            
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
-                <!-- BASIC PLAN -->
-                <div style="background: ${targetTier === 'basic' ? 'linear-gradient(135deg, #E8F5E9, #C8E6C9)' : 'var(--bg)'}; border: ${targetTier === 'basic' ? '3px solid #00C853' : '2px solid var(--border)'}; border-radius: 12px; padding: 20px; position: relative;">
-                    ${targetTier === 'basic' ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #00C853; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">RECOMMENDED</div>' : ''}
-                    
-                    <div style="text-align: center; margin-bottom: 15px;">
-                        <h4 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 5px;">💎 Basic</h4>
-                        <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">$9.95</div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">per month</div>
+        function showUpgradeModal(title, message, targetTier) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'upgradeModal';
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 600px;">
+                    <div class="modal-header">
+                        <h2 class="modal-title">✨ Upgrade Your Plan</h2>
+                        <button class="modal-close" onclick="closeUpgradeModal()">×</button>
                     </div>
                     
-                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 15px;">
-                        <div style="margin-bottom: 6px;">✓ Unlimited samples</div>
-                        <div style="margin-bottom: 6px;">✓ Calendar view</div>
-                        <div style="margin-bottom: 6px;">✓ 2 photos per sample</div>
-                        <div style="margin-bottom: 6px;">✓ Batch actions</div>
-                        <div style="margin-bottom: 6px;">✓ Custom reminders</div>
+                    <div style="text-align: center; margin-bottom: 25px;">
+                        <div style="font-size: 2.5rem; margin-bottom: 10px;">🚀</div>
+                        <h3 style="font-weight: 700; font-size: 1.2rem; margin-bottom: 10px; color: var(--text-main);">${title}</h3>
+                        <p style="color: var(--text-secondary);">${message}</p>
                     </div>
                     
-                    <button class="row-btn btn-full-width" onclick="startUpgrade('basic')" style="background: ${targetTier === 'basic' ? 'linear-gradient(135deg, #00C853, #00E676)' : 'var(--primary)'}; color: white; font-weight: 700;">
-                        Choose Basic
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px;">
+                        <!-- BASIC PLAN -->
+                        <div style="background: ${targetTier === 'basic' ? 'linear-gradient(135deg, #E8F5E9, #C8E6C9)' : 'var(--bg)'}; border: ${targetTier === 'basic' ? '3px solid #00C853' : '2px solid var(--border)'}; border-radius: 12px; padding: 20px; position: relative;">
+                            ${targetTier === 'basic' ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #00C853; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">RECOMMENDED</div>' : ''}
+                            
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <h4 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 5px;">💎 Basic</h4>
+                                <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">$9.95</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">per month</div>
+                            </div>
+                            
+                            <div style="text-align: left; font-size: 0.85rem; margin-bottom: 15px;">
+                                <div style="margin-bottom: 6px;">✓ Unlimited samples</div>
+                                <div style="margin-bottom: 6px;">✓ Calendar view</div>
+                                <div style="margin-bottom: 6px;">✓ 2 photos per sample</div>
+                                <div style="margin-bottom: 6px;">✓ Batch actions</div>
+                                <div style="margin-bottom: 6px;">✓ Custom reminders</div>
+                                <div style="margin-bottom: 6px;">✓ 1 AI script/day</div>
+                            </div>
+                            
+                            <button class="row-btn btn-full-width" onclick="startUpgrade('basic')" style="background: ${targetTier === 'basic' ? 'linear-gradient(135deg, #00C853, #00E676)' : 'var(--primary)'}; color: white; font-weight: 700;">
+                                Choose Basic
+                            </button>
+                        </div>
+                        
+                        <!-- PRO PLAN -->
+                        <div style="background: ${targetTier === 'pro' ? 'linear-gradient(135deg, #FFF8E1, #FFECB3)' : 'var(--bg)'}; border: ${targetTier === 'pro' ? '3px solid #FFB300' : '2px solid var(--border)'}; border-radius: 12px; padding: 20px; position: relative;">
+                            ${targetTier === 'pro' ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #FFB300; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">RECOMMENDED</div>' : ''}
+                            
+                            <div style="text-align: center; margin-bottom: 15px;">
+                                <h4 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 5px;">👑 Pro</h4>
+                                <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">$14.95</div>
+                                <div style="font-size: 0.8rem; color: var(--text-secondary);">per month</div>
+                            </div>
+                            
+                            <div style="text-align: left; font-size: 0.85rem; margin-bottom: 15px;">
+                                <div style="margin-bottom: 6px; font-weight: 700;">Everything in Basic, plus:</div>
+                                <div style="margin-bottom: 6px;">✓ Analytics dashboard</div>
+                                <div style="margin-bottom: 6px;">✓ Export to CSV</div>
+                                <div style="margin-bottom: 6px;">✓ Import data</div>
+                                <div style="margin-bottom: 6px;">✓ Ready-to-Film button</div>
+                                <div style="margin-bottom: 6px;">✓ 3 photos per sample</div>
+                                <div style="margin-bottom: 6px;">✓ 5 AI scripts/day</div>
+                            </div>
+                            
+                            <button class="row-btn btn-full-width" onclick="startUpgrade('pro')" style="background: ${targetTier === 'pro' ? 'linear-gradient(135deg, #FFB300, #FFC107)' : 'var(--primary)'}; color: white; font-weight: 700;">
+                                Choose Pro
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <button class="row-btn btn-secondary btn-full-width" onclick="closeUpgradeModal()" style="margin-top: 10px;">
+                        Maybe Later
                     </button>
+                    
+                    <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 15px; text-align: center;">
+                        ✓ Cancel anytime • ✓ 14-day money-back guarantee
+                    </p>
                 </div>
+            `;
+            document.body.appendChild(modal);
+        }      
                 
-                <!-- PRO PLAN -->
-                <div style="background: ${targetTier === 'pro' ? 'linear-gradient(135deg, #FFF8E1, #FFECB3)' : 'var(--bg)'}; border: ${targetTier === 'pro' ? '3px solid #FFB300' : '2px solid var(--border)'}; border-radius: 12px; padding: 20px; position: relative;">
-                    ${targetTier === 'pro' ? '<div style="position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #FFB300; color: white; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 800;">RECOMMENDED</div>' : ''}
-                    
-                    <div style="text-align: center; margin-bottom: 15px;">
-                        <h4 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 5px;">👑 Pro</h4>
-                        <div style="font-size: 2rem; font-weight: 800; color: var(--primary);">$14.95</div>
-                        <div style="font-size: 0.8rem; color: var(--text-secondary);">per month</div>
-                    </div>
-                    
-                    <div style="text-align: left; font-size: 0.85rem; margin-bottom: 15px;">
-                        <div style="margin-bottom: 6px; font-weight: 700;">Everything in Basic, plus:</div>
-                        <div style="margin-bottom: 6px;">✓ Analytics dashboard</div>
-                        <div style="margin-bottom: 6px;">✓ Export to CSV</div>
-                        <div style="margin-bottom: 6px;">✓ Import data</div>
-                        <div style="margin-bottom: 6px;">✓ Ready-to-Film button</div>
-                        <div style="margin-bottom: 6px;">✓ 3 photos per sample</div>
-                    </div>
-                    
-                    <button class="row-btn btn-full-width" onclick="startUpgrade('pro')" style="background: ${targetTier === 'pro' ? 'linear-gradient(135deg, #FFB300, #FFC107)' : 'var(--primary)'}; color: white; font-weight: 700;">
-                        Choose Pro
-                    </button>
-                </div>
-            </div>
-            
-            <button class="row-btn btn-secondary btn-full-width" onclick="closeUpgradeModal()" style="margin-top: 10px;">
-                Maybe Later
-            </button>
-            
-            <p style="font-size: 0.75rem; color: var(--text-secondary); margin-top: 15px; text-align: center;">
-                ✓ Cancel anytime • ✓ 14-day money-back guarantee
-            </p>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}      
-        
         function closeUpgradeModal() {
             const modal = document.getElementById('upgradeModal');
             if (modal) modal.remove();
         }
+        
         function startUpgrade(tier) {
             const checkoutUrls = {
-    basic: 'https://lazybstudios.lemonsqueezy.com/checkout/buy/a921ce0f-6637-4263-a5d7-2cf1f648b9bf?checkout[custom][return_url]=https://sampleflow.lazybstudios.com',
-    pro: 'https://lazybstudios.lemonsqueezy.com/checkout/buy/d324fe3e-0a61-4d6c-bffd-25e7a92d1ef0?checkout[custom][return_url]=https://sampleflow.lazybstudios.com'
-};
-    
-        // Add user email to checkout if signed in
-        let url = checkoutUrls[tier];
-        if (currentUser && currentUser.email) {
-            url += `?checkout[email]=${encodeURIComponent(currentUser.email)}&checkout[custom][user_id]=${currentUser.id}`;
+                basic: 'https://lazybstudios.lemonsqueezy.com/checkout/buy/a921ce0f-6637-4263-a5d7-2cf1f648b9bf?checkout[custom][return_url]=https://sampleflow.lazybstudios.com',
+                pro: 'https://lazybstudios.lemonsqueezy.com/checkout/buy/d324fe3e-0a61-4d6c-bffd-25e7a92d1ef0?checkout[custom][return_url]=https://sampleflow.lazybstudios.com'
+            };
+        
+            // Add user email to checkout if signed in
+            let url = checkoutUrls[tier];
+            if (currentUser && currentUser.email) {
+                url += `?checkout[email]=${encodeURIComponent(currentUser.email)}&checkout[custom][user_id]=${currentUser.id}`;
+            }
+        
+            // Redirect to checkout
+            window.location.href = url;
         }
-    
-        // Redirect to checkout
-        window.location.href = url;
-}
-       // ==================== CHANGE PASSWORD ====================
-function openChangePassword() {
-    if (!useCloud || !currentUser) {
-        alert('You must be signed in to change your password');
-        return;
-    }
-    document.getElementById('changePasswordModal').classList.add('active');
-}
-
-function closeChangePassword() {
-    document.getElementById('changePasswordModal').classList.remove('active');
-    document.getElementById('newPassword').value = '';
-    document.getElementById('confirmNewPassword').value = '';
-    document.getElementById('changePasswordError').style.display = 'none';
-}
-
-async function handleChangePassword() {
-    const newPassword = document.getElementById('newPassword').value;
-    const confirmPassword = document.getElementById('confirmNewPassword').value;
-    const errorDiv = document.getElementById('changePasswordError');
-    
-    if (!newPassword || newPassword.length < 6) {
-        errorDiv.textContent = 'Password must be at least 6 characters';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'Passwords do not match';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    try {
-        const { error } = await sb_client.auth.updateUser({
-            password: newPassword
-        });
-        
-        if (error) throw error;
-        
-        // Update stored password if "Keep me logged in" was checked
-        if (localStorage.getItem('user_password')) {
-            localStorage.setItem('user_password', newPassword);
-        }
-        
-        alert('Password updated successfully!');
-        closeChangePassword();
-    } catch (e) {
-        errorDiv.textContent = 'Failed to update password: ' + e.message;
-        errorDiv.style.display = 'block';
-    }
-}
+       
+        // ==================== CHANGE PASSWORD ====================
         function openChangePassword() {
-    if (!useCloud || !currentUser) {
-        alert('You must be signed in to change your password');
-        return;
-    }
-    document.getElementById('changePasswordModal').classList.add('active');
-}
-
-function closeChangePassword() {
-    document.getElementById('changePasswordModal').classList.remove('active');
-    document.getElementById('newPassword').value = '';
-    document.getElementById('confirmNewPassword').value = '';
-    document.getElementById('changePasswordError').style.display = 'none';
-}
-
-async function handleChangePassword() {
-    const newPassword = document.getElementById('newPassword').value;
-    const confirmPassword = document.getElementById('confirmNewPassword').value;
-    const errorDiv = document.getElementById('changePasswordError');
-    
-    if (!newPassword || newPassword.length < 6) {
-        errorDiv.textContent = 'Password must be at least 6 characters';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    if (newPassword !== confirmPassword) {
-        errorDiv.textContent = 'Passwords do not match';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    try {
-        const { error } = await sb_client.auth.updateUser({
-            password: newPassword
-        });
-        
-        if (error) throw error;
-        
-        // Update stored password if "Keep me logged in" was checked
-        if (localStorage.getItem('user_password')) {
-            localStorage.setItem('user_password', newPassword);
+            if (!useCloud || !currentUser) {
+                alert('You must be signed in to change your password');
+                return;
+            }
+            document.getElementById('changePasswordModal').classList.add('active');
         }
-        
-        alert('Password updated successfully!');
-        closeChangePassword();
-    } catch (e) {
-        errorDiv.textContent = 'Failed to update password: ' + e.message;
-        errorDiv.style.display = 'block';
-    }
-}
-// ==================== READY TO FILM (PRO FEATURE) ====================
-function readyToFilm(id) {
-    // ... existing code ...
-}
+
+        function closeChangePassword() {
+            document.getElementById('changePasswordModal').classList.remove('active');
+            document.getElementById('newPassword').value = '';
+            document.getElementById('confirmNewPassword').value = '';
+            document.getElementById('changePasswordError').style.display = 'none';
+        }
+
+        async function handleChangePassword() {
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmNewPassword').value;
+            const errorDiv = document.getElementById('changePasswordError');
+            
+            if (!newPassword || newPassword.length < 6) {
+                errorDiv.textContent = 'Password must be at least 6 characters';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                errorDiv.textContent = 'Passwords do not match';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            try {
+                const { error } = await sb_client.auth.updateUser({
+                    password: newPassword
+                });
+                
+                if (error) throw error;
+                
+                // Update stored password if "Keep me logged in" was checked
+                if (localStorage.getItem('user_password')) {
+                    localStorage.setItem('user_password', newPassword);
+                }
+                
+                alert('Password updated successfully!');
+                closeChangePassword();
+            } catch (e) {
+                errorDiv.textContent = 'Failed to update password: ' + e.message;
+                errorDiv.style.display = 'block';
+            }
+        }
 
         // ==================== READY TO FILM (PRO FEATURE) ====================
         function readyToFilm(id) {
@@ -1622,8 +1576,9 @@ function readyToFilm(id) {
                 window.open('https://www.tiktok.com/creator-tools/upload', '_blank');
             }
         }
-
-    </script><script>
+    </script>
+    
+    <script>
         // ==================== CONFIGURATION ====================
         const SUPABASE_URL = 'https://eiigbmrjtwndanywrcqp.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVpaWdibXJqdHduZGFueXdyY3FwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjcyMDQyMzQsImV4cCI6MjA4Mjc4MDIzNH0.bHCDscs-aeSukDeXAf9kuRC12WBC3zSqIQia-8cIc3s';
@@ -1644,12 +1599,12 @@ function readyToFilm(id) {
         let tempTags = [];
         let tempPhotos = [];
         let calendarDate = new Date();
-let userTier = 'free'; // Track user's subscription tier
-let tierLimits = {
-    free: { samples: 5, photos: 1 },
-    basic: { samples: 999999, photos: 2 },
-    pro: { samples: 999999, photos: 3 }
-};
+        let userTier = 'free';
+        let tierLimits = {
+            free: { samples: 5, photos: 1 },
+            basic: { samples: 999999, photos: 2 },
+            pro: { samples: 999999, photos: 3 }
+        };
         let hapticEnabled = false;
         let compactMode = false;
 
@@ -1666,55 +1621,51 @@ let tierLimits = {
         }
 
         // ==================== SUBSCRIPTION TIER ====================
-async function loadUserTier() {
-    if (!useCloud || !currentUser) {
-        userTier = 'free';
-        return;
-    }
-    
-    try {
-        const { data, error } = await sb_client
-            .from('users')
-            .select('subscription_tier')
-            .eq('id', currentUser.id)
-            .single();
-        
-        if (error && error.code === 'PGRST116') {
-            // User profile doesn't exist yet, create it
-            await sb_client
-                .from('users')
-                .insert({
-                    id: currentUser.id,
-                    email: currentUser.email,
-                    subscription_tier: 'free'
-                });
-            userTier = 'free';
-        } else if (error) {
-            console.error('Load tier error:', error);
-            userTier = 'free';
-        } else {
-            userTier = data?.subscription_tier || 'free';
+        async function loadUserTier() {
+            if (!useCloud || !currentUser) {
+                userTier = 'free';
+                return;
+            }
+            
+            try {
+                const { data, error } = await sb_client
+                    .from('users')
+                    .select('subscription_tier')
+                    .eq('id', currentUser.id)
+                    .single();
+                
+                if (error && error.code === 'PGRST116') {
+                    await sb_client
+                        .from('users')
+                        .insert({
+                            id: currentUser.id,
+                            email: currentUser.email,
+                            subscription_tier: 'free'
+                        });
+                    userTier = 'free';
+                } else if (error) {
+                    console.error('Load tier error:', error);
+                    userTier = 'free';
+                } else {
+                    userTier = data?.subscription_tier || 'free';
+                }
+                
+                console.log('✓ User tier loaded:', userTier);
+                updateUIForTier();
+            } catch (e) {
+                console.error('Load tier failed:', e);
+                userTier = 'free';
+            }
         }
-        
-        console.log('✓ User tier loaded:', userTier);
-        updateUIForTier();
-    } catch (e) {
-        console.error('Load tier failed:', e);
-        userTier = 'free';
-    }
-}
 
-function updateUIForTier() {
-    // Update calendar button
-    const calendarBtn = document.getElementById('view-calendar');
-    if (calendarBtn && userTier === 'free') {
-        calendarBtn.innerHTML = '📅 Calendar View <span class="pro-badge">💎 BASIC</span>';
-    }
-    
-    // Update settings to show current tier
-    updateCloudStatus();
-}
-
+        function updateUIForTier() {
+            const calendarBtn = document.getElementById('view-calendar');
+            if (calendarBtn && userTier === 'free') {
+                calendarBtn.innerHTML = '📅 Calendar View <span class="pro-badge">💎 BASIC</span>';
+            }
+            
+            updateCloudStatus();
+        }
 
         // ==================== AUTHENTICATION ====================
         async function signInAnonymously() {
@@ -1732,6 +1683,7 @@ function updateUIForTier() {
                         currentUser = data.user;
                         useCloud = true;
                         console.log('✓ Auto-signed in');
+                        await loadUserTier();
                         await loadFromCloud();
                         showApp();
                         return;
@@ -1746,8 +1698,6 @@ function updateUIForTier() {
                 }
             }
             
-            // No credentials or auto-login failed - show landing page
-            // Removed manual display switch to use the hidden class logic for fail-safe
             document.getElementById('landingPage').classList.remove('hidden');
         }
 
@@ -1767,18 +1717,25 @@ function updateUIForTier() {
                     
                     <div id="authForm">
                         <div class="form-group">
-                            <label class="form-label">Password</label>
-                            <input type="password" id="authPassword" class="form-input" placeholder="Min 6 characters" required>
+                            <label class="form-label">Email</label>
+                            <input type="email" id="authEmail" class="form-input" placeholder="your@email.com" required>
                         </div>
-                       ${mode === 'signup' ? `
-<div class="form-group">
-    <label class="form-label">Confirm Password</label>
-    <div style="position: relative;">
-        <input type="password" id="authConfirm" class="form-input" placeholder="Confirm your password" required style="padding-right: 45px;">
-        <button type="button" onclick="togglePasswordVisibility('authConfirm', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
-    </div>
-</div>
-` : ''}
+                        <div class="form-group">
+                            <label class="form-label">Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="authPassword" class="form-input" placeholder="Min 6 characters" required style="padding-right: 45px;">
+                                <button type="button" onclick="togglePasswordVisibility('authPassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+                            </div>
+                        </div>
+                        ${mode === 'signup' ? `
+                        <div class="form-group">
+                            <label class="form-label">Confirm Password</label>
+                            <div style="position: relative;">
+                                <input type="password" id="authConfirm" class="form-input" placeholder="Confirm your password" required style="padding-right: 45px;">
+                                <button type="button" onclick="togglePasswordVisibility('authConfirm', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+                            </div>
+                        </div>
+                        ` : ''}
                         <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
                             <input type="checkbox" id="rememberMe" checked style="width: 18px; height: 18px; cursor: pointer;">
                             <label for="rememberMe" style="margin: 0; cursor: pointer; font-size: 0.9rem; color: var(--text-main);">Keep me logged in</label>
@@ -1839,12 +1796,10 @@ function updateUIForTier() {
                 if (error) throw error;
                 
                 if (data.user) {
-                    // Only save credentials if "Keep me logged in" is checked
                     if (rememberMe) {
                         localStorage.setItem('user_email', email);
                         localStorage.setItem('user_password', password);
                     } else {
-                        // Clear any old credentials if they unchecked it
                         localStorage.removeItem('user_email');
                         localStorage.removeItem('user_password');
                     }
@@ -1854,20 +1809,16 @@ function updateUIForTier() {
                     
                     if (mode === 'signup') {
                         await migrateToCloud();
-                        // Prompt install for new users
                         setTimeout(() => checkAndShowInstallPrompt(), 3000); 
-                   } else {
-    // Load user tier and data first, then show app
-closeAuthModal();
-await loadUserTier();
-await loadFromCloud();
-showApp();
-render();
-renderCalendar();
-return;
-}
-                    
-                   
+                    } else {
+                        closeAuthModal();
+                        await loadUserTier();
+                        await loadFromCloud();
+                        showApp();
+                        render();
+                        renderCalendar();
+                        return;
+                    }
                 }
             } catch (e) {
                 console.error('Auth error:', e);
@@ -1948,71 +1899,61 @@ return;
         }
 
         // ==================== UI STATE ====================
-       // ===== UI State Management =====
+        function showLanding() {
+            if (currentUser) {
+                showApp();
+            } else {
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('landingPage').classList.add('active');
+                document.getElementById('appContainer').classList.remove('active');
+            }
+        }
 
-function showLanding() {
-    // If user is signed in, show app instead of landing
-    if (currentUser) {
-        showApp();
-    } else {
-        // Not signed in - show landing page
-        document.getElementById('landingPage').classList.remove('hidden');
-        document.getElementById('landingPage').classList.add('active');
-        document.getElementById('appContainer').classList.remove('active');
-    }
-}
-
-function showApp() {
-    document.getElementById('landingPage').classList.add('hidden');
-    document.getElementById('landingPage').classList.remove('active');
-    document.getElementById('appContainer').classList.add('active');
-    document.getElementById('authSection').style.display = 'none';
-    document.getElementById('appSection').style.display = 'block';
-    
-    // Load user tier and render
-    loadUserTier().then(() => {
-        render();
-        renderCalendar();
-        updateStats();
-    });
-}
-function goToLanding() {
-    if (confirm('Return to home screen? You will remain signed in.')) {
-        document.getElementById('appContainer').classList.remove('active');
-        document.getElementById('landingPage').classList.remove('hidden');
-        document.getElementById('landingPage').classList.add('active');
-    }
-}
-// Check for existing session on page load (STAY SIGNED IN)
-async function checkExistingSession() {
-    try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (session && session.user) {
-            // User has active session - auto sign in!
-            currentUser = {
-                id: session.user.id,
-                email: session.user.email
-            };
+        function showApp() {
+            document.getElementById('landingPage').classList.add('hidden');
+            document.getElementById('landingPage').classList.remove('active');
+            document.getElementById('appContainer').classList.add('active');
             
-            console.log('Auto-signed in:', currentUser.email);
-            
-            // Load user's tier and data
-            await loadUserTier();
-            await loadFromCloud();
-            
-            // Show app (not login screen)
-            showApp();
-            
-            return true;
+            loadUserTier().then(() => {
+                render();
+                renderCalendar();
+                updateStats();
+            });
         }
         
-        return false;
-    } catch (error) {
-        console.error('Session check error:', error);
-        return false;
-    }
-}
+        function goToLanding() {
+            if (confirm('Return to home screen? You will remain signed in.')) {
+                document.getElementById('appContainer').classList.remove('active');
+                document.getElementById('landingPage').classList.remove('hidden');
+                document.getElementById('landingPage').classList.add('active');
+            }
+        }
+
+        async function checkExistingSession() {
+            try {
+                const { data: { session }, error } = await sb_client.auth.getSession();
+                
+                if (session && session.user) {
+                    currentUser = {
+                        id: session.user.id,
+                        email: session.user.email
+                    };
+                    
+                    console.log('Auto-signed in:', currentUser.email);
+                    
+                    await loadUserTier();
+                    await loadFromCloud();
+                    showApp();
+                    
+                    return true;
+                }
+                
+                return false;
+            } catch (error) {
+                console.error('Session check error:', error);
+                return false;
+            }
+        }
 
         // ==================== THEME HANDLING ====================
         function toggleTheme(isDark) {
@@ -2095,7 +2036,6 @@ async function checkExistingSession() {
                 await deferredPrompt.userChoice;
                 deferredPrompt = null;
             } else {
-                // If deferredPrompt is null, show the instructions in the install modal
                 openInstall();
             }
             const modal = document.getElementById('installModal');
@@ -2108,10 +2048,6 @@ async function checkExistingSession() {
             if (modal) modal.remove();
         }
 
-        function goToLanding() {
-            showLanding();
-        }
-
         function showPrivacyFromLanding() {
             document.getElementById('privacyModal').classList.add('active');
         }
@@ -2121,10 +2057,6 @@ async function checkExistingSession() {
         }
 
         // ==================== STORAGE ====================
-        function saveSamplesLocal() {
-            localStorage.setItem('tiktok_samples', JSON.stringify(samples));
-        }
-
         async function saveSamples() {
             if (useCloud) {
                 await saveToCloud();
@@ -2159,46 +2091,45 @@ async function checkExistingSession() {
 
         // ==================== WINDOW LOAD ====================
         window.onload = async () => {
-    // Failsafe: Ensure landing page is visible if JS crashes later
-    document.getElementById('landingPage').classList.remove('hidden');
+            document.getElementById('landingPage').classList.remove('hidden');
 
-    loadTheme();
-    
-    const savedHaptic = localStorage.getItem('haptic') === 'true';
-    hapticEnabled = savedHaptic;
-    document.getElementById('hapticToggle').checked = savedHaptic;
+            loadTheme();
+            
+            const savedHaptic = localStorage.getItem('haptic') === 'true';
+            hapticEnabled = savedHaptic;
+            document.getElementById('hapticToggle').checked = savedHaptic;
 
-    const savedCompact = localStorage.getItem('compact') === 'true';
-    toggleCompact(savedCompact);
-    document.getElementById('compactToggle').checked = savedCompact;
+            const savedCompact = localStorage.getItem('compact') === 'true';
+            toggleCompact(savedCompact);
+            document.getElementById('compactToggle').checked = savedCompact;
 
-    try { 
-        samples = JSON.parse(localStorage.getItem('tiktok_samples')) || []; 
-        settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
-        document.getElementById('defaultDays').value = settings.defaultDays;
+            try { 
+                samples = JSON.parse(localStorage.getItem('tiktok_samples')) || []; 
+                settings = JSON.parse(localStorage.getItem('tiktok_settings')) || settings;
+                document.getElementById('defaultDays').value = settings.defaultDays;
+                
+                const savedReminderDays = localStorage.getItem('reminder_days');
+                if (savedReminderDays) {
+                    document.getElementById('reminderDays').value = savedReminderDays;
+                }
+                
+                const notifToggle = document.getElementById('notificationsToggle');
+                if (Notification.permission === 'granted') {
+                    notifToggle.checked = true;
+                    document.getElementById('reminderSettings').style.display = 'block';
+                }
+            } catch(e) { 
+                samples = []; 
+            }
+            
+            try {
+                sb_client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                await checkExistingSession();
+            } catch(e) {
+                console.error("Critical Init Error:", e);
+            }
+        };
         
-        const savedReminderDays = localStorage.getItem('reminder_days');
-        if (savedReminderDays) {
-            document.getElementById('reminderDays').value = savedReminderDays;
-        }
-        
-        const notifToggle = document.getElementById('notificationsToggle');
-        if (Notification.permission === 'granted') {
-            notifToggle.checked = true;
-            document.getElementById('reminderSettings').style.display = 'block';
-            scheduleNotifications();
-        }
-    } catch(e) { 
-        samples = []; 
-    }
-    
-    try {
-        sb_client = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-        await checkExistingSession();  // ← ADD THIS LINE!
-    } catch(e) {
-        console.error("Critical Init Error:", e);
-    }
-};
         // ==================== STATUS INFO ====================
         function getStatusInfo(s) {
             if (s.done) return { status: 'completed', days: 0, percent: 100, color: '#E0E0E0', text: 'Posted' };
@@ -2276,7 +2207,6 @@ async function checkExistingSession() {
             document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('f-' + f).classList.add('active');
             
-            // Update filter heading
             const headings = {
                 'all': '📦 All Samples',
                 'overdue': '🔥 Overdue Samples',
@@ -2391,7 +2321,6 @@ async function checkExistingSession() {
             updateStats();
             updateCloudStatus();
             const filtered = getFilteredSamples();
-            console.log('Filter:', currentFilter, 'Total samples:', samples.length, 'Filtered:', filtered.length);
             const grid = document.getElementById('sampleGrid');
             
             if (filtered.length === 0) {
@@ -2403,7 +2332,6 @@ async function checkExistingSession() {
         }
 
         function renderSampleCard(s) {
-            // Ensure checklist exists
             if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
             const info = getStatusInfo(s);
             const isSelected = selectedSamples.has(s.id);
@@ -2502,30 +2430,31 @@ async function checkExistingSession() {
                 renderCalendar();
             }
         }
+        
         async function toggleCheckbox(id, field) {
-    triggerHaptic();
-    samples = samples.map(s => {
-        if (s.id === id) {
-            return {...s, checklist: {...s.checklist, [field]: !s.checklist[field]}};
+            triggerHaptic();
+            samples = samples.map(s => {
+                if (s.id === id) {
+                    return {...s, checklist: {...s.checklist, [field]: !s.checklist[field]}};
+                }
+                return s;
+            });
+            render();
+            saveSamples();
         }
-        return s;
-    });
-    render();       // ← Update UI FIRST (instant!)
-    saveSamples();  // ← Save in background (no await)
-}
+        
         // ==================== MODAL ====================
         function openModal(id = null) {
-    // Check sample limit for free users
-    if (!id && userTier === 'free' && samples.length >= 5) {
-        showUpgradeModal(
-            'You\'ve reached the 5 sample limit!',
-            'Upgrade to Basic for unlimited samples + calendar view',
-            'basic'
-        );
-        return;
-    }
-    
-    editId = id;
+            if (!id && userTier === 'free' && samples.length >= 5) {
+                showUpgradeModal(
+                    'You\'ve reached the 5 sample limit!',
+                    'Upgrade to Basic for unlimited samples + calendar view',
+                    'basic'
+                );
+                return;
+            }
+            
+            editId = id;
             tempTags = [];
             tempPhotos = [];
             const form = document.getElementById('sampleForm');
@@ -2640,25 +2569,24 @@ async function checkExistingSession() {
             const file = e.target.files[0];
             if (!file) return;
     
-    // Check photo limit based on tier
-    const photoLimit = tierLimits[userTier].photos;
-    
-    if (tempPhotos.length >= photoLimit) {
-        const upgradeMsg = userTier === 'free' 
-            ? 'Free users can upload 1 photo per sample. Upgrade to Basic for 2 photos!'
-            : 'Basic users can upload 2 photos. Upgrade to Pro for 3 photos!';
-        
-        const targetTier = userTier === 'free' ? 'basic' : 'pro';
-        
-        showUpgradeModal(
-            `You've reached the ${photoLimit} photo limit!`,
-            upgradeMsg,
-            targetTier
-        );
-        return;
-    }
-    
-    const reader = new FileReader();
+            const photoLimit = tierLimits[userTier].photos;
+            
+            if (tempPhotos.length >= photoLimit) {
+                const upgradeMsg = userTier === 'free' 
+                    ? 'Free users can upload 1 photo per sample. Upgrade to Basic for 2 photos!'
+                    : 'Basic users can upload 2 photos. Upgrade to Pro for 3 photos!';
+                
+                const targetTier = userTier === 'free' ? 'basic' : 'pro';
+                
+                showUpgradeModal(
+                    `You've reached the ${photoLimit} photo limit!`,
+                    upgradeMsg,
+                    targetTier
+                );
+                return;
+            }
+            
+            const reader = new FileReader();
             reader.onload = (ev) => {
                 tempPhotos.push(ev.target.result);
                 renderPhotoGrid();
@@ -2698,16 +2626,16 @@ async function checkExistingSession() {
 
         // ==================== CALENDAR ====================
         function setView(v) {
-    if (v === 'calendar' && userTier === 'free') {
-        showUpgradeModal(
-            'Calendar View is a Basic feature!',
-            'Upgrade to see all your deadlines in a monthly calendar view',
-            'basic'
-        );
-        return;
-    }
-    
-    triggerHaptic();
+            if (v === 'calendar' && userTier === 'free') {
+                showUpgradeModal(
+                    'Calendar View is a Basic feature!',
+                    'Upgrade to see all your deadlines in a monthly calendar view',
+                    'basic'
+                );
+                return;
+            }
+            
+            triggerHaptic();
             currentView = v;
             document.querySelectorAll('.view-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('view-' + v).classList.add('active');
@@ -2781,16 +2709,16 @@ async function checkExistingSession() {
 
         // ==================== ANALYTICS ====================
         function openAnalytics() {
-    if (userTier !== 'pro') {
-        showUpgradeModal(
-            'Analytics Dashboard is a Pro feature!',
-            'Track your completion rates, overdue samples, and productivity stats',
-            'pro'
-        );
-        return;
-    }
-    
-    const total = samples.length;
+            if (userTier !== 'pro') {
+                showUpgradeModal(
+                    'Analytics Dashboard is a Pro feature!',
+                    'Track your completion rates, overdue samples, and productivity stats',
+                    'pro'
+                );
+                return;
+            }
+            
+            const total = samples.length;
             const completed = samples.filter(s => s.done).length;
             const active = total - completed;
             const stats = { overdue: 0, urgent: 0, good: 0 };
@@ -2860,43 +2788,13 @@ async function checkExistingSession() {
             document.getElementById('settingsModal').classList.remove('active');
         }
 
-      function updateCloudStatus() {
-    const statusDiv = document.getElementById('cloudStatus');
-    const signOutBtn = document.getElementById('signOutBtn');
-    const menuSignOutBtn = document.getElementById('menuSignOutBtn');
-    const manageSubBtn = document.getElementById('manageSubBtn');
-    
-    if (useCloud && currentUser) {
-        const userEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
-        statusDiv.innerHTML = `
-            <p style="margin-bottom: 5px; font-weight: 700; color: var(--green);">✓ Cloud Storage Active</p>
-            <p style="font-size: 0.85rem;">Signed in as: <strong>${userEmail}</strong></p>
-            <p style="font-size: 0.75rem; margin-top: 5px;">Data syncing across all your devices</p>
-        `;
-        statusDiv.style.background = '#E8F5E9';
-        if (signOutBtn) signOutBtn.style.display = 'block';
-        if (menuSignOutBtn) menuSignOutBtn.style.display = 'block';
-        
-        // Show/hide manage subscription button based on tier
-        if (manageSubBtn) {
-            if (userTier === 'basic' || userTier === 'pro') {
-                manageSubBtn.style.display = 'block';
-            } else {
-                manageSubBtn.style.display = 'none';
-            }
-        }
-    } else {
-        statusDiv.innerHTML = `
-            <p style="margin-bottom: 5px; font-weight: 700;">💾 Using Local Storage</p>
-            <p style="font-size: 0.85rem;">Your data is saved in your browser only</p>
-            <p style="font-size: 0.75rem; margin-top: 5px;">Create an account to sync across devices</p>
-        `;
-        statusDiv.style.background = '#E3F2FD';
-        if (signOutBtn) signOutBtn.style.display = 'none';
-        if (menuSignOutBtn) menuSignOutBtn.style.display = 'none';
-        if (manageSubBtn) manageSubBtn.style.display = 'none';
-    }
-}
+        function updateCloudStatus() {
+            const statusDiv = document.getElementById('cloudStatus');
+            const signOutBtn = document.getElementById('signOutBtn');
+            const menuSignOutBtn = document.getElementById('menuSignOutBtn');
+            const manageSubBtn = document.getElementById('manageSubBtn');
+            
+            if (useCloud && currentUser) {
                 const userEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
                 statusDiv.innerHTML = `
                     <p style="margin-bottom: 5px; font-weight: 700; color: var(--green);">✓ Cloud Storage Active</p>
@@ -2906,6 +2804,14 @@ async function checkExistingSession() {
                 statusDiv.style.background = '#E8F5E9';
                 if (signOutBtn) signOutBtn.style.display = 'block';
                 if (menuSignOutBtn) menuSignOutBtn.style.display = 'block';
+                
+                if (manageSubBtn) {
+                    if (userTier === 'basic' || userTier === 'pro') {
+                        manageSubBtn.style.display = 'block';
+                    } else {
+                        manageSubBtn.style.display = 'none';
+                    }
+                }
             } else {
                 statusDiv.innerHTML = `
                     <p style="margin-bottom: 5px; font-weight: 700;">💾 Using Local Storage</p>
@@ -2915,6 +2821,7 @@ async function checkExistingSession() {
                 statusDiv.style.background = '#E3F2FD';
                 if (signOutBtn) signOutBtn.style.display = 'none';
                 if (menuSignOutBtn) menuSignOutBtn.style.display = 'none';
+                if (manageSubBtn) manageSubBtn.style.display = 'none';
             }
         }
 
@@ -2927,10 +2834,10 @@ async function checkExistingSession() {
         }
 
         // ==================== NOTIFICATIONS ====================
-            async function toggleNotifications(enabled) 
-            {const reminderSettings = document.getElementById('reminderSettings');
+        async function toggleNotifications(enabled) {
+            const reminderSettings = document.getElementById('reminderSettings');
             
-           if (enabled) {
+            if (enabled) {
                 if (!('Notification' in window)) {
                     alert('Your browser doesn\'t support notifications');
                     document.getElementById('notificationsToggle').checked = false;
@@ -2939,8 +2846,6 @@ async function checkExistingSession() {
                 
                 if (Notification.permission === 'granted') {
                     reminderSettings.style.display = 'block';
-                    scheduleNotifications();
-                    showNotification('Reminders Enabled', 'You\'ll get notified when samples are due soon!');
                 } else if (Notification.permission !== 'denied') {
                     document.getElementById('notificationStatus').style.display = 'block';
                     const permission = await Notification.requestPermission();
@@ -2948,8 +2853,6 @@ async function checkExistingSession() {
                     
                     if (permission === 'granted') {
                         reminderSettings.style.display = 'block';
-                        scheduleNotifications();
-                        showNotification('Reminders Enabled', 'You\'ll get notified when samples are due soon!');
                     } else {
                         document.getElementById('notificationsToggle').checked = false;
                         alert('Notifications blocked. Enable them in your browser settings.');
@@ -2960,32 +2863,7 @@ async function checkExistingSession() {
                 }
             } else {
                 reminderSettings.style.display = 'none';
-                clearNotifications();
             } 
-            }
-
-        function checkDueSamples() {
-            const globalReminderDays = parseInt(localStorage.getItem('reminder_days') || '1');
-            const activeSamples = samples.filter(s => !s.done);
-            const overdue = activeSamples.filter(s => getStatusInfo(s).status === 'overdue');
-            
-            const dueWithinTimeframe = activeSamples.filter(s => {
-                const info = getStatusInfo(s);
-                const reminderDays = s.reminderDays !== undefined ? s.reminderDays : globalReminderDays;
-                return info.days >= 0 && info.days <= reminderDays;
-            });
-            
-            if (overdue.length > 0) {
-                showNotification(
-                    `⚠️ ${overdue.length} Overdue Sample${overdue.length > 1 ? 's' : ''}!`,
-                    `You have ${overdue.length} sample${overdue.length > 1 ? 's' : ''} past the deadline. Open the app to check.`
-                );
-            } else if (dueWithinTimeframe.length > 0) {
-                showNotification(
-                    `📅 ${dueWithinTimeframe.length} Sample${dueWithinTimeframe.length > 1 ? 's' : ''} Due Soon`,
-                    `${dueWithinTimeframe.length} sample${dueWithinTimeframe.length > 1 ? 's are' : ' is'} due soon.`
-                );
-            }
         }
 
         // ==================== MENU ====================
@@ -3041,16 +2919,16 @@ async function checkExistingSession() {
         }
 
         function exportCSV() {
-    if (userTier !== 'pro') {
-        showUpgradeModal(
-            'Export to CSV is a Pro feature!',
-            'Download all your sample data as a spreadsheet',
-            'pro'
-        );
-        return;
-    }
-    
-    const headers = ['Brand', 'Product', 'Received Date', 'Days to Post', 'Due Date', 'Status', 'Link', 'Notes', 'Tags', 'Filmed', 'Edited', 'Posted'];
+            if (userTier !== 'pro') {
+                showUpgradeModal(
+                    'Export to CSV is a Pro feature!',
+                    'Download all your sample data as a spreadsheet',
+                    'pro'
+                );
+                return;
+            }
+            
+            const headers = ['Brand', 'Product', 'Received Date', 'Days to Post', 'Due Date', 'Status', 'Link', 'Notes', 'Tags', 'Filmed', 'Edited', 'Posted'];
             const rows = samples.map(s => {
                 const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
                 const info = getStatusInfo(s);
@@ -3114,165 +2992,137 @@ async function checkExistingSession() {
             };
             input.click();
         }
+        
         // ==================== SUBSCRIPTION MANAGEMENT ====================
-function manageSubscription() {
-    // LemonSqueezy customer portal URL
-    const customerPortalUrl = 'https://lazybstudios.lemonsqueezy.com/billing';
-    
-    if (currentUser && currentUser.email) {
-        window.open(`${customerPortalUrl}?email=${encodeURIComponent(currentUser.email)}`, '_blank');
-    } else {
-        window.open(customerPortalUrl, '_blank');
-    }
-}
-
-function updateUIForTier() {
-    const manageSubBtn = document.getElementById('manageSubBtn');
-    
-    if (manageSubBtn) {
-        if (userTier === 'basic' || userTier === 'pro') {
-            manageSubBtn.style.display = 'block';
-        } else {
-            manageSubBtn.style.display = 'none';
-        }
-    }
-    
-    console.log('UI updated for tier:', userTier);
-}
-        // Force reload if opened in browser instead of standalone
-if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
-    console.log('Running in standalone mode');
-} else {
-    // Running in browser - this is fine for development
-    console.log('Running in browser mode - install as app for full experience');
-}
-   
-    // ==================== SCRIPT GENERATOR ====================
-async function generateScript(sampleId) {
-    const sample = samples.find(s => s.id === sampleId);
-    if (!sample) return;
-    
-    // Show loading state
-    const loadingModal = document.createElement('div');
-    loadingModal.className = 'modal active';
-    loadingModal.innerHTML = `
-        <div class="modal-content" style="text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 20px;">✨</div>
-            <h2 style="margin-bottom: 10px;">Generating Your Script...</h2>
-            <p style="color: var(--text-secondary);">AI is crafting the perfect TikTok script for ${sample.brand} ${sample.product}</p>
-            <div style="margin-top: 20px;">
-                <div style="width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;">
-                    <div style="width: 100%; height: 100%; background: var(--primary); animation: loading 1.5s ease-in-out infinite;"></div>
-                </div>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(loadingModal);
-    
-    try {
-        // Call Edge Function to generate script
-        const response = await fetch('https://eiigbmrjtwndanywrcqp.supabase.co/functions/v1/generate-script', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'apikey': SUPABASE_ANON_KEY
-            },
-            body: JSON.stringify({
-                product: sample.product,
-                brand: sample.brand,
-                notes: sample.notes || '',
-                userId: currentUser.id,
-                sampleId: sample.id
-            })
-        });
-        
-        const data = await response.json();
-        
-        if (!response.ok) {
-            loadingModal.remove();
+        function manageSubscription() {
+            const customerPortalUrl = 'https://lazybstudios.lemonsqueezy.com/billing';
             
-            if (response.status === 429) {
-                // Daily limit reached
-                const dailyLimit = userTier === 'pro' ? 5 : 1;
-                showUpgradeModal(
-                    `Daily Script Limit Reached!`,
-                    `You've used all ${dailyLimit} script${dailyLimit > 1 ? 's' : ''} for today. ${userTier === 'basic' ? 'Upgrade to Pro for 5 scripts per day!' : 'Come back tomorrow for more!'}`,
-                    'pro'
-                );
-            } else if (response.status === 403) {
-                // Not subscribed
-                showUpgradeModal(
-                    'Script Generator is a Premium Feature!',
-                    'Get AI-powered TikTok scripts for your products',
-                    'basic'
-                );
+            if (currentUser && currentUser.email) {
+                window.open(`${customerPortalUrl}?email=${encodeURIComponent(currentUser.email)}`, '_blank');
             } else {
-                alert('Failed to generate script: ' + (data.error || 'Unknown error'));
+                window.open(customerPortalUrl, '_blank');
             }
-            return;
+        }
+
+        // ==================== SCRIPT GENERATOR ====================
+        async function generateScript(sampleId) {
+            const sample = samples.find(s => s.id === sampleId);
+            if (!sample) return;
+            
+            const loadingModal = document.createElement('div');
+            loadingModal.className = 'modal active';
+            loadingModal.innerHTML = `
+                <div class="modal-content" style="text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 20px;">✨</div>
+                    <h2 style="margin-bottom: 10px;">Generating Your Script...</h2>
+                    <p style="color: var(--text-secondary);">AI is crafting the perfect TikTok script for ${sample.brand} ${sample.product}</p>
+                    <div style="margin-top: 20px;">
+                        <div style="width: 100%; height: 4px; background: var(--border); border-radius: 2px; overflow: hidden;">
+                            <div style="width: 100%; height: 100%; background: var(--primary); animation: loading 1.5s ease-in-out infinite;"></div>
+                        </div>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(loadingModal);
+            
+            try {
+                const response = await fetch('https://eiigbmrjtwndanywrcqp.supabase.co/functions/v1/generate-script', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'apikey': SUPABASE_ANON_KEY
+                    },
+                    body: JSON.stringify({
+                        product: sample.product,
+                        brand: sample.brand,
+                        notes: sample.notes || '',
+                        userId: currentUser.id,
+                        sampleId: sample.id
+                    })
+                });
+                
+                const data = await response.json();
+                
+                if (!response.ok) {
+                    loadingModal.remove();
+                    
+                    if (response.status === 429) {
+                        const dailyLimit = userTier === 'pro' ? 5 : 1;
+                        showUpgradeModal(
+                            `Daily Script Limit Reached!`,
+                            `You've used all ${dailyLimit} script${dailyLimit > 1 ? 's' : ''} for today. ${userTier === 'basic' ? 'Upgrade to Pro for 5 scripts per day!' : 'Come back tomorrow for more!'}`,
+                            'pro'
+                        );
+                    } else if (response.status === 403) {
+                        showUpgradeModal(
+                            'Script Generator is a Premium Feature!',
+                            'Get AI-powered TikTok scripts for your products',
+                            'basic'
+                        );
+                    } else {
+                        alert('Failed to generate script: ' + (data.error || 'Unknown error'));
+                    }
+                    return;
+                }
+                
+                loadingModal.remove();
+                showScriptModal(sample, data.script);
+                
+            } catch (error) {
+                loadingModal.remove();
+                alert('Failed to generate script. Please try again.');
+                console.error('Script generation error:', error);
+            }
+        }
+
+        function showScriptModal(sample, script) {
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title">✨ Your TikTok Script</h2>
+                        <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
+                    </div>
+                    <div style="margin-bottom: 15px; padding: 10px; background: var(--bg); border-radius: 8px;">
+                        <strong>${sample.brand} - ${sample.product}</strong>
+                    </div>
+                    <div style="white-space: pre-wrap; line-height: 1.6; padding: 15px; background: var(--surface); border-radius: 8px; margin-bottom: 15px; max-height: 400px; overflow-y: auto; border: 1px solid var(--border);">
+${script}
+                    </div>
+                    <div style="display: flex; gap: 10px;">
+                        <button class="row-btn" style="background: var(--primary); color: white; flex: 1;" onclick="copyScript(\`${script.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">📋 Copy Script</button>
+                        <button class="row-btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal').remove(); setTimeout(() => generateScript('${sample.id}'), 100);">🔄 Generate New</button>
+                    </div>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+
+        function copyScript(script) {
+            navigator.clipboard.writeText(script).then(() => {
+                alert('Script copied to clipboard! 📋');
+            }).catch(() => {
+                const textarea = document.createElement('textarea');
+                textarea.value = script;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                alert('Script copied to clipboard! 📋');
+            });
         }
         
-        // Remove loading modal
-        loadingModal.remove();
-        
-        // Show script in modal
-        showScriptModal(sample, data.script);
-        
-    } catch (error) {
-        loadingModal.remove();
-        alert('Failed to generate script. Please try again.');
-        console.error('Script generation error:', error);
-    }
-}
-
-function showScriptModal(sample, script) {
-    const modal = document.createElement('div');
-    modal.className = 'modal active';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">✨ Your TikTok Script</h2>
-                <button class="modal-close" onclick="this.closest('.modal').remove()">×</button>
-            </div>
-            <div style="margin-bottom: 15px; padding: 10px; background: var(--bg); border-radius: 8px;">
-                <strong>${sample.brand} - ${sample.product}</strong>
-            </div>
-            <div style="white-space: pre-wrap; line-height: 1.6; padding: 15px; background: var(--surface); border-radius: 8px; margin-bottom: 15px; max-height: 400px; overflow-y: auto; border: 1px solid var(--border);">
-${script}
-            </div>
-            <div style="display: flex; gap: 10px;">
-                <button class="row-btn" style="background: var(--primary); color: white; flex: 1;" onclick="copyScript(\`${script.replace(/`/g, '\\`').replace(/\$/g, '\\$')}\`)">📋 Copy Script</button>
-                <button class="row-btn btn-secondary" style="flex: 1;" onclick="this.closest('.modal').remove(); setTimeout(() => generateScript('${sample.id}'), 100);">🔄 Generate New</button>
-            </div>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-function copyScript(script) {
-    navigator.clipboard.writeText(script).then(() => {
-        alert('Script copied to clipboard! 📋');
-    }).catch(() => {
-        // Fallback for older browsers
-        const textarea = document.createElement('textarea');
-        textarea.value = script;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        alert('Script copied to clipboard! 📋');
-    });
-}
-    function togglePasswordVisibility(inputId, button) {
-    const input = document.getElementById(inputId);
-    if (input.type === 'password') {
-        input.type = 'text';
-        button.textContent = '🙈';
-    } else {
-        input.type = 'password';
-        button.textContent = '👁️';
-    }
-}   
+        function togglePasswordVisibility(inputId, button) {
+            const input = document.getElementById(inputId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                button.textContent = '🙈';
+            } else {
+                input.type = 'password';
+                button.textContent = '👁️';
+            }
+        }   
     </script>
 </body>
 </html>
