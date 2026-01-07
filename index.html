@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <meta name="theme-color" content="#FE2C55">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -2967,6 +2967,13 @@ function updateUIForTier() {
     }
     
     console.log('UI updated for tier:', userTier);
+}
+        // Force reload if opened in browser instead of standalone
+if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone) {
+    console.log('Running in standalone mode');
+} else {
+    // Running in browser - this is fine for development
+    console.log('Running in browser mode - install as app for full experience');
 }
     </script>
 </body>
