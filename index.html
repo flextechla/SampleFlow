@@ -2975,6 +2975,10 @@ if (window.matchMedia('(display-mode: standalone)').matches || window.navigator.
     // Running in browser - this is fine for development
     console.log('Running in browser mode - install as app for full experience');
 }
+    // Initialize app on page load
+window.addEventListener('DOMContentLoaded', async () => {
+    await initSupabase();
+});    
     </script>
 </body>
 </html>
