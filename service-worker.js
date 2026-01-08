@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sampleflow-v2'; // Bump this to v2 now
+const CACHE_NAME = 'sampleflow-v5'; // Bump this to v2 now
 const ASSETS = [
   './',
   './index.html',
