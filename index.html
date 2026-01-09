@@ -1887,7 +1887,7 @@
         }
 
         // ==================== READY TO FILM (PRO FEATURE) ====================
-        function readyToFilm(id) {
+       function readyToFilm(id) {
     if (userTier !== 'pro') {
         showUpgradeModal(
             'Ready-to-Film is a Pro feature!',
@@ -1897,36 +1897,59 @@
         return;
     }
     
-    // Detect if mobile or desktop
+    // Show TikTok launcher modal
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.id = 'tiktokLauncherModal';
+    modal.innerHTML = `
+        <div class="modal-content" style="text-align: center;">
+            <h2 style="margin-bottom: 20px;">📱 Ready to Film!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">Tap below to open TikTok camera</p>
+            
+            <button onclick="launchTikTok()" style="
+                width: 100%;
+                padding: 20px;
+                font-size: 1.2rem;
+                background: linear-gradient(135deg, #ff0050 0%, #00f2ea 100%);
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-bottom: 15px;
+            ">
+                🎥 Open TikTok Camera
+            </button>
+            
+            <button onclick="closeTikTokLauncher()" class="row-btn btn-secondary" style="width: 100%;">
+                ← Back to SampleFlow
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
+
+function launchTikTok() {
     const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
     
     if (isMobile) {
-        // Create a temporary link element for better mobile behavior
-        const link = document.createElement('a');
-        link.href = 'tiktok://camera';
-        link.style.display = 'none';
-        document.body.appendChild(link);
+        // Try TikTok app
+        window.location.href = 'tiktok://camera';
         
-        // Try to open TikTok app
-        link.click();
-        document.body.removeChild(link);
-        
-        // Fallback: If TikTok isn't installed, open web version after 2 seconds
+        // Fallback to web if app not installed (after 2 seconds)
         setTimeout(() => {
-            if (document.hasFocus()) {
-                // Still on this page, TikTok probably not installed
-                window.open('https://www.tiktok.com/upload', '_blank');
-            }
+            window.location.href = 'https://www.tiktok.com/upload';
         }, 2000);
     } else {
-        // Desktop - open TikTok upload page in new tab
+        // Desktop
         window.open('https://www.tiktok.com/creator-tools/upload', '_blank');
+        closeTikTokLauncher();
     }
-    
-    // Show feedback message
-    if (typeof showToast === 'function') {
-        showToast('✓ TikTok opened! Use your back button to return to SampleFlow.');
-    }
+}
+
+function closeTikTokLauncher() {
+    const modal = document.getElementById('tiktokLauncherModal');
+    if (modal) modal.remove();
 }
 
         function showToast(message, duration = 3000) {
