@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="theme-color" content="#000000">
+    <meta name="theme-color" content="#FE2C55">
+    <meta name="apple-mobile-web-app-title" content="SampleFlow">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="mobile-web-app-capable" content="yes">
@@ -1103,7 +1104,7 @@
                 </button>
                 
                 <button class="row-btn btn-secondary" onclick="openSettings(); closeMenu()">⚙️ Settings</button>
-                <button class="row-btn btn-secondary" id="installBtnMenu" onclick="openInstall(); closeMenu()">📲 Install App</button>
+                <button class="row-btn btn-secondary" id="installBtnMenu" onclick="installApp(); closeMenu()" style="display: none;">📲 Install App</button>
                 <button class="row-btn btn-secondary" onclick="openSupport(); closeMenu()">💬 Contact Support</button>
                 <button class="row-btn btn-secondary" onclick="openHelp(); closeMenu()">❓ Help</button>
                 <button class="row-btn btn-secondary" onclick="window.open('privacy.html', '_blank'); closeMenu()">🔒 Privacy Policy</button>
@@ -3703,57 +3704,66 @@ ${script}
   
 // ... your existing app code ends here ...
 
-        // ==================== PWA INSTALLATION LOGIC ====================
+        // ==================== PWA INSTALLATION LOGIC (COMPLETE) ====================
         let deferredPrompt;
 
-        // Detects when the browser says the app is "Installable" (Android/Chrome)
+        // 1. Listen for the Android/Chrome Install Prompt
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
+            
+            // Show the top banner automatically
             showInstallBanner(); 
+
+            // Also show the button in the sidebar menu
+            const menuBtn = document.getElementById('installBtnMenu');
+            if (menuBtn) menuBtn.style.display = 'block';
         });
 
         function showInstallBanner() {
-            // Check if banner already exists to avoid duplicates
             if (document.getElementById('pwa-install-banner')) return;
-
             const banner = document.createElement('div');
             banner.id = 'pwa-install-banner';
             banner.style.cssText = `
                 position: fixed; top: 0; left: 0; right: 0; 
                 background: #FE2C55; color: white; padding: 15px; 
                 text-align: center; z-index: 10001; font-weight: bold;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
                 display: flex; justify-content: center; align-items: center; gap: 10px;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
             `;
             banner.innerHTML = `
                 <span>📱 Install SampleFlow for quick access!</span>
-                <button onclick="executeInstall()" style="background:white; color:#FE2C55; border:none; padding:8px 15px; border-radius:20px; font-weight:bold; cursor:pointer;">Install</button>
+                <button onclick="installApp()" style="background:white; color:#FE2C55; border:none; padding:8px 15px; border-radius:20px; font-weight:bold; cursor:pointer;">Install</button>
                 <button onclick="this.parentElement.remove()" style="background:transparent; color:white; border:none; cursor:pointer; font-size:1.2rem; margin-left:10px;">✕</button>
             `;
             document.body.prepend(banner);
         }
 
-        function executeInstall() {
+        // 2. The Master Install Function (Android and iOS)
+        async function installApp() {
             if (deferredPrompt) {
+                // For Android/Chrome
                 deferredPrompt.prompt();
-                const b = document.getElementById('pwa-install-banner');
-                if(b) b.remove();
+                const { outcome } = await deferredPrompt.userChoice;
+                if (outcome === 'accepted') {
+                    const b = document.getElementById('pwa-install-banner');
+                    if(b) b.remove();
+                }
                 deferredPrompt = null;
+            } else {
+                // For iOS or browsers that don't support the prompt
+                showIOSTip(); 
             }
         }
 
-        // iOS Logic: Safari doesn't support the prompt, so we show a tip
+        // 3. iOS Logic: Show a tip instead of a prompt
         const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
         const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
 
-        if (isIOS && !isStandalone) {
-            // Wait 3 seconds so they don't get hit with it immediately on load
-            setTimeout(showIOSTip, 3000); 
-        }
-
         function showIOSTip() {
+            if (document.getElementById('ios-tip')) return;
             const tip = document.createElement('div');
+            tip.id = 'ios-tip';
             tip.style.cssText = `
                 position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
                 background: var(--surface); color: var(--text-main); padding: 15px; border-radius: 15px;
@@ -3767,13 +3777,18 @@ ${script}
             `;
             document.body.appendChild(tip);
         }
+
+        // Auto-show tip on iOS after 3 seconds if not installed
+        if (isIOS && !isStandalone) {
+            setTimeout(showIOSTip, 3000);
+        }
         
-        // Final Step: Register the Service Worker file
+        // 4. Register the Service Worker file
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
                 navigator.serviceWorker.register('/service-worker.js')
-                .then(reg => console.log('SW Registered'))
-                .catch(err => console.log('SW Failed', err));
+                .then(reg => console.log('PWA Service Worker Registered'))
+                .catch(err => console.error('PWA Service Worker Failed', err));
             });
         }
     </script>
