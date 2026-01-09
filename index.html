@@ -1273,7 +1273,7 @@
                 <input type="number" id="defaultDays" class="form-input" value="14" onchange="saveSettings()">
             </div>
 
-           <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+          <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
     <label class="form-label">Account Information</label>
     
     <div style="padding: 15px; background: var(--bg); border-radius: 12px; margin-bottom: 10px;">
@@ -1281,6 +1281,16 @@
             <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Email Address</span>
             <span id="settingsEmailDisplay" style="font-weight: 600; color: var(--text-main);">Not signed in</span>
         </div>
+        <div style="margin-bottom: 8px;">
+            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Account Tier</span>
+            <span id="settingsTierDisplay" style="font-weight: 600; color: var(--text-main); text-transform: capitalize;">Free</span>
+        </div>
+    </div>
+    
+    <button class="row-btn btn-secondary" onclick="openChangeEmail()" style="margin-bottom: 10px;">📧 Change Email</button>
+    <button class="row-btn btn-secondary" onclick="openChangePassword()" style="margin-bottom: 10px;">🔒 Change Password</button>
+    <button class="row-btn btn-secondary" onclick="openDeleteAccountModal()" style="color: var(--red); border-color: var(--red); margin-bottom: 10px;">🗑️ Delete Account</button>
+</div>
         <div style="margin-bottom: 8px;">
             <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Account Tier</span>
             <span id="settingsTierDisplay" style="font-weight: 600; color: var(--text-main); text-transform: capitalize;">Free</span>
@@ -1300,7 +1310,6 @@
 
             <div class="form-group" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
     <label class="form-label" style="color: var(--red);">Danger Zone</label>
-    <button class="row-btn btn-secondary" onclick="openDeleteAccountModal()" style="color: var(--red); border-color: var(--red); margin-bottom: 10px;">🗑️ Delete Account</button>
     <button class="row-btn btn-secondary" onclick="openResetModal()" style="color: var(--red); border-color: var(--red);">⚠️ Reset App Data</button>
 </div>
         </div>
@@ -1711,6 +1720,178 @@
                 errorDiv.style.display = 'block';
             }
         }
+        // ==================== CHANGE EMAIL ====================
+function openChangeEmail() {
+    if (!useCloud || !currentUser) {
+        alert('You must be signed in to change your email');
+        return;
+    }
+    const currentEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
+    document.getElementById('currentEmailDisplay').value = currentEmail;
+    document.getElementById('newEmail').value = '';
+    document.getElementById('emailChangePassword').value = '';
+    document.getElementById('changeEmailError').style.display = 'none';
+    document.getElementById('changeEmailModal').classList.add('active');
+}
+
+function closeChangeEmail() {
+    document.getElementById('changeEmailModal').classList.remove('active');
+}
+
+async function handleChangeEmail() {
+    const newEmail = document.getElementById('newEmail').value.trim();
+    const password = document.getElementById('emailChangePassword').value;
+    const errorDiv = document.getElementById('changeEmailError');
+    
+    if (!newEmail) {
+        errorDiv.textContent = 'Please enter a new email address';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    if (!password) {
+        errorDiv.textContent = 'Please enter your password to confirm';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(newEmail)) {
+        errorDiv.textContent = 'Please enter a valid email address';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const currentEmail = localStorage.getItem('user_email') || currentUser.email;
+        const { error: signInError } = await sb_client.auth.signInWithPassword({
+            email: currentEmail,
+            password: password
+        });
+        
+        if (signInError) {
+            errorDiv.textContent = 'Incorrect password';
+            errorDiv.style.display = 'block';
+            return;
+        }
+        
+        const { error } = await sb_client.auth.updateUser({
+            email: newEmail
+        });
+        
+        if (error) throw error;
+        
+        localStorage.setItem('user_email', newEmail);
+        if (currentUser) currentUser.email = newEmail;
+        
+        alert('Email change initiated! Please check your new email for a verification link.');
+        closeChangeEmail();
+        updateCloudStatus();
+        
+    } catch (e) {
+        errorDiv.textContent = 'Failed to change email: ' + e.message;
+        errorDiv.style.display = 'block';
+    }
+}
+
+// ==================== DELETE ACCOUNT ====================
+function openDeleteAccountModal() {
+    if (!useCloud || !currentUser) {
+        alert('You must be signed in to delete your account');
+        return;
+    }
+    document.getElementById('deleteConfirmInput').value = '';
+    document.getElementById('deleteAccountError').style.display = 'none';
+    document.getElementById('deleteAccountModal').classList.add('active');
+}
+
+function closeDeleteAccountModal() {
+    document.getElementById('deleteAccountModal').classList.remove('active');
+}
+
+async function confirmDeleteAccount() {
+    const confirmText = document.getElementById('deleteConfirmInput').value.trim().toUpperCase();
+    const errorDiv = document.getElementById('deleteAccountError');
+    
+    if (confirmText !== 'DELETE') {
+        errorDiv.textContent = 'Please type DELETE to confirm';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    if (!confirm('Are you absolutely sure? This will delete all your data and you will need to contact support to complete account deletion.')) {
+        return;
+    }
+    
+    try {
+        errorDiv.textContent = 'Deleting your data...';
+        errorDiv.style.color = 'var(--text-secondary)';
+        errorDiv.style.display = 'block';
+        
+        const userEmail = localStorage.getItem('user_email') || currentUser.email;
+        
+        if (useCloud && currentUser) {
+            try {
+                await sb_client
+                    .from('sample_tracker_data')
+                    .delete()
+                    .eq('user_id', currentUser.id);
+                
+                await sb_client
+                    .from('users')
+                    .delete()
+                    .eq('id', currentUser.id);
+                    
+                console.log('All user data deleted from database');
+            } catch (dbError) {
+                console.error('Database cleanup error:', dbError);
+                throw new Error('Failed to delete data. Please try again or contact support.');
+            }
+        }
+        
+        await sb_client.auth.signOut();
+        localStorage.clear();
+        
+        currentUser = null;
+        useCloud = false;
+        samples = [];
+        settings = { defaultDays: 14 };
+        
+        closeDeleteAccountModal();
+        
+        const successModal = document.createElement('div');
+        successModal.className = 'modal active';
+        successModal.innerHTML = `
+            <div class="modal-content" style="max-width: 500px;">
+                <div class="modal-header">
+                    <h2 class="modal-title">✓ Data Deleted Successfully</h2>
+                </div>
+                
+                <div style="text-align: center; padding: 20px;">
+                    <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
+                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Your data has been deleted</p>
+                    <p style="margin-bottom: 20px; color: var(--text-secondary);">All your samples, photos, and settings have been permanently removed.</p>
+                    
+                    <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
+                        <p style="font-weight: 600; margin-bottom: 10px;">Final Step: Complete Account Deletion</p>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">To fully delete your account authentication:</p>
+                        <p style="font-size: 0.9rem; color: #666;">Email: <strong>${userEmail}</strong></p>
+                        <p style="font-size: 0.9rem; color: #666;">To: <a href="mailto:support@lazybstudios.com?subject=Account Deletion Request - ${encodeURIComponent(userEmail)}&body=Please delete my SampleFlow account." style="color: var(--primary);">support@lazybstudios.com</a></p>
+                    </div>
+                    
+                    <button class="row-btn btn-full-width" onclick="window.location.reload()">Return to Home</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(successModal);
+        
+    } catch (e) {
+        console.error('Delete account error:', e);
+        errorDiv.textContent = 'Error: ' + e.message;
+        errorDiv.style.color = 'var(--red)';
+        errorDiv.style.display = 'block';
+    }
+}
 
         // ==================== READY TO FILM (PRO FEATURE) ====================
         function readyToFilm(id) {
@@ -3047,9 +3228,20 @@ function toggleCard(id) {
 
         // ==================== SETTINGS ====================
         function openSettings() {
-            updateCloudStatus();
-            document.getElementById('settingsModal').classList.add('active');
-        }
+    updateCloudStatus();
+    
+    // Update account info display
+    if (useCloud && currentUser) {
+        const email = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
+        document.getElementById('settingsEmailDisplay').textContent = email;
+        document.getElementById('settingsTierDisplay').textContent = userTier.charAt(0).toUpperCase() + userTier.slice(1);
+    } else {
+        document.getElementById('settingsEmailDisplay').textContent = 'Not signed in';
+        document.getElementById('settingsTierDisplay').textContent = 'N/A';
+    }
+    
+    document.getElementById('settingsModal').classList.add('active');
+}
 
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('active');
