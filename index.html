@@ -69,6 +69,106 @@
         body.compact-mode .checklist-item { font-size: 0.75rem; margin-bottom: 2px; }
         body.compact-mode .row-btn { padding: 10px; font-size: 0.85rem; }
         body.compact-mode .action-container { gap: 6px; margin-top: 6px; }
+
+        /* Collapsed Card Styles */
+.sample-card.collapsed {
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sample-card.collapsed:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.sample-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+}
+
+.summary-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.summary-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.summary-brand {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.summary-product {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 2px 0;
+}
+
+.summary-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+}
+
+.summary-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.summary-date {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.card-expand-icon {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    transition: transform 0.3s;
+}
+
+.sample-card.collapsed .card-expand-icon {
+    transform: rotate(0deg);
+}
+
+.sample-card:not(.collapsed) .card-expand-icon {
+    transform: rotate(180deg);
+}
+
+.card-details {
+    display: none;
+}
+
+.sample-card:not(.collapsed) .card-details {
+    display: block;
+}
+
+.sample-card.collapsed .card-details {
+    display: none;
+}
         
         /* Landing Page Styles */
         #landingPage {
@@ -427,106 +527,6 @@
         .sample-card.selecting { 
             border: 2px solid var(--primary); 
         }
-
-        /* Collapsed Card Styles */
-.sample-card.collapsed {
-    margin-bottom: 8px;
-    cursor: pointer;
-    transition: all 0.2s;
-}
-
-.sample-card.collapsed:hover {
-    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
-    transform: translateY(-2px);
-}
-
-.sample-summary {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 12px 16px;
-}
-
-.summary-thumbnail {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    object-fit: cover;
-    flex-shrink: 0;
-    background: var(--bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 1.5rem;
-}
-
-.summary-info {
-    flex: 1;
-    min-width: 0;
-}
-
-.summary-brand {
-    font-size: 0.7rem;
-    color: var(--text-secondary);
-    font-weight: 700;
-    text-transform: uppercase;
-}
-
-.summary-product {
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--text-main);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    margin: 2px 0;
-}
-
-.summary-meta {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.75rem;
-}
-
-.summary-badge {
-    display: inline-block;
-    padding: 2px 6px;
-    border-radius: 8px;
-    font-size: 0.7rem;
-    font-weight: 800;
-}
-
-.summary-date {
-    color: var(--text-secondary);
-    font-weight: 600;
-}
-
-.card-expand-icon {
-    font-size: 1.2rem;
-    color: var(--text-secondary);
-    transition: transform 0.3s;
-}
-
-.sample-card.collapsed .card-expand-icon {
-    transform: rotate(0deg);
-}
-
-.sample-card:not(.collapsed) .card-expand-icon {
-    transform: rotate(180deg);
-}
-
-.card-details {
-    display: none;
-}
-
-.sample-card:not(.collapsed) .card-details {
-    display: block;
-}
-
-.sample-card.collapsed .card-details {
-    display: none;
-}
         
         .card-header { 
             display: flex; 
@@ -1032,14 +1032,6 @@
                 <button class="view-btn" id="filterToggleBtn" onclick="toggleFilterDropdown()">🔍 Filter</button>
                 <button class="view-btn" id="sortToggleBtn" onclick="toggleSortDropdown()">📊 Sort</button>
             </div>
-            <div class="view-toggle" style="margin-top: 12px;">
-                <button class="view-btn" id="condensedViewBtn" onclick="toggleCondensedView()">
-                <span id="condensedViewIcon">📋</span> Condensed
-                </button>
-                <button class="view-btn" id="expandAllBtn" onclick="toggleExpandAll()" style="display: none;">
-                <span id="expandAllIcon">📂</span> <span id="expandAllText">Expand All</span>
-                </button>
-            </div>
             
             <div id="filterDropdown" class="dropdown-panel" style="display: none; margin-top: 8px;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
@@ -1056,6 +1048,14 @@
                 <button class="filter-btn" onclick="setSort('brand')">🏷️ Brand Name</button>
                 <button class="filter-btn" onclick="setSort('received')">📦 Received Date</button>
             </div>
+            <div class="view-toggle" style="margin-top: 12px;">
+    <button class="view-btn" id="condensedViewBtn" onclick="toggleCondensedView()">
+        <span id="condensedViewIcon">📋</span> Condensed
+    </button>
+    <button class="view-btn" id="expandAllBtn" onclick="toggleExpandAll()" style="display: none;">
+        <span id="expandAllIcon">📂</span> <span id="expandAllText">Expand All</span>
+    </button>
+</div>
             
             <div id="filterHeading" style="position: sticky; top: 0; z-index: 50; background: var(--bg); padding: 12px 15px; margin: 0 -15px; font-weight: 700; font-size: 1.1rem; color: var(--text-main); border-bottom: 2px solid var(--border); display: none;">
                 📦 All Samples
@@ -1693,8 +1693,8 @@
         };
         let hapticEnabled = false;
         let compactMode = false;
-        let condensedView = false;
-        let expandedCards = new Set();
+        let condensedView = false;  // ADD THIS
+        let expandedCards = new Set();  // ADD THIS
 
         // ==================== INITIALIZATION ====================
         async function initSupabase() {
@@ -2094,6 +2094,60 @@
             e.preventDefault();
             deferredPrompt = e;
         });
+        // ==================== CONDENSED VIEW FUNCTIONS ====================
+function toggleCondensedView() {
+    triggerHaptic();
+    condensedView = !condensedView;
+    const btn = document.getElementById('condensedViewBtn');
+    const expandBtn = document.getElementById('expandAllBtn');
+    const icon = document.getElementById('condensedViewIcon');
+    
+    if (condensedView) {
+        btn.classList.add('active');
+        icon.textContent = '📄';
+        expandBtn.style.display = 'block';
+    } else {
+        btn.classList.remove('active');
+        icon.textContent = '📋';
+        expandBtn.style.display = 'none';
+        expandedCards.clear();
+    }
+    
+    render();
+}
+
+function toggleExpandAll() {
+    triggerHaptic();
+    const filtered = getFilteredSamples();
+    const expandBtn = document.getElementById('expandAllBtn');
+    const expandIcon = document.getElementById('expandAllIcon');
+    const expandText = document.getElementById('expandAllText');
+    
+    if (expandedCards.size === filtered.length) {
+        // Collapse all
+        expandedCards.clear();
+        expandIcon.textContent = '📂';
+        expandText.textContent = 'Expand All';
+    } else {
+        // Expand all
+        filtered.forEach(s => expandedCards.add(s.id));
+        expandIcon.textContent = '📁';
+        expandText.textContent = 'Collapse All';
+    }
+    
+    render();
+}
+
+function toggleCard(id) {
+    triggerHaptic();
+    if (expandedCards.has(id)) {
+        expandedCards.delete(id);
+    } else {
+        expandedCards.add(id);
+    }
+    render();
+}
+        
 
         function checkAndShowInstallPrompt() {
             if (window.matchMedia('(display-mode: standalone)').matches) return;
@@ -2402,59 +2456,7 @@
                 updateBatchBar();
             }
         }
-// ==================== CONDENSED VIEW FUNCTIONS ====================
-function toggleCondensedView() {
-    triggerHaptic();
-    condensedView = !condensedView;
-    const btn = document.getElementById('condensedViewBtn');
-    const expandBtn = document.getElementById('expandAllBtn');
-    const icon = document.getElementById('condensedViewIcon');
-    
-    if (condensedView) {
-        btn.classList.add('active');
-        icon.textContent = '📄';
-        expandBtn.style.display = 'block';
-    } else {
-        btn.classList.remove('active');
-        icon.textContent = '📋';
-        expandBtn.style.display = 'none';
-        expandedCards.clear();
-    }
-    
-    render();
-}
 
-function toggleExpandAll() {
-    triggerHaptic();
-    const filtered = getFilteredSamples();
-    const expandBtn = document.getElementById('expandAllBtn');
-    const expandIcon = document.getElementById('expandAllIcon');
-    const expandText = document.getElementById('expandAllText');
-    
-    if (expandedCards.size === filtered.length) {
-        // Collapse all
-        expandedCards.clear();
-        expandIcon.textContent = '📂';
-        expandText.textContent = 'Expand All';
-    } else {
-        // Expand all
-        filtered.forEach(s => expandedCards.add(s.id));
-        expandIcon.textContent = '📁';
-        expandText.textContent = 'Collapse All';
-    }
-    
-    render();
-}
-
-function toggleCard(id) {
-    triggerHaptic();
-    if (expandedCards.has(id)) {
-        expandedCards.delete(id);
-    } else {
-        expandedCards.add(id);
-    }
-    render();
-}
         // ==================== RENDER ====================
         function render() {
             updateStats();
@@ -2471,86 +2473,130 @@ function toggleCard(id) {
         }
 
         function renderSampleCard(s) {
-            if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
-            const info = getStatusInfo(s);
-            const isSelected = selectedSamples.has(s.id);
-            const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
-            
-            return `
-                <div class="sample-card ${isSelected ? 'selecting' : ''}">
-                    <div class="card-body">
-                        <div class="card-header">
-                            <div>
-                                <div class="brand-name">${s.brand}</div>
-                                <div class="product-name">${s.product}</div>
-                            </div>
-                            <input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection('${s.id}')">
-                        </div>
-                        
-                        <div class="days-badge ${info.status}">${info.text}</div>
-                        
-                        ${s.tags && s.tags.length ? `<div class="tags-row">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
-                        
-                        ${s.photos && s.photos.length ? `<div class="photo-row">${s.photos.map(p => `<img src="${p}" class="photo-thumb" onclick="viewPhoto('${p}')">`).join('')}</div>` : ''}
-                        
-                        ${s.notes ? `<div class="notes-section">${s.notes}</div>` : ''}
-                        
-                        <div class="checklist">
-                            <button class="progress-toggle ${s.checklist.filmed ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'filmed')">
-                                <span class="toggle-icon">🎥</span>
-                                <span class="toggle-label">Filmed</span>
-                                ${s.checklist.filmed ? '<span class="toggle-check">✓</span>' : ''}
-                            </button>
-                            <button class="progress-toggle ${s.checklist.edited ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'edited')">
-                                <span class="toggle-icon">✂️</span>
-                                <span class="toggle-label">Edited</span>
-                                ${s.checklist.edited ? '<span class="toggle-check">✓</span>' : ''}
-                            </button>
-                            <button class="progress-toggle ${s.checklist.posted ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'posted')">
-                                <span class="toggle-icon">📱</span>
-                                <span class="toggle-label">Posted</span>
-                                ${s.checklist.posted ? '<span class="toggle-check">✓</span>' : ''}
-                            </button>
-                        </div>
-                        
-                        <div class="progress-container">
-                            <div class="progress-fill" style="width: ${info.percent}%; background: ${info.color};"></div>
-                        </div>
-                        
-                        <div class="meta-grid">
-                            <div>
-                                <span class="meta-label">Received</span>
-                                <span class="meta-value">${new Date(s.date).toLocaleDateString()}</span>
-                            </div>
-                            <div>
-                                <span class="meta-label">Due Date</span>
-                                <span class="meta-value">${dueDate.toLocaleDateString()}</span>
-                            </div>
-                        </div>
-                        
-                        <div class="action-container">
-                            ${!s.done && userTier === 'pro' ? 
-                                '<button class="row-btn" style="background: linear-gradient(135deg, #FE2C55, #FF6B8A); color: white; margin-bottom: 8px;" onclick="readyToFilm(\''+s.id+'\')">🎥 Ready to Film</button>' 
-                                : ''
-                            }
-                            ${(userTier === 'basic' || userTier === 'pro') && !s.done ? 
-                                '<button class="row-btn" style="background: linear-gradient(135deg, #9C27B0, #BA68C8); color: white; margin-bottom: 8px;" onclick="generateScript(\''+s.id+'\')">✨ Generate Script</button>' 
-                                : ''
-                            }
-                            ${s.done ? 
-                                '<button class="row-btn btn-completed">✓ Posted</button>' :
-                                '<button class="row-btn btn-full-width" onclick="markDone(\''+s.id+'\')">✓ Mark as Posted</button>'
-                            }
-                            ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
-                            <div class="btn-row-2">
-                                <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
-                                <button class="row-btn btn-secondary" onclick="deleteSample('${s.id}')">🗑 Delete</button>
-                            </div>
+    if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
+    const info = getStatusInfo(s);
+    const isSelected = selectedSamples.has(s.id);
+    const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
+    const isExpanded = expandedCards.has(s.id);
+    const isCollapsed = condensedView && !isExpanded;
+    
+    // Collapsed summary view
+    if (isCollapsed) {
+        const thumbnail = s.photos && s.photos.length > 0 
+            ? `<img src="${s.photos[0]}" class="summary-thumbnail" alt="${s.product}">`
+            : `<div class="summary-thumbnail">📦</div>`;
+        
+        return `
+            <div class="sample-card collapsed" onclick="toggleCard('${s.id}')">
+                <div class="sample-summary">
+                    ${thumbnail}
+                    <div class="summary-info">
+                        <div class="summary-brand">${s.brand}</div>
+                        <div class="summary-product">${s.product}</div>
+                        <div class="summary-meta">
+                            <span class="summary-badge ${info.status}">${info.text}</span>
+                            <span class="summary-date">${new Date(s.date).toLocaleDateString()}</span>
                         </div>
                     </div>
+                    <div class="card-expand-icon">▼</div>
                 </div>
-            `;
-        }
+            </div>
+        `;
+    }
+    
+    // Expanded full view
+    return `
+        <div class="sample-card ${isSelected ? 'selecting' : ''}">
+            ${condensedView ? `
+                <div class="sample-summary" onclick="toggleCard('${s.id}')" style="border-bottom: 1px solid var(--border); margin-bottom: 12px; cursor: pointer;">
+                    ${s.photos && s.photos.length > 0 
+                        ? `<img src="${s.photos[0]}" class="summary-thumbnail" alt="${s.product}">`
+                        : `<div class="summary-thumbnail">📦</div>`
+                    }
+                    <div class="summary-info">
+                        <div class="summary-brand">${s.brand}</div>
+                        <div class="summary-product">${s.product}</div>
+                        <div class="summary-meta">
+                            <span class="summary-badge ${info.status}">${info.text}</span>
+                            <span class="summary-date">${new Date(s.date).toLocaleDateString()}</span>
+                        </div>
+                    </div>
+                    <div class="card-expand-icon">▼</div>
+                </div>
+            ` : ''}
+            <div class="card-body card-details">
+                <div class="card-header">
+                    <div>
+                        <div class="brand-name">${s.brand}</div>
+                        <div class="product-name">${s.product}</div>
+                    </div>
+                    <input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection('${s.id}')">
+                </div>
+                
+                <div class="days-badge ${info.status}">${info.text}</div>
+                
+                ${s.tags && s.tags.length ? `<div class="tags-row">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+                
+                ${s.photos && s.photos.length ? `<div class="photo-row">${s.photos.map(p => `<img src="${p}" class="photo-thumb" onclick="viewPhoto('${p}')">`).join('')}</div>` : ''}
+                
+                ${s.notes ? `<div class="notes-section">${s.notes}</div>` : ''}
+                
+                <div class="checklist">
+                    <button class="progress-toggle ${s.checklist.filmed ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'filmed')">
+                        <span class="toggle-icon">🎥</span>
+                        <span class="toggle-label">Filmed</span>
+                        ${s.checklist.filmed ? '<span class="toggle-check">✓</span>' : ''}
+                    </button>
+                    <button class="progress-toggle ${s.checklist.edited ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'edited')">
+                        <span class="toggle-icon">✂️</span>
+                        <span class="toggle-label">Edited</span>
+                        ${s.checklist.edited ? '<span class="toggle-check">✓</span>' : ''}
+                    </button>
+                    <button class="progress-toggle ${s.checklist.posted ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'posted')">
+                        <span class="toggle-icon">📱</span>
+                        <span class="toggle-label">Posted</span>
+                        ${s.checklist.posted ? '<span class="toggle-check">✓</span>' : ''}
+                    </button>
+                </div>
+                
+                <div class="progress-container">
+                    <div class="progress-fill" style="width: ${info.percent}%; background: ${info.color};"></div>
+                </div>
+                
+                <div class="meta-grid">
+                    <div>
+                        <span class="meta-label">Received</span>
+                        <span class="meta-value">${new Date(s.date).toLocaleDateString()}</span>
+                    </div>
+                    <div>
+                        <span class="meta-label">Due Date</span>
+                        <span class="meta-value">${dueDate.toLocaleDateString()}</span>
+                    </div>
+                </div>
+                
+                <div class="action-container">
+                    ${!s.done && userTier === 'pro' ? 
+                        '<button class="row-btn" style="background: linear-gradient(135deg, #FE2C55, #FF6B8A); color: white; margin-bottom: 8px;" onclick="readyToFilm(\''+s.id+'\')">🎥 Ready to Film</button>' 
+                        : ''
+                    }
+                    ${(userTier === 'basic' || userTier === 'pro') && !s.done ? 
+                        '<button class="row-btn" style="background: linear-gradient(135deg, #9C27B0, #BA68C8); color: white; margin-bottom: 8px;" onclick="generateScript(\''+s.id+'\')">✨ Generate Script</button>' 
+                        : ''
+                    }
+                    ${s.done ? 
+                        '<button class="row-btn btn-completed">✓ Posted</button>' :
+                        '<button class="row-btn btn-full-width" onclick="markDone(\''+s.id+'\')">✓ Mark as Posted</button>'
+                    }
+                    ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
+                    <div class="btn-row-2">
+                        <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
+                        <button class="row-btn btn-secondary" onclick="deleteSample('${s.id}')">🗑 Delete</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    `;
+}
 
         // ==================== SAMPLE ACTIONS ====================
         async function markDone(id) {
