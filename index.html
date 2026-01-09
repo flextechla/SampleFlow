@@ -3701,5 +3701,81 @@ ${script}
         }
     </script>
   
+// ... your existing app code ends here ...
+
+        // ==================== PWA INSTALLATION LOGIC ====================
+        let deferredPrompt;
+
+        // Detects when the browser says the app is "Installable" (Android/Chrome)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            showInstallBanner(); 
+        });
+
+        function showInstallBanner() {
+            // Check if banner already exists to avoid duplicates
+            if (document.getElementById('pwa-install-banner')) return;
+
+            const banner = document.createElement('div');
+            banner.id = 'pwa-install-banner';
+            banner.style.cssText = `
+                position: fixed; top: 0; left: 0; right: 0; 
+                background: #FE2C55; color: white; padding: 15px; 
+                text-align: center; z-index: 10001; font-weight: bold;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+                display: flex; justify-content: center; align-items: center; gap: 10px;
+            `;
+            banner.innerHTML = `
+                <span>📱 Install SampleFlow for quick access!</span>
+                <button onclick="executeInstall()" style="background:white; color:#FE2C55; border:none; padding:8px 15px; border-radius:20px; font-weight:bold; cursor:pointer;">Install</button>
+                <button onclick="this.parentElement.remove()" style="background:transparent; color:white; border:none; cursor:pointer; font-size:1.2rem; margin-left:10px;">✕</button>
+            `;
+            document.body.prepend(banner);
+        }
+
+        function executeInstall() {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                const b = document.getElementById('pwa-install-banner');
+                if(b) b.remove();
+                deferredPrompt = null;
+            }
+        }
+
+        // iOS Logic: Safari doesn't support the prompt, so we show a tip
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+
+        if (isIOS && !isStandalone) {
+            // Wait 3 seconds so they don't get hit with it immediately on load
+            setTimeout(showIOSTip, 3000); 
+        }
+
+        function showIOSTip() {
+            const tip = document.createElement('div');
+            tip.style.cssText = `
+                position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+                background: var(--surface); color: var(--text-main); padding: 15px; border-radius: 15px;
+                width: 90%; max-width: 350px; z-index: 10001; border: 2px solid #FE2C55;
+                box-shadow: 0 10px 25px rgba(0,0,0,0.3); text-align: center;
+            `;
+            tip.innerHTML = `
+                <p><strong>Install on iPhone:</strong></p>
+                <p style="font-size: 0.9rem; margin-top:5px;">Tap the <strong>Share</strong> icon and select <strong>'Add to Home Screen'</strong>.</p>
+                <button onclick="this.parentElement.remove()" style="margin-top:10px; color:#FE2C55; background:none; border:none; font-weight:bold; cursor:pointer;">Got it</button>
+            `;
+            document.body.appendChild(tip);
+        }
+        
+        // Final Step: Register the Service Worker file
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js')
+                .then(reg => console.log('SW Registered'))
+                .catch(err => console.log('SW Failed', err));
+            });
+        }
+    </script>
 </body>
 </html>
