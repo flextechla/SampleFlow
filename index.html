@@ -1273,10 +1273,23 @@
                 <input type="number" id="defaultDays" class="form-input" value="14" onchange="saveSettings()">
             </div>
 
-            <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
-                <label class="form-label">Account Security</label>
-                <button class="row-btn btn-secondary" onclick="openChangePassword()" style="margin-bottom: 10px;">🔒 Change Password</button>
-            </div>
+           <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+    <label class="form-label">Account Information</label>
+    
+    <div style="padding: 15px; background: var(--bg); border-radius: 12px; margin-bottom: 10px;">
+        <div style="margin-bottom: 8px;">
+            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Email Address</span>
+            <span id="settingsEmailDisplay" style="font-weight: 600; color: var(--text-main);">Not signed in</span>
+        </div>
+        <div style="margin-bottom: 8px;">
+            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Account Tier</span>
+            <span id="settingsTierDisplay" style="font-weight: 600; color: var(--text-main); text-transform: capitalize;">Free</span>
+        </div>
+    </div>
+    
+    <button class="row-btn btn-secondary" onclick="openChangeEmail()" style="margin-bottom: 10px;">📧 Change Email</button>
+    <button class="row-btn btn-secondary" onclick="openChangePassword()" style="margin-bottom: 10px;">🔒 Change Password</button>
+</div>
 
             <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
                 <label class="form-label">Data Management</label>
@@ -1286,9 +1299,10 @@
             </div>
 
             <div class="form-group" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
-                <label class="form-label" style="color: var(--red);">Danger Zone</label>
-                <button class="row-btn btn-secondary" onclick="openResetModal()" style="color: var(--red); border-color: var(--red);">⚠️ Reset App</button>
-            </div>
+    <label class="form-label" style="color: var(--red);">Danger Zone</label>
+    <button class="row-btn btn-secondary" onclick="openDeleteAccountModal()" style="color: var(--red); border-color: var(--red); margin-bottom: 10px;">🗑️ Delete Account</button>
+    <button class="row-btn btn-secondary" onclick="openResetModal()" style="color: var(--red); border-color: var(--red);">⚠️ Reset App Data</button>
+</div>
         </div>
     </div>
 
@@ -1304,6 +1318,74 @@
             <button class="row-btn btn-secondary" onclick="closeResetModal()">Cancel</button>
         </div>
     </div>
+
+    <!-- Delete Account Modal -->
+<div id="deleteAccountModal" class="modal">
+    <div class="modal-content" style="max-width: 500px;">
+        <div class="modal-header">
+            <h2 class="modal-title" style="color: var(--red);">⚠️ Delete Account</h2>
+            <button class="modal-close" onclick="closeDeleteAccountModal()">×</button>
+        </div>
+        
+        <div style="background: #FFEBEE; padding: 15px; border-radius: 12px; border-left: 4px solid var(--red); margin-bottom: 20px;">
+            <p style="font-weight: 700; color: var(--red); margin-bottom: 10px;">⚠️ WARNING: This action cannot be undone!</p>
+            <p style="color: #333; font-size: 0.9rem;">Deleting your account will permanently:</p>
+            <ul style="margin: 10px 0 0 20px; color: #333; font-size: 0.9rem;">
+                <li>Delete all your samples and data</li>
+                <li>Remove all photos and notes</li>
+                <li>Cancel any active subscriptions</li>
+                <li>Sign you out immediately</li>
+            </ul>
+        </div>
+        
+        <p style="margin-bottom: 20px; font-weight: 600;">Please type <strong style="color: var(--red);">DELETE</strong> to confirm:</p>
+        
+        <div class="form-group">
+            <input type="text" id="deleteConfirmInput" class="form-input" placeholder="Type DELETE to confirm" style="text-transform: uppercase;">
+        </div>
+        
+        <div id="deleteAccountError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
+        
+        <button class="row-btn btn-full-width" style="background: var(--red); margin-bottom: 10px;" onclick="confirmDeleteAccount()">Delete My Account</button>
+        <button class="row-btn btn-secondary" onclick="closeDeleteAccountModal()">Cancel</button>
+    </div>
+</div>
+
+<!-- Change Email Modal -->
+<div id="changeEmailModal" class="modal">
+    <div class="modal-content" style="max-width: 400px;">
+        <div class="modal-header">
+            <h2 class="modal-title">📧 Change Email</h2>
+            <button class="modal-close" onclick="closeChangeEmail()">×</button>
+        </div>
+        
+        <div style="background: #FFF8E1; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; color: #666;">
+            ℹ️ You'll need to verify your new email address
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Current Email</label>
+            <input type="email" id="currentEmailDisplay" class="form-input" disabled style="background: var(--bg); color: var(--text-secondary);">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">New Email</label>
+            <input type="email" id="newEmail" class="form-input" placeholder="your-new-email@example.com">
+        </div>
+        
+        <div class="form-group">
+            <label class="form-label">Confirm Password</label>
+            <div style="position: relative;">
+                <input type="password" id="emailChangePassword" class="form-input" placeholder="Enter your password" style="padding-right: 45px;">
+                <button type="button" onclick="togglePasswordVisibility('emailChangePassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+            </div>
+        </div>
+        
+        <div id="changeEmailError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
+        
+        <button class="row-btn btn-full-width" onclick="handleChangeEmail()">Change Email</button>
+    </div>
+</div>
 
     <div id="cloudInfoModal" class="modal">
         <div class="modal-content">
