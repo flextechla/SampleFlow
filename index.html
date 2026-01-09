@@ -997,8 +997,8 @@
         </div>
 
         <div class="landing-sticky-bar">
-          <button class="landing-btn btn-primary" onclick="showAuth('signup')">Create Free Account</button>
-<button class="landing-btn btn-secondary" onclick="showAuth('signin')">Sign In</button>
+            <button class="landing-btn btn-primary" onclick="showAuth('signup')">Create Free Account</button>
+            <button class="landing-btn btn-secondary" onclick="showAuth('signin')">Sign In</button>
             
             <div class="landing-links">
                 <a href="#" class="landing-link" onclick="showPrivacyFromLanding(); return false;">Privacy Policy</a>
@@ -1273,25 +1273,25 @@
                 <input type="number" id="defaultDays" class="form-input" value="14" onchange="saveSettings()">
             </div>
 
-          <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
-    <label class="form-label">Account Information</label>
-    
-    <div style="padding: 15px; background: var(--bg); border-radius: 12px; margin-bottom: 10px;">
-        <div style="margin-bottom: 8px;">
-            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Email Address</span>
-            <span id="settingsEmailDisplay" style="font-weight: 600; color: var(--text-main);">Not signed in</span>
-        </div>
-        <div style="margin-bottom: 8px;">
-            <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Account Tier</span>
-            <span id="settingsTierDisplay" style="font-weight: 600; color: var(--text-main); text-transform: capitalize;">Free</span>
-        </div>
-    </div>
-    
-    <button class="row-btn btn-secondary" onclick="openChangeEmail()" style="margin-bottom: 10px;">📧 Change Email</button>
-    <button class="row-btn btn-secondary" onclick="openChangePassword()" style="margin-bottom: 10px;">🔒 Change Password</button>
-    <button class="row-btn btn-secondary" onclick="openDeleteAccountModal()" style="color: var(--red); border-color: var(--red); margin-bottom: 10px;">🗑️ Delete Account</button>
-</div>
-       
+            <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
+                <label class="form-label">Account Information</label>
+                
+                <div style="padding: 15px; background: var(--bg); border-radius: 12px; margin-bottom: 10px;">
+                    <div style="margin-bottom: 8px;">
+                        <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Email Address</span>
+                        <span id="settingsEmailDisplay" style="font-weight: 600; color: var(--text-main);">Not signed in</span>
+                    </div>
+                    <div style="margin-bottom: 8px;">
+                        <span style="font-size: 0.75rem; color: var(--text-secondary); display: block;">Account Tier</span>
+                        <span id="settingsTierDisplay" style="font-weight: 600; color: var(--text-main); text-transform: capitalize;">Free</span>
+                    </div>
+                </div>
+                
+                <button class="row-btn btn-secondary" onclick="openChangeEmail()" style="margin-bottom: 10px;">📧 Change Email</button>
+                <button class="row-btn btn-secondary" onclick="openChangePassword()" style="margin-bottom: 10px;">🔒 Change Password</button>
+                <button class="row-btn btn-secondary" onclick="openDeleteAccountModal()" style="color: var(--red); border-color: var(--red); margin-bottom: 10px;">🗑️ Delete Account</button>
+            </div>
+
             <div class="form-group" style="margin-top: 20px; border-top: 1px solid var(--border); padding-top: 20px;">
                 <label class="form-label">Data Management</label>
                 <button class="row-btn btn-secondary" onclick="exportCSV(); closeSettings();" style="margin-bottom: 10px;">📥 Export to CSV</button>
@@ -1300,9 +1300,9 @@
             </div>
 
             <div class="form-group" style="margin-top: 30px; border-top: 1px solid var(--border); padding-top: 20px;">
-    <label class="form-label" style="color: var(--red);">Danger Zone</label>
-    <button class="row-btn btn-secondary" onclick="openResetModal()" style="color: var(--red); border-color: var(--red);">⚠️ Reset App Data</button>
-</div>
+                <label class="form-label" style="color: var(--red);">Danger Zone</label>
+                <button class="row-btn btn-secondary" onclick="openResetModal()" style="color: var(--red); border-color: var(--red);">⚠️ Reset App Data</button>
+            </div>
         </div>
     </div>
 
@@ -1320,72 +1320,72 @@
     </div>
 
     <!-- Delete Account Modal -->
-<div id="deleteAccountModal" class="modal">
-    <div class="modal-content" style="max-width: 500px;">
-        <div class="modal-header">
-            <h2 class="modal-title" style="color: var(--red);">⚠️ Delete Account</h2>
-            <button class="modal-close" onclick="closeDeleteAccountModal()">×</button>
-        </div>
-        
-        <div style="background: #FFEBEE; padding: 15px; border-radius: 12px; border-left: 4px solid var(--red); margin-bottom: 20px;">
-            <p style="font-weight: 700; color: var(--red); margin-bottom: 10px;">⚠️ WARNING: This action cannot be undone!</p>
-            <p style="color: #333; font-size: 0.9rem;">Deleting your account will permanently:</p>
-            <ul style="margin: 10px 0 0 20px; color: #333; font-size: 0.9rem;">
-                <li>Delete all your samples and data</li>
-                <li>Remove all photos and notes</li>
-                <li>Cancel any active subscriptions</li>
-                <li>Sign you out immediately</li>
-            </ul>
-        </div>
-        
-        <p style="margin-bottom: 20px; font-weight: 600;">Please type <strong style="color: var(--red);">DELETE</strong> to confirm:</p>
-        
-        <div class="form-group">
-            <input type="text" id="deleteConfirmInput" class="form-input" placeholder="Type DELETE to confirm" style="text-transform: uppercase;">
-        </div>
-        
-        <div id="deleteAccountError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
-        
-        <button class="row-btn btn-full-width" style="background: var(--red); margin-bottom: 10px;" onclick="confirmDeleteAccount()">Delete My Account</button>
-        <button class="row-btn btn-secondary" onclick="closeDeleteAccountModal()">Cancel</button>
-    </div>
-</div>
-
-<!-- Change Email Modal -->
-<div id="changeEmailModal" class="modal">
-    <div class="modal-content" style="max-width: 400px;">
-        <div class="modal-header">
-            <h2 class="modal-title">📧 Change Email</h2>
-            <button class="modal-close" onclick="closeChangeEmail()">×</button>
-        </div>
-        
-        <div style="background: #FFF8E1; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; color: #666;">
-            ℹ️ You'll need to verify your new email address
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Current Email</label>
-            <input type="email" id="currentEmailDisplay" class="form-input" disabled style="background: var(--bg); color: var(--text-secondary);">
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">New Email</label>
-            <input type="email" id="newEmail" class="form-input" placeholder="your-new-email@example.com">
-        </div>
-        
-        <div class="form-group">
-            <label class="form-label">Confirm Password</label>
-            <div style="position: relative;">
-                <input type="password" id="emailChangePassword" class="form-input" placeholder="Enter your password" style="padding-right: 45px;">
-                <button type="button" onclick="togglePasswordVisibility('emailChangePassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+    <div id="deleteAccountModal" class="modal">
+        <div class="modal-content" style="max-width: 500px;">
+            <div class="modal-header">
+                <h2 class="modal-title" style="color: var(--red);">⚠️ Delete Account</h2>
+                <button class="modal-close" onclick="closeDeleteAccountModal()">×</button>
             </div>
+            
+            <div style="background: #FFEBEE; padding: 15px; border-radius: 12px; border-left: 4px solid var(--red); margin-bottom: 20px;">
+                <p style="font-weight: 700; color: var(--red); margin-bottom: 10px;">⚠️ WARNING: This action cannot be undone!</p>
+                <p style="color: #333; font-size: 0.9rem;">Deleting your account will permanently:</p>
+                <ul style="margin: 10px 0 0 20px; color: #333; font-size: 0.9rem;">
+                    <li>Delete all your samples and data</li>
+                    <li>Remove all photos and notes</li>
+                    <li>Cancel any active subscriptions</li>
+                    <li>Sign you out immediately</li>
+                </ul>
+            </div>
+            
+            <p style="margin-bottom: 20px; font-weight: 600;">Please type <strong style="color: var(--red);">DELETE</strong> to confirm:</p>
+            
+            <div class="form-group">
+                <input type="text" id="deleteConfirmInput" class="form-input" placeholder="Type DELETE to confirm" style="text-transform: uppercase;">
+            </div>
+            
+            <div id="deleteAccountError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
+            
+            <button class="row-btn btn-full-width" style="background: var(--red); margin-bottom: 10px;" onclick="confirmDeleteAccount()">Delete My Account</button>
+            <button class="row-btn btn-secondary" onclick="closeDeleteAccountModal()">Cancel</button>
         </div>
-        
-        <div id="changeEmailError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
-        
-        <button class="row-btn btn-full-width" onclick="handleChangeEmail()">Change Email</button>
     </div>
-</div>
+
+    <!-- Change Email Modal -->
+    <div id="changeEmailModal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2 class="modal-title">📧 Change Email</h2>
+                <button class="modal-close" onclick="closeChangeEmail()">×</button>
+            </div>
+            
+            <div style="background: #FFF8E1; padding: 12px; border-radius: 8px; margin-bottom: 15px; font-size: 0.85rem; color: #666;">
+                ℹ️ You'll need to verify your new email address
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Current Email</label>
+                <input type="email" id="currentEmailDisplay" class="form-input" disabled style="background: var(--bg); color: var(--text-secondary);">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">New Email</label>
+                <input type="email" id="newEmail" class="form-input" placeholder="your-new-email@example.com">
+            </div>
+            
+            <div class="form-group">
+                <label class="form-label">Confirm Password</label>
+                <div style="position: relative;">
+                    <input type="password" id="emailChangePassword" class="form-input" placeholder="Enter your password" style="padding-right: 45px;">
+                    <button type="button" onclick="togglePasswordVisibility('emailChangePassword', this)" style="position: absolute; right: 10px; top: 50%; transform: translateY(-50%); background: none; border: none; cursor: pointer; font-size: 1.2rem;">👁️</button>
+                </div>
+            </div>
+            
+            <div id="changeEmailError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
+            
+            <button class="row-btn btn-full-width" onclick="handleChangeEmail()">Change Email</button>
+        </div>
+    </div>
 
     <div id="cloudInfoModal" class="modal">
         <div class="modal-content">
@@ -1711,236 +1711,242 @@
                 errorDiv.style.display = 'block';
             }
         }
+
         // ==================== CHANGE EMAIL ====================
-function openChangeEmail() {
-    if (!useCloud || !currentUser) {
-        alert('You must be signed in to change your email');
-        return;
-    }
-    const currentEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
-    document.getElementById('currentEmailDisplay').value = currentEmail;
-    document.getElementById('newEmail').value = '';
-    document.getElementById('emailChangePassword').value = '';
-    document.getElementById('changeEmailError').style.display = 'none';
-    document.getElementById('changeEmailModal').classList.add('active');
-}
-
-function closeChangeEmail() {
-    document.getElementById('changeEmailModal').classList.remove('active');
-}
-
-async function handleChangeEmail() {
-    const newEmail = document.getElementById('newEmail').value.trim();
-    const password = document.getElementById('emailChangePassword').value;
-    const errorDiv = document.getElementById('changeEmailError');
-    
-    if (!newEmail) {
-        errorDiv.textContent = 'Please enter a new email address';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    if (!password) {
-        errorDiv.textContent = 'Please enter your password to confirm';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(newEmail)) {
-        errorDiv.textContent = 'Please enter a valid email address';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    try {
-        const currentEmail = localStorage.getItem('user_email') || currentUser.email;
-        const { error: signInError } = await sb_client.auth.signInWithPassword({
-            email: currentEmail,
-            password: password
-        });
-        
-        if (signInError) {
-            errorDiv.textContent = 'Incorrect password';
-            errorDiv.style.display = 'block';
-            return;
+        function openChangeEmail() {
+            if (!useCloud || !currentUser) {
+                alert('You must be signed in to change your email');
+                return;
+            }
+            const currentEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
+            document.getElementById('currentEmailDisplay').value = currentEmail;
+            document.getElementById('newEmail').value = '';
+            document.getElementById('emailChangePassword').value = '';
+            document.getElementById('changeEmailError').style.display = 'none';
+            document.getElementById('changeEmailModal').classList.add('active');
         }
-        
-        const { error } = await sb_client.auth.updateUser({
-            email: newEmail
-        });
-        
-        if (error) throw error;
-        
-        localStorage.setItem('user_email', newEmail);
-        if (currentUser) currentUser.email = newEmail;
-        
-        alert('Email change initiated! Please check your new email for a verification link.');
-        closeChangeEmail();
-        updateCloudStatus();
-        
-    } catch (e) {
-        errorDiv.textContent = 'Failed to change email: ' + e.message;
-        errorDiv.style.display = 'block';
-    }
-}
 
-// ==================== DELETE ACCOUNT ====================
-function openDeleteAccountModal() {
-    if (!useCloud || !currentUser) {
-        alert('You must be signed in to delete your account');
-        return;
-    }
-    document.getElementById('deleteConfirmInput').value = '';
-    document.getElementById('deleteAccountError').style.display = 'none';
-    document.getElementById('deleteAccountModal').classList.add('active');
-}
+        function closeChangeEmail() {
+            document.getElementById('changeEmailModal').classList.remove('active');
+        }
 
-function closeDeleteAccountModal() {
-    document.getElementById('deleteAccountModal').classList.remove('active');
-}
-
-async function confirmDeleteAccount() {
-    const confirmText = document.getElementById('deleteConfirmInput').value.trim().toUpperCase();
-    const errorDiv = document.getElementById('deleteAccountError');
-    
-    if (confirmText !== 'DELETE') {
-        errorDiv.textContent = 'Please type DELETE to confirm';
-        errorDiv.style.display = 'block';
-        return;
-    }
-    
-    if (!confirm('Are you absolutely sure? This will delete all your data and you will need to contact support to complete account deletion.')) {
-        return;
-    }
-    
-    try {
-        errorDiv.textContent = 'Deleting your data...';
-        errorDiv.style.color = 'var(--text-secondary)';
-        errorDiv.style.display = 'block';
-        
-        const userEmail = localStorage.getItem('user_email') || currentUser.email;
-        
-        if (useCloud && currentUser) {
+        async function handleChangeEmail() {
+            const newEmail = document.getElementById('newEmail').value.trim();
+            const password = document.getElementById('emailChangePassword').value;
+            const errorDiv = document.getElementById('changeEmailError');
+            
+            if (!newEmail) {
+                errorDiv.textContent = 'Please enter a new email address';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (!password) {
+                errorDiv.textContent = 'Please enter your password to confirm';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(newEmail)) {
+                errorDiv.textContent = 'Please enter a valid email address';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
             try {
-                await sb_client
-                    .from('sample_tracker_data')
-                    .delete()
-                    .eq('user_id', currentUser.id);
+                const currentEmail = localStorage.getItem('user_email') || currentUser.email;
+                const { error: signInError } = await sb_client.auth.signInWithPassword({
+                    email: currentEmail,
+                    password: password
+                });
                 
-                await sb_client
-                    .from('users')
-                    .delete()
-                    .eq('id', currentUser.id);
-                    
-                console.log('All user data deleted from database');
-            } catch (dbError) {
-                console.error('Database cleanup error:', dbError);
-                throw new Error('Failed to delete data. Please try again or contact support.');
+                if (signInError) {
+                    errorDiv.textContent = 'Incorrect password';
+                    errorDiv.style.display = 'block';
+                    return;
+                }
+                
+                const { error } = await sb_client.auth.updateUser({
+                    email: newEmail
+                });
+                
+                if (error) throw error;
+                
+                localStorage.setItem('user_email', newEmail);
+                if (currentUser) currentUser.email = newEmail;
+                
+                alert('Email change initiated! Please check your new email for a verification link.');
+                closeChangeEmail();
+                updateCloudStatus();
+                updateSettingsAccountInfo();
+                
+            } catch (e) {
+                errorDiv.textContent = 'Failed to change email: ' + e.message;
+                errorDiv.style.display = 'block';
             }
         }
-        
-        await sb_client.auth.signOut();
-        localStorage.clear();
-        
-        currentUser = null;
-        useCloud = false;
-        samples = [];
-        settings = { defaultDays: 14 };
-        
-        closeDeleteAccountModal();
-        
-        const successModal = document.createElement('div');
-        successModal.className = 'modal active';
-        successModal.innerHTML = `
-            <div class="modal-content" style="max-width: 500px;">
-                <div class="modal-header">
-                    <h2 class="modal-title">✓ Data Deleted Successfully</h2>
-                </div>
-                
-                <div style="text-align: center; padding: 20px;">
-                    <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
-                    <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Your data has been deleted</p>
-                    <p style="margin-bottom: 20px; color: var(--text-secondary);">All your samples, photos, and settings have been permanently removed.</p>
-                    
-                    <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
-                        <p style="font-weight: 600; margin-bottom: 10px;">Final Step: Complete Account Deletion</p>
-                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">To fully delete your account authentication:</p>
-                        <p style="font-size: 0.9rem; color: #666;">Email: <strong>${userEmail}</strong></p>
-                        <p style="font-size: 0.9rem; color: #666;">To: <a href="mailto:support@lazybstudios.com?subject=Account Deletion Request - ${encodeURIComponent(userEmail)}&body=Please delete my SampleFlow account." style="color: var(--primary);">support@lazybstudios.com</a></p>
-                    </div>
-                    
-                    <button class="row-btn btn-full-width" onclick="window.location.reload()">Return to Home</button>
-                </div>
-            </div>
-        `;
-        document.body.appendChild(successModal);
-        
-    } catch (e) {
-        console.error('Delete account error:', e);
-        errorDiv.textContent = 'Error: ' + e.message;
-        errorDiv.style.color = 'var(--red)';
-        errorDiv.style.display = 'block';
-    }
-}
 
-      // ==================== READY TO FILM (PRO FEATURE) ====================
-function readyToFilm(id) {
-    if (userTier !== 'pro') {
-        showUpgradeModal(
-            'Ready-to-Film is a Pro feature!',
-            'One-tap access to TikTok camera saves you time on every video',
-            'pro'
-        );
-        return;
-    }
+        // ==================== DELETE ACCOUNT ====================
+        function openDeleteAccountModal() {
+            if (!useCloud || !currentUser) {
+                alert('You must be signed in to delete your account');
+                return;
+            }
+            document.getElementById('deleteConfirmInput').value = '';
+            document.getElementById('deleteAccountError').style.display = 'none';
+            document.getElementById('deleteAccountModal').classList.add('active');
+        }
+
+        function closeDeleteAccountModal() {
+            document.getElementById('deleteAccountModal').classList.remove('active');
+        }
+
+        async function confirmDeleteAccount() {
+            const confirmText = document.getElementById('deleteConfirmInput').value.trim().toUpperCase();
+            const errorDiv = document.getElementById('deleteAccountError');
+            
+            if (confirmText !== 'DELETE') {
+                errorDiv.textContent = 'Please type DELETE to confirm';
+                errorDiv.style.display = 'block';
+                return;
+            }
+            
+            if (!confirm('Are you absolutely sure? This will delete all your data and you will need to contact support to complete account deletion.')) {
+                return;
+            }
+            
+            try {
+                errorDiv.textContent = 'Deleting your data...';
+                errorDiv.style.color = 'var(--text-secondary)';
+                errorDiv.style.display = 'block';
+                
+                const userEmail = localStorage.getItem('user_email') || currentUser.email;
+                
+                if (useCloud && currentUser) {
+                    try {
+                        await sb_client
+                            .from('sample_tracker_data')
+                            .delete()
+                            .eq('user_id', currentUser.id);
+                        
+                        await sb_client
+                            .from('users')
+                            .delete()
+                            .eq('id', currentUser.id);
+                            
+                        console.log('All user data deleted from database');
+                    } catch (dbError) {
+                        console.error('Database cleanup error:', dbError);
+                        throw new Error('Failed to delete data. Please try again or contact support.');
+                    }
+                }
+                
+                await sb_client.auth.signOut();
+                localStorage.clear();
+                
+                currentUser = null;
+                useCloud = false;
+                samples = [];
+                settings = { defaultDays: 14 };
+                
+                closeDeleteAccountModal();
+                
+                const successModal = document.createElement('div');
+                successModal.className = 'modal active';
+                successModal.innerHTML = `
+                    <div class="modal-content" style="max-width: 500px;">
+                        <div class="modal-header">
+                            <h2 class="modal-title">✓ Data Deleted Successfully</h2>
+                        </div>
+                        
+                        <div style="text-align: center; padding: 20px;">
+                            <div style="font-size: 4rem; margin-bottom: 20px;">✅</div>
+                            <p style="font-size: 1.1rem; font-weight: 600; margin-bottom: 15px;">Your data has been deleted</p>
+                            <p style="margin-bottom: 20px; color: var(--text-secondary);">All your samples, photos, and settings have been permanently removed.</p>
+                            
+                            <div style="background: #E3F2FD; padding: 20px; border-radius: 12px; margin-bottom: 20px; text-align: left;">
+                                <p style="font-weight: 600; margin-bottom: 10px;">Final Step: Complete Account Deletion</p>
+                                <p style="font-size: 0.9rem; color: #666; margin-bottom: 15px;">To fully delete your account authentication:</p>
+                                <p style="font-size: 0.9rem; color: #666;">Email: <strong>${userEmail}</strong></p>
+                                <p style="font-size: 0.9rem; color: #666;">To: <a href="mailto:support@lazybstudios.com?subject=Account Deletion Request - ${encodeURIComponent(userEmail)}&body=Please delete my SampleFlow account." style="color: var(--primary);">support@lazybstudios.com</a></p>
+                            </div>
+                            
+                            <button class="row-btn btn-full-width" onclick="window.location.reload()">Return to Home</button>
+                        </div>
+                    </div>
+                `;
+                document.body.appendChild(successModal);
+                
+            } catch (e) {
+                console.error('Delete account error:', e);
+                errorDiv.textContent = 'Error: ' + e.message;
+                errorDiv.style.color = 'var(--red)';
+                errorDiv.style.display = 'block';
+            }
+        }
+
+        // ==================== READY TO FILM (PRO FEATURE) ====================
+        function readyToFilm(id) {
+            if (userTier !== 'pro') {
+                showUpgradeModal(
+                    'Ready-to-Film is a Pro feature!',
+                    'One-tap access to TikTok camera saves you time on every video',
+                    'pro'
+                );
+                return;
+            }
+            
+            // Detect if mobile or desktop
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            
+            if (isMobile) {
+                // Try to open TikTok app in new tab (keeps app open)
+                window.open('tiktok://camera', '_blank');
+                
+                // Fallback to TikTok mobile web if app not installed
+                setTimeout(() => {
+                    window.open('https://www.tiktok.com/upload', '_blank');
+                }, 1500);
+            } else {
+                // Desktop - open TikTok upload page in new tab
+                window.open('https://www.tiktok.com/creator-tools/upload', '_blank');
+            }
+            
+            // Show feedback message
+            if (typeof showToast === 'function') {
+                showToast('✓ TikTok opened! Your app is still here.');
+            }
+        }
+
+        function showToast(message, duration = 3000) {
+            const toast = document.createElement('div');
+            toast.style.cssText = `
+                position: fixed;
+                bottom: 80px;
+                left: 50%;
+                transform: translateX(-50%);
+                background: var(--surface);
+                color: var(--text-main);
+                padding: 12px 24px;
+                border-radius: 24px;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+                z-index: 10000;
+                font-size: 0.9rem;
+                font-weight: 600;
+                border: 1px solid var(--border);
+            `;
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transition = 'opacity 0.3s ease';
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+    </script>
     
-    // Detect if mobile or desktop
-    const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-    
-    if (isMobile) {
-        // Try to open TikTok app in new tab (keeps app open)
-        window.open('tiktok://camera', '_blank');
-        
-        // Fallback to TikTok mobile web if app not installed
-        setTimeout(() => {
-            window.open('https://www.tiktok.com/upload', '_blank');
-        }, 1500);
-    } else {
-        // Desktop - open TikTok upload page in new tab
-        window.open('https://www.tiktok.com/creator-tools/upload', '_blank');
-    }
-    
-    // Optional: Show feedback message
-    if (typeof showToast === 'function') {
-        showToast('✓ TikTok opened! Your app is still here.');
-    }
-}
-    function showToast(message, duration = 3000) {
-    const toast = document.createElement('div');
-    toast.style.cssText = `
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        background: var(--card-bg);
-        color: var(--text-main);
-        padding: 12px 24px;
-        border-radius: 24px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        z-index: 10000;
-        font-size: 0.9rem;
-        font-weight: 600;
-    `;
-    toast.textContent = message;
-    document.body.appendChild(toast);
-    
-    setTimeout(() => {
-        toast.style.opacity = '0';
-        toast.style.transition = 'opacity 0.3s ease';
-        setTimeout(() => toast.remove(), 300);
-    }, duration);
-}
     <script>
         // ==================== CONFIGURATION ====================
         const SUPABASE_URL = 'https://eiigbmrjtwndanywrcqp.supabase.co';
@@ -1970,8 +1976,8 @@ function readyToFilm(id) {
         };
         let hapticEnabled = false;
         let compactMode = false;
-        let condensedView = false;  // ADD THIS
-        let expandedCards = new Set();  // ADD THIS
+        let condensedView = false;
+        let expandedCards = new Set();
 
         // ==================== INITIALIZATION ====================
         async function initSupabase() {
@@ -1987,47 +1993,48 @@ function readyToFilm(id) {
 
         // ==================== SUBSCRIPTION TIER ====================
         async function loadUserTier() {
-        if (!useCloud || !currentUser) {
-        console.log('❌ No cloud or no user, defaulting to free');
-        userTier = 'free';
-        return;
-    }
-    
-    try {
-        console.log('📡 Querying database for user:', currentUser.id);
-        
-        const { data, error } = await sb_client
-            .from('users')
-            .select('subscription_tier')
-            .eq('id', currentUser.id)
-            .single();
-        
-        console.log('📊 Database response:', { data, error });
-        
-        if (error && error.code === 'PGRST116') {
-            console.log('⚠️ User not in database, creating...');
-            await sb_client
-                .from('users')
-                .insert({
-                    id: currentUser.id,
-                    email: currentUser.email,
-                    subscription_tier: 'free'
-                });
-            userTier = 'free';
-        } else if (error) {
-            console.error('❌ Load tier error:', error);
-            userTier = 'free';
-        } else {
-            userTier = data?.subscription_tier || 'free';
-            console.log('✓ User tier loaded:', userTier);
+            if (!useCloud || !currentUser) {
+                console.log('❌ No cloud or no user, defaulting to free');
+                userTier = 'free';
+                return;
+            }
+            
+            try {
+                console.log('📡 Querying database for user:', currentUser.id);
+                
+                const { data, error } = await sb_client
+                    .from('users')
+                    .select('subscription_tier')
+                    .eq('id', currentUser.id)
+                    .single();
+                
+                console.log('📊 Database response:', { data, error });
+                
+                if (error && error.code === 'PGRST116') {
+                    console.log('⚠️ User not in database, creating...');
+                    await sb_client
+                        .from('users')
+                        .insert({
+                            id: currentUser.id,
+                            email: currentUser.email,
+                            subscription_tier: 'free'
+                        });
+                    userTier = 'free';
+                } else if (error) {
+                    console.error('❌ Load tier error:', error);
+                    userTier = 'free';
+                } else {
+                    userTier = data?.subscription_tier || 'free';
+                    console.log('✓ User tier loaded:', userTier);
+                }
+                
+                updateUIForTier();
+            } catch (e) {
+                console.error('💥 Load tier failed:', e);
+                userTier = 'free';
+            }
         }
-        
-        updateUIForTier();
-    } catch (e) {
-        console.error('💥 Load tier failed:', e);
-        userTier = 'free';
-    }
-}
+
         function updateUIForTier() {
             const calendarBtn = document.getElementById('view-calendar');
             if (calendarBtn && userTier === 'free') {
@@ -2291,33 +2298,33 @@ function readyToFilm(id) {
             });
         }
 
-       async function checkExistingSession() {
-    try {
-        const { data: { session }, error } = await sb_client.auth.getSession();
-        
-        if (session && session.user) {
-            currentUser = {
-                id: session.user.id,
-                email: session.user.email
-            };
-            
-            useCloud = true;  // ← ADD THIS LINE
-            
-            console.log('Auto-signed in:', currentUser.email);
-            
-            await loadUserTier();
-            await loadFromCloud();
-            showApp();
-            
-            return true;
+        async function checkExistingSession() {
+            try {
+                const { data: { session }, error } = await sb_client.auth.getSession();
+                
+                if (session && session.user) {
+                    currentUser = {
+                        id: session.user.id,
+                        email: session.user.email
+                    };
+                    
+                    useCloud = true;
+                    
+                    console.log('Auto-signed in:', currentUser.email);
+                    
+                    await loadUserTier();
+                    await loadFromCloud();
+                    showApp();
+                    
+                    return true;
+                }
+                
+                return false;
+            } catch (error) {
+                console.error('Session check error:', error);
+                return false;
+            }
         }
-        
-        return false;
-    } catch (error) {
-        console.error('Session check error:', error);
-        return false;
-    }
-}
 
         // ==================== THEME HANDLING ====================
         function toggleTheme(isDark) {
@@ -2371,60 +2378,60 @@ function readyToFilm(id) {
             e.preventDefault();
             deferredPrompt = e;
         });
+
         // ==================== CONDENSED VIEW FUNCTIONS ====================
-function toggleCondensedView() {
-    triggerHaptic();
-    condensedView = !condensedView;
-    const btn = document.getElementById('condensedViewBtn');
-    const expandBtn = document.getElementById('expandAllBtn');
-    const icon = document.getElementById('condensedViewIcon');
-    
-    if (condensedView) {
-        btn.classList.add('active');
-        icon.textContent = '📄';
-        expandBtn.style.display = 'block';
-    } else {
-        btn.classList.remove('active');
-        icon.textContent = '📋';
-        expandBtn.style.display = 'none';
-        expandedCards.clear();
-    }
-    
-    render();
-}
+        function toggleCondensedView() {
+            triggerHaptic();
+            condensedView = !condensedView;
+            const btn = document.getElementById('condensedViewBtn');
+            const expandBtn = document.getElementById('expandAllBtn');
+            const icon = document.getElementById('condensedViewIcon');
+            
+            if (condensedView) {
+                btn.classList.add('active');
+                icon.textContent = '📄';
+                expandBtn.style.display = 'block';
+            } else {
+                btn.classList.remove('active');
+                icon.textContent = '📋';
+                expandBtn.style.display = 'none';
+                expandedCards.clear();
+            }
+            
+            render();
+        }
 
-function toggleExpandAll() {
-    triggerHaptic();
-    const filtered = getFilteredSamples();
-    const expandBtn = document.getElementById('expandAllBtn');
-    const expandIcon = document.getElementById('expandAllIcon');
-    const expandText = document.getElementById('expandAllText');
-    
-    if (expandedCards.size === filtered.length) {
-        // Collapse all
-        expandedCards.clear();
-        expandIcon.textContent = '📂';
-        expandText.textContent = 'Expand All';
-    } else {
-        // Expand all
-        filtered.forEach(s => expandedCards.add(s.id));
-        expandIcon.textContent = '📁';
-        expandText.textContent = 'Collapse All';
-    }
-    
-    render();
-}
+        function toggleExpandAll() {
+            triggerHaptic();
+            const filtered = getFilteredSamples();
+            const expandBtn = document.getElementById('expandAllBtn');
+            const expandIcon = document.getElementById('expandAllIcon');
+            const expandText = document.getElementById('expandAllText');
+            
+            if (expandedCards.size === filtered.length) {
+                // Collapse all
+                expandedCards.clear();
+                expandIcon.textContent = '📂';
+                expandText.textContent = 'Expand All';
+            } else {
+                // Expand all
+                filtered.forEach(s => expandedCards.add(s.id));
+                expandIcon.textContent = '📁';
+                expandText.textContent = 'Collapse All';
+            }
+            
+            render();
+        }
 
-function toggleCard(id) {
-    triggerHaptic();
-    if (expandedCards.has(id)) {
-        expandedCards.delete(id);
-    } else {
-        expandedCards.add(id);
-    }
-    render();
-}
-        
+        function toggleCard(id) {
+            triggerHaptic();
+            if (expandedCards.has(id)) {
+                expandedCards.delete(id);
+            } else {
+                expandedCards.add(id);
+            }
+            render();
+        }
 
         function checkAndShowInstallPrompt() {
             if (window.matchMedia('(display-mode: standalone)').matches) return;
@@ -2750,130 +2757,130 @@ function toggleCard(id) {
         }
 
         function renderSampleCard(s) {
-    if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
-    const info = getStatusInfo(s);
-    const isSelected = selectedSamples.has(s.id);
-    const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
-    const isExpanded = expandedCards.has(s.id);
-    const isCollapsed = condensedView && !isExpanded;
-    
-    // Collapsed summary view
-    if (isCollapsed) {
-        const thumbnail = s.photos && s.photos.length > 0 
-            ? `<img src="${s.photos[0]}" class="summary-thumbnail" alt="${s.product}">`
-            : `<div class="summary-thumbnail">📦</div>`;
-        
-        return `
-            <div class="sample-card collapsed" onclick="toggleCard('${s.id}')">
-                <div class="sample-summary">
-                    ${thumbnail}
-                    <div class="summary-info">
-                        <div class="summary-brand">${s.brand}</div>
-                        <div class="summary-product">${s.product}</div>
-                        <div class="summary-meta">
-                            <span class="summary-badge ${info.status}">${info.text}</span>
-                            <span class="summary-date">${new Date(s.date).toLocaleDateString()}</span>
+            if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
+            const info = getStatusInfo(s);
+            const isSelected = selectedSamples.has(s.id);
+            const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
+            const isExpanded = expandedCards.has(s.id);
+            const isCollapsed = condensedView && !isExpanded;
+            
+            // Collapsed summary view
+            if (isCollapsed) {
+                const thumbnail = s.photos && s.photos.length > 0 
+                    ? `<img src="${s.photos[0]}" class="summary-thumbnail" alt="${s.product}">`
+                    : `<div class="summary-thumbnail">📦</div>`;
+                
+                return `
+                    <div class="sample-card collapsed" onclick="toggleCard('${s.id}')">
+                        <div class="sample-summary">
+                            ${thumbnail}
+                            <div class="summary-info">
+                                <div class="summary-brand">${s.brand}</div>
+                                <div class="summary-product">${s.product}</div>
+                                <div class="summary-meta">
+                                    <span class="summary-badge ${info.status}">${info.text}</span>
+                                    <span class="summary-date">${new Date(s.date).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                            <div class="card-expand-icon">▼</div>
                         </div>
                     </div>
-                    <div class="card-expand-icon">▼</div>
-                </div>
-            </div>
-        `;
-    }
-    
-    // Expanded full view
-    return `
-        <div class="sample-card ${isSelected ? 'selecting' : ''}">
-            ${condensedView ? `
-                <div class="sample-summary" onclick="toggleCard('${s.id}')" style="border-bottom: 1px solid var(--border); margin-bottom: 12px; cursor: pointer;">
-                    ${s.photos && s.photos.length > 0 
-                        ? `<img src="${s.photos[0]}" class="summary-thumbnail" alt="${s.product}">`
-                        : `<div class="summary-thumbnail">📦</div>`
-                    }
-                    <div class="summary-info">
-                        <div class="summary-brand">${s.brand}</div>
-                        <div class="summary-product">${s.product}</div>
-                        <div class="summary-meta">
-                            <span class="summary-badge ${info.status}">${info.text}</span>
-                            <span class="summary-date">${new Date(s.date).toLocaleDateString()}</span>
+                `;
+            }
+            
+            // Expanded full view
+            return `
+                <div class="sample-card ${isSelected ? 'selecting' : ''}">
+                    ${condensedView ? `
+                        <div class="sample-summary" onclick="toggleCard('${s.id}')" style="border-bottom: 1px solid var(--border); margin-bottom: 12px; cursor: pointer;">
+                            ${s.photos && s.photos.length > 0 
+                                ? `<img src="${s.photos[0]}" class="summary-thumbnail" alt="${s.product}">`
+                                : `<div class="summary-thumbnail">📦</div>`
+                            }
+                            <div class="summary-info">
+                                <div class="summary-brand">${s.brand}</div>
+                                <div class="summary-product">${s.product}</div>
+                                <div class="summary-meta">
+                                    <span class="summary-badge ${info.status}">${info.text}</span>
+                                    <span class="summary-date">${new Date(s.date).toLocaleDateString()}</span>
+                                </div>
+                            </div>
+                            <div class="card-expand-icon">▼</div>
+                        </div>
+                    ` : ''}
+                    <div class="card-body card-details">
+                        <div class="card-header">
+                            <div>
+                                <div class="brand-name">${s.brand}</div>
+                                <div class="product-name">${s.product}</div>
+                            </div>
+                            <input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection('${s.id}')">
+                        </div>
+                        
+                        <div class="days-badge ${info.status}">${info.text}</div>
+                        
+                        ${s.tags && s.tags.length ? `<div class="tags-row">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
+                        
+                        ${s.photos && s.photos.length ? `<div class="photo-row">${s.photos.map(p => `<img src="${p}" class="photo-thumb" onclick="viewPhoto('${p}')">`).join('')}</div>` : ''}
+                        
+                        ${s.notes ? `<div class="notes-section">${s.notes}</div>` : ''}
+                        
+                        <div class="checklist">
+                            <button class="progress-toggle ${s.checklist.filmed ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'filmed')">
+                                <span class="toggle-icon">🎥</span>
+                                <span class="toggle-label">Filmed</span>
+                                ${s.checklist.filmed ? '<span class="toggle-check">✓</span>' : ''}
+                            </button>
+                            <button class="progress-toggle ${s.checklist.edited ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'edited')">
+                                <span class="toggle-icon">✂️</span>
+                                <span class="toggle-label">Edited</span>
+                                ${s.checklist.edited ? '<span class="toggle-check">✓</span>' : ''}
+                            </button>
+                            <button class="progress-toggle ${s.checklist.posted ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'posted')">
+                                <span class="toggle-icon">📱</span>
+                                <span class="toggle-label">Posted</span>
+                                ${s.checklist.posted ? '<span class="toggle-check">✓</span>' : ''}
+                            </button>
+                        </div>
+                        
+                        <div class="progress-container">
+                            <div class="progress-fill" style="width: ${info.percent}%; background: ${info.color};"></div>
+                        </div>
+                        
+                        <div class="meta-grid">
+                            <div>
+                                <span class="meta-label">Received</span>
+                                <span class="meta-value">${new Date(s.date).toLocaleDateString()}</span>
+                            </div>
+                            <div>
+                                <span class="meta-label">Due Date</span>
+                                <span class="meta-value">${dueDate.toLocaleDateString()}</span>
+                            </div>
+                        </div>
+                        
+                        <div class="action-container">
+                            ${!s.done && userTier === 'pro' ? 
+                                '<button class="row-btn" style="background: linear-gradient(135deg, #FE2C55, #FF6B8A); color: white; margin-bottom: 8px;" onclick="readyToFilm(\''+s.id+'\')">🎥 Ready to Film</button>' 
+                                : ''
+                            }
+                            ${(userTier === 'basic' || userTier === 'pro') && !s.done ? 
+                                '<button class="row-btn" style="background: linear-gradient(135deg, #9C27B0, #BA68C8); color: white; margin-bottom: 8px;" onclick="generateScript(\''+s.id+'\')">✨ Generate Script</button>' 
+                                : ''
+                            }
+                            ${s.done ? 
+                                '<button class="row-btn btn-completed">✓ Posted</button>' :
+                                '<button class="row-btn btn-full-width" onclick="markDone(\''+s.id+'\')">✓ Mark as Posted</button>'
+                            }
+                            ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
+                            <div class="btn-row-2">
+                                <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
+                                <button class="row-btn btn-secondary" onclick="deleteSample('${s.id}')">🗑 Delete</button>
+                            </div>
                         </div>
                     </div>
-                    <div class="card-expand-icon">▼</div>
                 </div>
-            ` : ''}
-            <div class="card-body card-details">
-                <div class="card-header">
-                    <div>
-                        <div class="brand-name">${s.brand}</div>
-                        <div class="product-name">${s.product}</div>
-                    </div>
-                    <input type="checkbox" class="card-checkbox" ${isSelected ? 'checked' : ''} onchange="toggleSelection('${s.id}')">
-                </div>
-                
-                <div class="days-badge ${info.status}">${info.text}</div>
-                
-                ${s.tags && s.tags.length ? `<div class="tags-row">${s.tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>` : ''}
-                
-                ${s.photos && s.photos.length ? `<div class="photo-row">${s.photos.map(p => `<img src="${p}" class="photo-thumb" onclick="viewPhoto('${p}')">`).join('')}</div>` : ''}
-                
-                ${s.notes ? `<div class="notes-section">${s.notes}</div>` : ''}
-                
-                <div class="checklist">
-                    <button class="progress-toggle ${s.checklist.filmed ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'filmed')">
-                        <span class="toggle-icon">🎥</span>
-                        <span class="toggle-label">Filmed</span>
-                        ${s.checklist.filmed ? '<span class="toggle-check">✓</span>' : ''}
-                    </button>
-                    <button class="progress-toggle ${s.checklist.edited ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'edited')">
-                        <span class="toggle-icon">✂️</span>
-                        <span class="toggle-label">Edited</span>
-                        ${s.checklist.edited ? '<span class="toggle-check">✓</span>' : ''}
-                    </button>
-                    <button class="progress-toggle ${s.checklist.posted ? 'active' : ''}" onclick="toggleCheckbox('${s.id}', 'posted')">
-                        <span class="toggle-icon">📱</span>
-                        <span class="toggle-label">Posted</span>
-                        ${s.checklist.posted ? '<span class="toggle-check">✓</span>' : ''}
-                    </button>
-                </div>
-                
-                <div class="progress-container">
-                    <div class="progress-fill" style="width: ${info.percent}%; background: ${info.color};"></div>
-                </div>
-                
-                <div class="meta-grid">
-                    <div>
-                        <span class="meta-label">Received</span>
-                        <span class="meta-value">${new Date(s.date).toLocaleDateString()}</span>
-                    </div>
-                    <div>
-                        <span class="meta-label">Due Date</span>
-                        <span class="meta-value">${dueDate.toLocaleDateString()}</span>
-                    </div>
-                </div>
-                
-                <div class="action-container">
-                    ${!s.done && userTier === 'pro' ? 
-                        '<button class="row-btn" style="background: linear-gradient(135deg, #FE2C55, #FF6B8A); color: white; margin-bottom: 8px;" onclick="readyToFilm(\''+s.id+'\')">🎥 Ready to Film</button>' 
-                        : ''
-                    }
-                    ${(userTier === 'basic' || userTier === 'pro') && !s.done ? 
-                        '<button class="row-btn" style="background: linear-gradient(135deg, #9C27B0, #BA68C8); color: white; margin-bottom: 8px;" onclick="generateScript(\''+s.id+'\')">✨ Generate Script</button>' 
-                        : ''
-                    }
-                    ${s.done ? 
-                        '<button class="row-btn btn-completed">✓ Posted</button>' :
-                        '<button class="row-btn btn-full-width" onclick="markDone(\''+s.id+'\')">✓ Mark as Posted</button>'
-                    }
-                    ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
-                    <div class="btn-row-2">
-                        <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
-                        <button class="row-btn btn-secondary" onclick="deleteSample('${s.id}')">🗑 Delete</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    `;
-}
+            `;
+        }
 
         // ==================== SAMPLE ACTIONS ====================
         async function markDone(id) {
@@ -3242,40 +3249,40 @@ function toggleCard(id) {
 
         // ==================== SETTINGS ====================
         function openSettings() {
-    updateCloudStatus();
-    
-    // Update account info display
-    if (useCloud && currentUser) {
-        const email = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
-        document.getElementById('settingsEmailDisplay').textContent = email;
-        document.getElementById('settingsTierDisplay').textContent = userTier.charAt(0).toUpperCase() + userTier.slice(1);
-    } else {
-        document.getElementById('settingsEmailDisplay').textContent = 'Not signed in';
-        document.getElementById('settingsTierDisplay').textContent = 'N/A';
-    }
-    
-    document.getElementById('settingsModal').classList.add('active');
-}
+            updateCloudStatus();
+            updateSettingsAccountInfo();
+            document.getElementById('settingsModal').classList.add('active');
+        }
 
         function closeSettings() {
             document.getElementById('settingsModal').classList.remove('active');
         }
 
+        function updateSettingsAccountInfo() {
+            if (useCloud && currentUser) {
+                const email = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
+                document.getElementById('settingsEmailDisplay').textContent = email;
+                document.getElementById('settingsTierDisplay').textContent = userTier.charAt(0).toUpperCase() + userTier.slice(1);
+            } else {
+                document.getElementById('settingsEmailDisplay').textContent = 'Not signed in';
+                document.getElementById('settingsTierDisplay').textContent = 'Free';
+            }
+        }
+
         function updateCloudStatus() {
             const statusDiv = document.getElementById('cloudStatus');
-            const signOutBtn = document.getElementById('signOutBtn');
             const menuSignOutBtn = document.getElementById('menuSignOutBtn');
             const manageSubBtn = document.getElementById('manageSubBtn');
             
             if (useCloud && currentUser) {
-                const userEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
+                const userEmail = localStorage.getItem('user_email') || current
+                User.email || 'Unknown';
                 statusDiv.innerHTML = `
                     <p style="margin-bottom: 5px; font-weight: 700; color: var(--green);">✓ Cloud Storage Active</p>
                     <p style="font-size: 0.85rem;">Signed in as: <strong>${userEmail}</strong></p>
                     <p style="font-size: 0.75rem; margin-top: 5px;">Data syncing across all your devices</p>
                 `;
                 statusDiv.style.background = '#E8F5E9';
-                if (signOutBtn) signOutBtn.style.display = 'block';
                 if (menuSignOutBtn) menuSignOutBtn.style.display = 'block';
                 
                 if (manageSubBtn) {
@@ -3292,7 +3299,6 @@ function toggleCard(id) {
                     <p style="font-size: 0.75rem; margin-top: 5px;">Create an account to sync across devices</p>
                 `;
                 statusDiv.style.background = '#E3F2FD';
-                if (signOutBtn) signOutBtn.style.display = 'none';
                 if (menuSignOutBtn) menuSignOutBtn.style.display = 'none';
                 if (manageSubBtn) manageSubBtn.style.display = 'none';
             }
@@ -3597,11 +3603,11 @@ ${script}
             }
         }   
     </script>
-  <script>
-  // Handle cache-buster
-  if (window.location.search.includes('v=update')) {
-    window.history.replaceState({}, document.title, window.location.pathname);
-  }
-</script>
+    <script>
+        // Handle cache-buster
+        if (window.location.search.includes('v=update')) {
+            window.history.replaceState({}, document.title, window.location.pathname);
+        }
+    </script>
 </body>
 </html>
