@@ -427,6 +427,106 @@
         .sample-card.selecting { 
             border: 2px solid var(--primary); 
         }
+
+        /* Collapsed Card Styles */
+.sample-card.collapsed {
+    margin-bottom: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.sample-card.collapsed:hover {
+    box-shadow: 0 6px 16px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+
+.sample-summary {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+}
+
+.summary-thumbnail {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+    flex-shrink: 0;
+    background: var(--bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+}
+
+.summary-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.summary-brand {
+    font-size: 0.7rem;
+    color: var(--text-secondary);
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+.summary-product {
+    font-size: 0.95rem;
+    font-weight: 700;
+    color: var(--text-main);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 2px 0;
+}
+
+.summary-meta {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.75rem;
+}
+
+.summary-badge {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 8px;
+    font-size: 0.7rem;
+    font-weight: 800;
+}
+
+.summary-date {
+    color: var(--text-secondary);
+    font-weight: 600;
+}
+
+.card-expand-icon {
+    font-size: 1.2rem;
+    color: var(--text-secondary);
+    transition: transform 0.3s;
+}
+
+.sample-card.collapsed .card-expand-icon {
+    transform: rotate(0deg);
+}
+
+.sample-card:not(.collapsed) .card-expand-icon {
+    transform: rotate(180deg);
+}
+
+.card-details {
+    display: none;
+}
+
+.sample-card:not(.collapsed) .card-details {
+    display: block;
+}
+
+.sample-card.collapsed .card-details {
+    display: none;
+}
         
         .card-header { 
             display: flex; 
@@ -931,6 +1031,14 @@
             <div class="view-toggle" style="margin-top: 12px;">
                 <button class="view-btn" id="filterToggleBtn" onclick="toggleFilterDropdown()">🔍 Filter</button>
                 <button class="view-btn" id="sortToggleBtn" onclick="toggleSortDropdown()">📊 Sort</button>
+            </div>
+            <div class="view-toggle" style="margin-top: 12px;">
+                <button class="view-btn" id="condensedViewBtn" onclick="toggleCondensedView()">
+                <span id="condensedViewIcon">📋</span> Condensed
+                </button>
+                <button class="view-btn" id="expandAllBtn" onclick="toggleExpandAll()" style="display: none;">
+                <span id="expandAllIcon">📂</span> <span id="expandAllText">Expand All</span>
+                </button>
             </div>
             
             <div id="filterDropdown" class="dropdown-panel" style="display: none; margin-top: 8px;">
@@ -1585,6 +1693,8 @@
         };
         let hapticEnabled = false;
         let compactMode = false;
+        let condensedView = false;
+        let expandedCards = new Set();
 
         // ==================== INITIALIZATION ====================
         async function initSupabase() {
@@ -2292,7 +2402,59 @@
                 updateBatchBar();
             }
         }
+// ==================== CONDENSED VIEW FUNCTIONS ====================
+function toggleCondensedView() {
+    triggerHaptic();
+    condensedView = !condensedView;
+    const btn = document.getElementById('condensedViewBtn');
+    const expandBtn = document.getElementById('expandAllBtn');
+    const icon = document.getElementById('condensedViewIcon');
+    
+    if (condensedView) {
+        btn.classList.add('active');
+        icon.textContent = '📄';
+        expandBtn.style.display = 'block';
+    } else {
+        btn.classList.remove('active');
+        icon.textContent = '📋';
+        expandBtn.style.display = 'none';
+        expandedCards.clear();
+    }
+    
+    render();
+}
 
+function toggleExpandAll() {
+    triggerHaptic();
+    const filtered = getFilteredSamples();
+    const expandBtn = document.getElementById('expandAllBtn');
+    const expandIcon = document.getElementById('expandAllIcon');
+    const expandText = document.getElementById('expandAllText');
+    
+    if (expandedCards.size === filtered.length) {
+        // Collapse all
+        expandedCards.clear();
+        expandIcon.textContent = '📂';
+        expandText.textContent = 'Expand All';
+    } else {
+        // Expand all
+        filtered.forEach(s => expandedCards.add(s.id));
+        expandIcon.textContent = '📁';
+        expandText.textContent = 'Collapse All';
+    }
+    
+    render();
+}
+
+function toggleCard(id) {
+    triggerHaptic();
+    if (expandedCards.has(id)) {
+        expandedCards.delete(id);
+    } else {
+        expandedCards.add(id);
+    }
+    render();
+}
         // ==================== RENDER ====================
         function render() {
             updateStats();
