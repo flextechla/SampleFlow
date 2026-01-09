@@ -1908,31 +1908,34 @@
             });
         }
 
-        async function checkExistingSession() {
-            try {
-                const { data: { session }, error } = await sb_client.auth.getSession();
-                
-                if (session && session.user) {
-                    currentUser = {
-                        id: session.user.id,
-                        email: session.user.email
-                    };
-                    
-                    console.log('Auto-signed in:', currentUser.email);
-                    
-                    await loadUserTier();
-                    await loadFromCloud();
-                    showApp();
-                    
-                    return true;
-                }
-                
-                return false;
-            } catch (error) {
-                console.error('Session check error:', error);
-                return false;
-            }
+       async function checkExistingSession() {
+    try {
+        const { data: { session }, error } = await sb_client.auth.getSession();
+        
+        if (session && session.user) {
+            currentUser = {
+                id: session.user.id,
+                email: session.user.email
+            };
+            
+            useCloud = true;  // ← ADD THIS LINE
+            
+            console.log('Auto-signed in:', currentUser.email);
+            
+            await loadUserTier();
+            await loadFromCloud();
+            showApp();
+            
+            return true;
         }
+        
+        return false;
+    } catch (error) {
+        console.error('Session check error:', error);
+        return false;
+    }
+}
+```
 
         // ==================== THEME HANDLING ====================
         function toggleTheme(isDark) {
