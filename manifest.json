@@ -12,13 +12,7 @@
   "theme_color": "#FE2C55",
   "orientation": "portrait",
   "prefer_related_applications": false,
-  "icons": [
-    {
-      "src": "icon.svg",
-      "sizes": "any",
-      "type": "image/svg+xml",
-      "purpose": "any"
-    },
+ "icons": [
     {
       "src": "icon-192.png",
       "sizes": "192x192",
