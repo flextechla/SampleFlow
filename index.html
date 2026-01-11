@@ -1046,7 +1046,7 @@
     <div id="appContainer">
         <div class="header">
             <div class="header-top">
-                <h1><span>Sample</span> Flow</h1>
+                <h1><span>Sample</span> Flow123</h1>
                 <div class="header-actions">
                     <button class="icon-btn" onclick="openAnalytics()" title="Analytics">📊</button>
                     <button class="icon-btn" onclick="toggleMenu()" title="Menu">⋮</button>
@@ -3725,92 +3725,84 @@ ${script}
 
       // ... (This should be at the very bottom of your script, right before </script>)
 
-        // ==================== PWA INSTALL ====================
-        // We define this at the TOP LEVEL so the HTML button can find it.
-        
-        let deferredPrompt = null;
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
-        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-        const installBtnFloating = document.getElementById('floatingInstallBtn');
-        const installBtnMenu = document.getElementById('installBtnMenu');
+    // ==================== GLOBAL PWA INSTALL LOGIC ====================
+window.deferredPrompt = null;
 
-        // Capture the native install prompt (Android/Chrome/Edge)
-        window.addEventListener('beforeinstallprompt', (e) => {
-            e.preventDefault();
-            deferredPrompt = e;
-            console.log('✅ PWA install event captured!');
-            if (!isStandalone) {
-                if (installBtnFloating) installBtnFloating.style.display = 'block';
-                if (installBtnMenu) installBtnMenu.style.display = 'block';
-            }
-        });
+// 1. Capture the native prompt
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    window.deferredPrompt = e;
+    console.log('✅ PWA install event captured and ready');
+    
+    // Show buttons
+    const fBtn = document.getElementById('floatingInstallBtn');
+    const mBtn = document.getElementById('installBtnMenu');
+    if (fBtn) fBtn.style.display = 'block';
+    if (mBtn) mBtn.style.display = 'block';
+});
 
-        // Show button for iOS manually since it doesn't support the event above
-        if (isIOS && !isStandalone) {
-            setTimeout(() => {
-                if (installBtnFloating) installBtnFloating.style.display = 'block';
-                if (installBtnMenu) installBtnMenu.style.display = 'block';
-            }, 1000);
-        }
+// 2. Global Install Function (Defined on window so HTML can always see it)
+window.installApp = async function() {
+    console.log("👆 Install button clicked");
 
-        // THIS IS THE GLOBAL FUNCTION CALLED BY YOUR HTML BUTTON
-        window.installApp = async function() {
-            console.log("👆 Install button clicked");
-            if (deferredPrompt) {
-                console.log("🚀 Launching native prompt...");
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log(`User response: ${outcome}`);
-                deferredPrompt = null; // Clear prompt after use
-            } else {
-                console.log("⚠️ No native prompt found. Showing instructions.");
-                showInstallInstructions(); 
-            }
-        };
+    if (window.deferredPrompt) {
+        console.log("🚀 Launching native prompt...");
+        window.deferredPrompt.prompt();
+        const { outcome } = await window.deferredPrompt.userChoice;
+        console.log(`User response: ${outcome}`);
+        window.deferredPrompt = null;
+    } else {
+        console.log("⚠️ Native prompt unavailable. Opening instructions.");
+        showInstallInstructions(); 
+    }
+};
 
-        function showInstallInstructions() {
-            const existing = document.getElementById('installInstructionsModal');
-            if (existing) existing.remove();
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.id = 'installInstructionsModal';
-            
-            let instructionsHtml = isIOS ? `
-                <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the <span style="font-size: 1.3rem;">⎋</span> <strong>Share</strong> button.</p>
-                <p style="margin-bottom: 8px;"><strong>2.</strong> Scroll down and tap <strong>Add to Home Screen</strong>.</p>` : `
-                <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the browser menu (⋮).</p>
-                <p style="margin-bottom: 8px;"><strong>2.</strong> Select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</p>`;
+function showInstallInstructions() {
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+    const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+    
+    const existing = document.getElementById('installInstructionsModal');
+    if (existing) existing.remove();
 
-            modal.innerHTML = `
-                <div class="modal-content" style="max-width: 400px; text-align: center;">
-                    <div style="font-size: 3rem; margin-bottom: 15px;">📲</div>
-                    <h2 class="modal-title" style="margin-bottom: 10px;">Install App</h2>
-                    <div style="text-align: left; font-size: 0.95rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.5;">
-                        ${instructionsHtml}
-                    </div>
-                    <button class="row-btn btn-full-width" onclick="document.getElementById('installInstructionsModal').remove()">Got it</button>
-                </div>`;
-            document.body.appendChild(modal);
-        }
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.id = 'installInstructionsModal';
+    
+    let instructionsHtml = isIOS ? `
+        <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the <span style="font-size: 1.3rem;">⎋</span> <strong>Share</strong> button.</p>
+        <p style="margin-bottom: 8px;"><strong>2.</strong> Scroll down and tap <strong>Add to Home Screen</strong>.</p>` : `
+        <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the browser menu (⋮).</p>
+        <p style="margin-bottom: 8px;"><strong>2.</strong> Select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</p>`;
 
-        window.addEventListener('appinstalled', () => {
-            console.log('✅ App installed successfully');
-            if (installBtnFloating) installBtnFloating.style.display = 'none';
-            if (installBtnMenu) installBtnMenu.style.display = 'none';
-        });
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">📲</div>
+            <h2 class="modal-title" style="margin-bottom: 10px;">Install App</h2>
+            <div style="text-align: left; font-size: 0.95rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.5;">
+                ${instructionsHtml}
+            </div>
+            <button class="row-btn btn-full-width" onclick="document.getElementById('installInstructionsModal').remove()">Got it</button>
+        </div>`;
+    document.body.appendChild(modal);
+}
 
-        // PWA DEBUGGER
-        console.log("🔍 PWA DEBUGGER STARTED");
-        if (!window.isSecureContext) console.error("❌ ERROR: App is not running on HTTPS!");
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.ready.then(() => console.log("✅ Service Worker is Active"));
-        }
-    </script>
+// 3. Cleanup
+window.addEventListener('appinstalled', () => {
+    console.log('✅ App installed');
+    const fBtn = document.getElementById('floatingInstallBtn');
+    const mBtn = document.getElementById('installBtnMenu');
+    if (fBtn) fBtn.style.display = 'none';
+    if (mBtn) mBtn.style.display = 'none';
+});
+
+// 4. Service Worker Registration
+if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/service-worker.js')
+            .then(reg => console.log('✅ SW registered'))
+            .catch(err => console.log('❌ SW failed', err));
+    });
+}
+</script>
 </body>
-</html> 
-
-
-
-       
-
-   
+</html>
