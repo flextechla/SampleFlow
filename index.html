@@ -2087,38 +2087,7 @@ let sb_client = null;
 let currentUser = null;
 let useCloud = false;
 
-// ==================== GLOBAL PWA INSTALL LOGIC ====================
-// This MUST be here at the top so the button can see it immediately
-window.deferredPrompt = null;
 
-window.installApp = async function() {
-    console.log("👆 Global Install Function Triggered");
-    if (window.deferredPrompt) {
-        window.deferredPrompt.prompt();
-        const { outcome } = await window.deferredPrompt.userChoice;
-        console.log(`User choice: ${outcome}`);
-        window.deferredPrompt = null;
-    } else {
-        console.log("Native prompt null. Triggering manual instructions.");
-        // We call the instructions function which is defined at the bottom of the file
-        if (typeof showInstallInstructions === 'function') {
-            showInstallInstructions();
-        } else {
-            alert('To install: Open browser menu (⋮) and select "Install App"');
-        }
-    }
-};
-
-window.addEventListener('beforeinstallprompt', (e) => {
-    e.preventDefault();
-    window.deferredPrompt = e;
-    console.log('✅ PWA Install Prompt Captured');
-    // Show the buttons now that we know they will work
-    const fBtn = document.getElementById('floatingInstallBtn');
-    const mBtn = document.getElementById('installBtnMenu');
-    if (fBtn) fBtn.style.display = 'block';
-    if (mBtn) mBtn.style.display = 'block';
-});
 
         // ==================== STATE ====================
         let samples = [];
