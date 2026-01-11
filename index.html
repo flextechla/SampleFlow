@@ -974,7 +974,7 @@
                 </svg>
             </div>
             
-            <h1 class="landing-title">SampleFlow test</h1>
+            <h1 class="landing-title">SampleFlow</h1>
             <p class="landing-subtitle">Never miss a deadline again. Track your brand collaborations, get reminders, and stay organized.</p>
             
             <div class="landing-features">
@@ -3350,8 +3350,8 @@ function closeTikTokLaunchModal() {
             const manageSubBtn = document.getElementById('manageSubBtn');
             
             if (useCloud && currentUser) {
-                const userEmail = localStorage.getItem('user_email') || current
-               currentUser.email || 'Unknown';
+                const userEmail = localStorage.getItem('user_email') || currentUser.email || 'Unknown';
+                
                 statusDiv.innerHTML = `
                     <p style="margin-bottom: 5px; font-weight: 700; color: var(--green);">✓ Cloud Storage Active</p>
                     <p style="font-size: 0.85rem;">Signed in as: <strong>${userEmail}</strong></p>
@@ -3778,8 +3778,7 @@ ${script}
         });
     });
 }
-    document.getElementById('installBtnMenu').style.display = 'block'; 
-    
+        
     </script>
 </body>
 </html>
