@@ -1054,7 +1054,7 @@
             </div>
             <button class="add-sample-btn" onclick="openModal()">
                 <span style="font-size: 1.2rem;">+</span>
-                <span>Add New Sample</span>
+                <span>Add New Sample123</span>
             </button>
             
             <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
@@ -3760,6 +3760,9 @@ window.addEventListener('beforeinstallprompt', (e) => {
 
 // Main install function used by both buttons
 async function installApp() {
+    // Always show something so we know the button works
+    alert('Install button was clicked. If you do not see an install popup, open the Chrome menu (⋮) and tap "Install app" or "Add to Home Screen".');
+
     // If we have a real prompt (Android/Chrome)
     if (deferredPrompt) {
         deferredPrompt.prompt();
@@ -3776,12 +3779,9 @@ async function installApp() {
         }
 
         deferredPrompt = null;
-        return;
     }
-
-    // Fallback for iOS / desktop / no prompt available
-    showInstallInstructions();
 }
+
 
 // Simple fallback instructions modal
 function showInstallInstructions() {
