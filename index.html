@@ -982,8 +982,14 @@
     </style>
 </head>
 <body>
-     <!-- Floating Install Button -->
-    <button id="floatingInstallBtn" onclick="installApp()">
+      <!-- Floating Install Button -->
+    <button
+        id="floatingInstallBtn"
+        class="floatingInstallBtn"
+        style="display:none;"
+        onclick="installApp()"
+    >
+      
         📱 Install App
     </button>
     <div id="landingPage">
@@ -3720,69 +3726,95 @@ ${script}
 
 
         // ==================== PWA INSTALLATION (IMPROVED) ====================
-        let deferredPrompt;
-       // Check if already installed
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+  // ==================== PWA INSTALL ====================
 
-// Show floating button if NOT installed
-    //added console logic temporarily
-    // Show floating button if NOT installed
-if (!isStandalone) {
-    console.log('About to set timeout for install button');
+let deferredPrompt = null;
+
+const installBtnFloating = document.getElementById('floatingInstallBtn');
+const installBtnMenu = document.getElementById('installBtnMenu');
+
+// Detect standalone mode (already installed)
+const isStandalone =
+    window.matchMedia('(display-mode: standalone)').matches ||
+    window.navigator.standalone === true;
+
+// If not installed, optionally show the floating button after a short delay
+if (!isStandalone && installBtnFloating) {
     setTimeout(() => {
-        console.log('Timeout fired!');
-        const btn = document.getElementById('floatingInstallBtn');
-        console.log('Button found:', btn);
-        if (btn) btn.style.display = 'block';
+        // Only show if we don't yet have a proper install prompt
+        if (!deferredPrompt) {
+            installBtnFloating.style.display = 'block';
+        }
     }, 3000);
 }
 
-    
-        // Listen for Chrome/Android install prompt
-        window.addEventListener('beforeinstallprompt', (e) => {
-            console.log('🎉 Install prompt ready!');
-            e.preventDefault();
-            deferredPrompt = e;
-            
-            if (floatingBtn) floatingBtn.style.display = 'block';
-            if (menuBtn) menuBtn.style.display = 'block';
-        });
+// Capture Chrome/Android install event
+window.addEventListener('beforeinstallprompt', (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
 
-        // Master install function
-        async function installApp() {
-            if (deferredPrompt) {
-                deferredPrompt.prompt();
-                const { outcome } = await deferredPrompt.userChoice;
-                console.log('Install outcome:', outcome);
-                
-                if (outcome === 'accepted') {
-                    if (floatingBtn) floatingBtn.style.display = 'none';
-                    if (menuBtn) menuBtn.style.display = 'none';
-                }
-                deferredPrompt = null;
-            } else {
-                showInstallInstructions();
-            }
+    // Show install buttons when prompt is available
+    if (installBtnFloating) installBtnFloating.style.display = 'block';
+    if (installBtnMenu) installBtnMenu.style.display = 'block';
+
+    console.log('PWA install prompt available');
+});
+
+// Main install function used by both buttons
+async function installApp() {
+    // If we have a real prompt (Android/Chrome)
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+
+        const choiceResult = await deferredPrompt.userChoice;
+
+        if (choiceResult.outcome === 'accepted') {
+            console.log('User accepted the install prompt');
+
+            if (installBtnFloating) installBtnFloating.style.display = 'none';
+            if (installBtnMenu) installBtnMenu.style.display = 'none';
+        } else {
+            console.log('User dismissed the install prompt');
         }
 
-        function showInstallInstructions() {
-            const modal = document.createElement('div');
-            modal.className = 'modal active';
-            modal.innerHTML = `
-                <div class="modal-content" style="text-align: center;">
-                    <div style="font-size: 3rem; margin-bottom: 15px;">📱</div>
-                    <h2 style="margin-bottom: 15px;">Install SampleFlow</h2>
-                    ${isIOS ? `
-                        <p style="margin-bottom: 20px;">Tap the <strong>Share</strong> button in Safari and select <strong>"Add to Home Screen"</strong></p>
-                        <div style="font-size: 4rem; margin: 20px 0;">⎋</div>
-                    ` : `
-                        <p style="margin-bottom: 20px;">Tap your browser menu (⋮) and select <strong>"Add to Home screen"</strong></p>
-                    `}
-                    <button class="row-btn btn-full-width" onclick="this.closest('.modal').remove()">Got it!</button>
-                </div>
-            `;
-            document.body.appendChild(modal);
-        }
+        deferredPrompt = null;
+        return;
+    }
+
+    // Fallback for iOS / desktop / no prompt available
+    showInstallInstructions();
+}
+
+// Simple fallback instructions modal
+function showInstallInstructions() {
+    const existing = document.getElementById('installInstructionsModal');
+    if (existing) existing.remove();
+
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.id = 'installInstructionsModal';
+    modal.innerHTML = `
+        <div class="modal-content" style="max-width: 400px; text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">📲</div>
+            <h2 class="modal-title" style="margin-bottom: 10px;">Install SampleFlow</h2>
+            <p style="margin-bottom: 20px; color: var(--text-secondary);">
+                For the best experience, add SampleFlow to your home screen.
+            </p>
+            <div style="text-align: left; font-size: 0.9rem; color: var(--text-main); margin-bottom: 20px;">
+                <p style="margin-bottom: 8px;">
+                    <strong>iOS (Safari):</strong> Tap the Share button, then “Add to Home Screen”.
+                </p>
+                <p style="margin-bottom: 8px;">
+                    <strong>Android (Chrome):</strong> Open the browser menu and choose “Install app” or “Add to Home Screen”.
+                </p>
+            </div>
+            <button class="row-btn btn-full-width" onclick="document.getElementById('installInstructionsModal').remove()">
+                Got it
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
 
         // Register service worker
         if ('serviceWorker' in navigator) {
