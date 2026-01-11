@@ -1046,7 +1046,7 @@
     <div id="appContainer">
         <div class="header">
             <div class="header-top">
-                <h1><span>Sample</span> Flow123</h1>
+                <h1><span>Sample</span> Flow</h1>
                 <div class="header-actions">
                     <button class="icon-btn" onclick="openAnalytics()" title="Analytics">📊</button>
                     <button class="icon-btn" onclick="toggleMenu()" title="Menu">⋮</button>
@@ -3725,23 +3725,24 @@ ${script}
 
       // ... (This should be at the very bottom of your script, right before </script>)
 
-    // ==================== GLOBAL PWA INSTALL LOGIC ====================
+// ==================== GLOBAL PWA INSTALL LOGIC ====================
+// We attach this to 'window' to ensure the HTML button can ALWAYS see it.
 window.deferredPrompt = null;
 
-// 1. Capture the native prompt
+// 1. Capture the browser's install event
 window.addEventListener('beforeinstallprompt', (e) => {
     e.preventDefault();
     window.deferredPrompt = e;
     console.log('✅ PWA install event captured and ready');
     
-    // Show buttons
+    // Force show the buttons now that we know the prompt is ready
     const fBtn = document.getElementById('floatingInstallBtn');
     const mBtn = document.getElementById('installBtnMenu');
     if (fBtn) fBtn.style.display = 'block';
     if (mBtn) mBtn.style.display = 'block';
 });
 
-// 2. Global Install Function (Defined on window so HTML can always see it)
+// 2. The Primary Install Function (FAIL-SAFE)
 window.installApp = async function() {
     console.log("👆 Install button clicked");
 
@@ -3750,17 +3751,21 @@ window.installApp = async function() {
         window.deferredPrompt.prompt();
         const { outcome } = await window.deferredPrompt.userChoice;
         console.log(`User response: ${outcome}`);
-        window.deferredPrompt = null;
+        window.deferredPrompt = null; // Prompt can only be used once
     } else {
-        console.log("⚠️ Native prompt unavailable. Opening instructions.");
-        showInstallInstructions(); 
+        console.log("ℹ️ Native prompt unavailable. Opening instructions.");
+        // Try to call your instructions modal
+        if (typeof showInstallInstructions === 'function') {
+            showInstallInstructions();
+        } else {
+            alert('To install: Open your browser menu (⋮) and select "Install App" or "Add to Home Screen".');
+        }
     }
 };
 
-function showInstallInstructions() {
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+// 3. Manual Instructions Fallback
+window.showInstallInstructions = function() {
     const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
-    
     const existing = document.getElementById('installInstructionsModal');
     if (existing) existing.remove();
 
@@ -3784,23 +3789,23 @@ function showInstallInstructions() {
             <button class="row-btn btn-full-width" onclick="document.getElementById('installInstructionsModal').remove()">Got it</button>
         </div>`;
     document.body.appendChild(modal);
-}
+};
 
-// 3. Cleanup
+// 4. Cleanup on success
 window.addEventListener('appinstalled', () => {
-    console.log('✅ App installed');
+    console.log('✅ App installed successfully');
     const fBtn = document.getElementById('floatingInstallBtn');
     const mBtn = document.getElementById('installBtnMenu');
     if (fBtn) fBtn.style.display = 'none';
     if (mBtn) mBtn.style.display = 'none';
 });
 
-// 4. Service Worker Registration
+// 5. Final Service Worker Registration
 if ('serviceWorker' in navigator) {
     window.addEventListener('load', () => {
         navigator.serviceWorker.register('/service-worker.js')
-            .then(reg => console.log('✅ SW registered'))
-            .catch(err => console.log('❌ SW failed', err));
+            .then(reg => console.log('✅ SW Registered'))
+            .catch(err => console.error('❌ SW Failed', err));
     });
 }
 </script>
