@@ -1054,7 +1054,7 @@
             </div>
             <button class="add-sample-btn" onclick="openModal()">
                 <span style="font-size: 1.2rem;">+</span>
-                <span>Add New Sample123</span>
+                <span>Add New Sample</span>
             </button>
             
             <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
@@ -3723,143 +3723,91 @@ ${script}
 // ... your existing app code ends here ...
 
 
-       
-// ==================== PWA INSTALL ====================
+      // ... (This should be at the very bottom of your script, right before </script>)
 
-let deferredPrompt = null;
+        // ==================== PWA INSTALL ====================
+        // We define this at the TOP LEVEL so the HTML button can find it.
+        
+        let deferredPrompt = null;
+        const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        const installBtnFloating = document.getElementById('floatingInstallBtn');
+        const installBtnMenu = document.getElementById('installBtnMenu');
 
-// Detect if already installed
-const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone === true;
+        // Capture the native install prompt (Android/Chrome/Edge)
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            console.log('✅ PWA install event captured!');
+            if (!isStandalone) {
+                if (installBtnFloating) installBtnFloating.style.display = 'block';
+                if (installBtnMenu) installBtnMenu.style.display = 'block';
+            }
+        });
 
-// Detect iOS
-const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+        // Show button for iOS manually since it doesn't support the event above
+        if (isIOS && !isStandalone) {
+            setTimeout(() => {
+                if (installBtnFloating) installBtnFloating.style.display = 'block';
+                if (installBtnMenu) installBtnMenu.style.display = 'block';
+            }, 1000);
+        }
 
-const installBtnFloating = document.getElementById('floatingInstallBtn');
-const installBtnMenu = document.getElementById('installBtnMenu');
+        // THIS IS THE GLOBAL FUNCTION CALLED BY YOUR HTML BUTTON
+        window.installApp = async function() {
+            console.log("👆 Install button clicked");
+            if (deferredPrompt) {
+                console.log("🚀 Launching native prompt...");
+                deferredPrompt.prompt();
+                const { outcome } = await deferredPrompt.userChoice;
+                console.log(`User response: ${outcome}`);
+                deferredPrompt = null; // Clear prompt after use
+            } else {
+                console.log("⚠️ No native prompt found. Showing instructions.");
+                showInstallInstructions(); 
+            }
+        };
 
-// HIDE buttons initially
-if (installBtnFloating) installBtnFloating.style.display = 'none';
-if (installBtnMenu) installBtnMenu.style.display = 'none';
+        function showInstallInstructions() {
+            const existing = document.getElementById('installInstructionsModal');
+            if (existing) existing.remove();
+            const modal = document.createElement('div');
+            modal.className = 'modal active';
+            modal.id = 'installInstructionsModal';
+            
+            let instructionsHtml = isIOS ? `
+                <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the <span style="font-size: 1.3rem;">⎋</span> <strong>Share</strong> button.</p>
+                <p style="margin-bottom: 8px;"><strong>2.</strong> Scroll down and tap <strong>Add to Home Screen</strong>.</p>` : `
+                <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the browser menu (⋮).</p>
+                <p style="margin-bottom: 8px;"><strong>2.</strong> Select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</p>`;
 
-// 1. Handle Android/Desktop Chrome (The "Magic" Button)
-window.addEventListener('beforeinstallprompt', (e) => {
-    // Prevent Chrome 67 and earlier from automatically showing the prompt
-    e.preventDefault();
-    // Stash the event so it can be triggered later.
-    deferredPrompt = e;
-    console.log('✅ PWA install event captured!');
+            modal.innerHTML = `
+                <div class="modal-content" style="max-width: 400px; text-align: center;">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">📲</div>
+                    <h2 class="modal-title" style="margin-bottom: 10px;">Install App</h2>
+                    <div style="text-align: left; font-size: 0.95rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.5;">
+                        ${instructionsHtml}
+                    </div>
+                    <button class="row-btn btn-full-width" onclick="document.getElementById('installInstructionsModal').remove()">Got it</button>
+                </div>`;
+            document.body.appendChild(modal);
+        }
 
-    // Show the buttons now that we know they will work
-    if (!isStandalone) {
-        if (installBtnFloating) installBtnFloating.style.display = 'block';
-        if (installBtnMenu) installBtnMenu.style.display = 'block';
-    }
-});
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ App installed successfully');
+            if (installBtnFloating) installBtnFloating.style.display = 'none';
+            if (installBtnMenu) installBtnMenu.style.display = 'none';
+        });
 
-// 2. Handle iOS (Manual Instructions)
-// iOS never fires 'beforeinstallprompt', so we show the button manually
-if (isIOS && !isStandalone) {
-    setTimeout(() => {
-        if (installBtnFloating) installBtnFloating.style.display = 'block';
-        if (installBtnMenu) installBtnMenu.style.display = 'block';
-    }, 1000);
-}
-
-// 3. Main Install Function
-async function installApp() {
-    console.log("👆 Install button clicked");
-
-    if (deferredPrompt) {
-        console.log("🚀 Launching native prompt...");
-        deferredPrompt.prompt();
-        const { outcome } = await deferredPrompt.userChoice;
-        console.log(`User response: ${outcome}`);
-        deferredPrompt = null;
-    } else {
-        console.log("⚠️ No install event found. showing fallback instructions.");
-        // This handles iOS or cases where the native prompt failed
-        showInstallInstructions(); 
-    }
-}
-
-// 4. Instructions Modal (You already have this, keeping it logic-connected)
-function showInstallInstructions() {
-    // Reuse your existing modal creation code here, but ensure it handles iOS text specifically
-    const existing = document.getElementById('installInstructionsModal');
-    if (existing) existing.remove();
-
-    const modal = document.createElement('div');
-    modal.className = 'modal active';
-    modal.id = 'installInstructionsModal';
-    
-    // Customize text based on device
-    let instructionsHtml = '';
-    if (isIOS) {
-        instructionsHtml = `
-            <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the <span style="font-size: 1.3rem;">⎋</span> <strong>Share</strong> button in your browser bar.</p>
-            <p style="margin-bottom: 8px;"><strong>2.</strong> Scroll down and tap <strong>Add to Home Screen</strong>.</p>
-        `;
-    } else {
-        instructionsHtml = `
-            <p style="margin-bottom: 8px;"><strong>1.</strong> Tap the browser menu (⋮).</p>
-            <p style="margin-bottom: 8px;"><strong>2.</strong> Select <strong>Install App</strong> or <strong>Add to Home Screen</strong>.</p>
-        `;
-    }
-
-    modal.innerHTML = `
-        <div class="modal-content" style="max-width: 400px; text-align: center;">
-            <div style="font-size: 3rem; margin-bottom: 15px;">📲</div>
-            <h2 class="modal-title" style="margin-bottom: 10px;">Install App</h2>
-            <div style="text-align: left; font-size: 0.95rem; color: var(--text-main); margin-bottom: 20px; line-height: 1.5;">
-                ${instructionsHtml}
-            </div>
-            <button class="row-btn btn-full-width" onclick="document.getElementById('installInstructionsModal').remove()">Got it</button>
-        </div>
-    `;
-    document.body.appendChild(modal);
-}
-
-// 5. Hide button on successful install
-window.addEventListener('appinstalled', () => {
-    console.log('✅ App installed successfully');
-    if (installBtnFloating) installBtnFloating.style.display = 'none';
-    if (installBtnMenu) installBtnMenu.style.display = 'none';
-});
-
-
-
-
-    // DEBUGGER: Paste this at the bottom of your script
-console.log("🔍 PWA DEBUGGER STARTED");
-
-if (!window.isSecureContext) {
-    console.error("❌ ERROR: App is not running on HTTPS! Install will fail.");
-} else {
-    console.log("✅ HTTPS Check Passed");
-}
-
-if ('serviceWorker' in navigator) {
-    navigator.serviceWorker.ready.then(registration => {
-        console.log("✅ Service Worker is Active:", registration);
-    }).catch(err => {
-        console.error("❌ Service Worker Error:", err);
-    });
-} else {
-    console.error("❌ Service Worker not supported in this browser.");
-}
-
-// Check if we captured the event
-setTimeout(() => {
-    if (!deferredPrompt) {
-        console.warn("⚠️ WARNING: 'beforeinstallprompt' event has NOT fired after 3 seconds.");
-        console.warn("Potential causes: App already installed, criteria not met, or browser blocking.");
-    } else {
-        console.log("✅ SUCCESS: Install event captured! Button should work.");
-    }
-}, 3000);
-</script>
+        // PWA DEBUGGER
+        console.log("🔍 PWA DEBUGGER STARTED");
+        if (!window.isSecureContext) console.error("❌ ERROR: App is not running on HTTPS!");
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.ready.then(() => console.log("✅ Service Worker is Active"));
+        }
+    </script>
 </body>
-</html>
+</html> 
 
 
 
