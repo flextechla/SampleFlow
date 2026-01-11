@@ -1056,7 +1056,7 @@
             </div>
             <button class="add-sample-btn" onclick="openModal()">
                 <span style="font-size: 1.2rem;">+</span>
-                <span>Add New Sample</span>
+                <span>Add New Sample123</span>
             </button>
             
             <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
@@ -1619,7 +1619,7 @@
             </div>
             <div style="line-height: 1.6;">
                 <div style="background: #FFF8E1; padding: 15px; border-radius: 12px; border-left: 4px solid var(--yellow); margin-bottom: 20px;">
-                    <p style="font-size: 0.95rem; margin-bottom: 10px; color: #444;">For the best experience, add Sample Flow to your home screen:</p>
+                    <p style="font-size: 0.95rem; margin-bottom: 10px; color: #444;">For the best experience, add SampleFlow to your home screen:</p>
                     <p style="margin-bottom: 10px; color: #444;"><strong>iOS (iPhone/iPad):</strong> Tap the <span style="font-size: 1.2rem;">⎋</span> (Share) button in Safari, then scroll down and tap <strong>"Add to Home Screen"</strong>.</p>
                     <p style="color: #444;"><strong>Android:</strong> Tap the <span style="font-size: 1.2rem;">⋮</span> menu in Chrome and select <strong>"Install App"</strong> or <strong>"Add to Home Screen"</strong>.</p>
                 </div>
@@ -2569,7 +2569,7 @@ function closeTikTokLaunchModal() {
             modal.innerHTML = `
                 <div class="modal-content" style="max-width: 400px; text-align: center;">
                     <div style="font-size: 4rem; margin-bottom: 15px;">📱</div>
-                    <h2 style="font-weight: 800; font-size: 1.5rem; margin-bottom: 10px;">Install Sample Flow</h2>
+                    <h2 style="font-weight: 800; font-size: 1.5rem; margin-bottom: 10px;">Install SampleFlow</h2>
                     <p style="color: var(--text-secondary); margin-bottom: 25px;">Add to your home screen for quick access!</p>
                     <button class="row-btn btn-full-width" onclick="installApp()" style="margin-bottom: 10px;">⬇️ Install Now</button>
                     <button class="row-btn btn-secondary" onclick="dismissInstall()">Maybe Later</button>
@@ -3730,20 +3730,22 @@ ${script}
 
 let deferredPrompt = null;
 
-const installBtnFloating = document.getElementById('floatingInstallBtn');
-const installBtnMenu = document.getElementById('installBtnMenu');
-
-// Detect standalone mode (already installed)
+// Detect if already installed (standalone)
 const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true;
 
-// If not installed, always show the floating button after a short delay
-if (!isStandalone && installBtnFloating) {
+const installBtnFloating = document.getElementById('floatingInstallBtn');
+const installBtnMenu = document.getElementById('installBtnMenu');
+
+// Always show buttons after a short delay if NOT installed
+if (!isStandalone) {
     setTimeout(() => {
-        installBtnFloating.style.display = 'block';
+        if (installBtnFloating) installBtnFloating.style.display = 'block';
+        if (installBtnMenu) installBtnMenu.style.display = 'block';
     }, 3000);
 }
+
 
 
 // Capture Chrome/Android install event
@@ -3794,7 +3796,7 @@ function showInstallInstructions() {
     modal.innerHTML = `
         <div class="modal-content" style="max-width: 400px; text-align: center;">
             <div style="font-size: 3rem; margin-bottom: 15px;">📲</div>
-            <h2 class="modal-title" style="margin-bottom: 10px;">Install SampleFlow 123</h2>
+            <h2 class="modal-title" style="margin-bottom: 10px;">Install SampleFlow</h2>
             <p style="margin-bottom: 20px; color: var(--text-secondary);">
                 For the best experience, add SampleFlow to your home screen.
             </p>
