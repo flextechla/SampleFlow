@@ -1,4 +1,5 @@
-const CACHE_NAME = 'sampleflow-v9'; // Increment this from v6 to v7
+// service-worker.js - Final Resilient Version
+const CACHE_NAME = 'sampleflow-v10'; // Updated version to force reload
 const ASSETS = [
   '/',
   '/index.html',
@@ -7,13 +8,20 @@ const ASSETS = [
   '/icon-512.png'
 ];
 
-// 1. Install & Force Activation
+// 1. Install & Force Activation (Resilient Mode)
 self.addEventListener('install', (event) => {
   self.skipWaiting(); 
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
-      // Use addAll with care: if one file fails, the whole install fails
-      return cache.addAll(ASSETS);
+      // We use map + add + catch to ensure the worker installs 
+      // even if one icon file is missing from the server.
+      return Promise.allSettled(
+        ASSETS.map(asset => {
+          return cache.add(asset).catch(err => 
+            console.warn(`PWA Service Worker: Skipping missing asset ${asset}`)
+          );
+        })
+      );
     })
   );
 });
@@ -25,6 +33,7 @@ self.addEventListener('activate', (event) => {
       return Promise.all(
         cacheNames.map((cache) => {
           if (cache !== CACHE_NAME) {
+            console.log('PWA Service Worker: Cleaning up old cache', cache);
             return caches.delete(cache);
           }
         })
@@ -34,9 +43,8 @@ self.addEventListener('activate', (event) => {
 });
 
 // 3. Network-First Strategy
-// This is critical: It checks the internet for updates FIRST.
 self.addEventListener('fetch', (event) => {
-  // We only want to cache GET requests (Supabase calls are usually POST/other)
+  // Only cache GET requests (prevents issues with Supabase/API calls)
   if (event.request.method !== 'GET') return;
 
   event.respondWith(
