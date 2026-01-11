@@ -3738,15 +3738,13 @@ const isStandalone =
     window.matchMedia('(display-mode: standalone)').matches ||
     window.navigator.standalone === true;
 
-// If not installed, optionally show the floating button after a short delay
+// If not installed, always show the floating button after a short delay
 if (!isStandalone && installBtnFloating) {
     setTimeout(() => {
-        // Only show if we don't yet have a proper install prompt
-        if (!deferredPrompt) {
-            installBtnFloating.style.display = 'block';
-        }
+        installBtnFloating.style.display = 'block';
     }, 3000);
 }
+
 
 // Capture Chrome/Android install event
 window.addEventListener('beforeinstallprompt', (e) => {
