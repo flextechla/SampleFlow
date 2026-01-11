@@ -966,7 +966,6 @@
     box-shadow: 0 4px 20px rgba(254, 44, 85, 0.4);
     cursor: pointer;
     z-index: 9999;
-    display: none;
     border: none;
     animation: pulse 2s infinite;
 }
@@ -983,15 +982,14 @@
 </head>
 <body>
       <!-- Floating Install Button -->
-    <button
-        id="floatingInstallBtn"
-        class="floatingInstallBtn"
-        style="display:none;"
-        onclick="installApp()"
-    >
-      
-        📱 Install App
-    </button>
+<button
+    id="floatingInstallBtn"
+    class="floatingInstallBtn"
+    onclick="installApp()"
+>
+    📱 Install App
+</button>
+
     <div id="landingPage">
         <div class="landing-content">
             <div class="app-icon">
@@ -1056,7 +1054,7 @@
             </div>
             <button class="add-sample-btn" onclick="openModal()">
                 <span style="font-size: 1.2rem;">+</span>
-                <span>Add New Sample123</span>
+                <span>Add New Sample</span>
             </button>
             
             <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
@@ -3825,27 +3823,46 @@ function showInstallInstructions() {
             });
         }
 
-        // Hide install button when app is installed
-        window.addEventListener('appinstalled', () => {
-            console.log('✅ App installed successfully!');
-            if (floatingBtn) floatingBtn.style.display = 'none';
-            if (menuBtn) menuBtn.style.display = 'none';
-        });
+      // Hide install button when app is installed
+window.addEventListener('appinstalled', () => {
+    console.log('✅ App installed successfully!');
+    const installBtnFloating = document.getElementById('floatingInstallBtn');
+    const installBtnMenu = document.getElementById('installBtnMenu');
+    if (installBtnFloating) installBtnFloating.style.display = 'none';
+    if (installBtnMenu) installBtnMenu.style.display = 'none';
+});
 
 
-// ==================== PWA INSTALL ====================
+
+// Simple PWA install logic
+
 let deferredPrompt = null;
-const isStandalone = ...
-... rest of block ...
+
+// Save the browser's install event, if it fires
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+// Called when the user taps 📱 Install App
+async function installApp() {
+  // If the browser gave us a real install prompt
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    const choiceResult = await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    return;
+  }
+
+  // If no prompt is available, show your instructions popup
+  showInstallInstructions();
+}
 
 </script>
 </body>
 </html>
 
-    </script>
-    
-</body>
-</html>
+
 
        
 
