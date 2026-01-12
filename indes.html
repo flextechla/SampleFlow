@@ -732,40 +732,62 @@
             margin-top: 10px; 
         }
         
-        .row-btn { 
-            width: 100%; 
-            padding: 14px; 
-            border-radius: 12px; 
-            border: none; 
-            font-weight: 700; 
-            font-size: 0.95rem; 
-            cursor: pointer; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            text-decoration: none; 
-            transition: transform 0.2s; 
-        }
-        .row-btn:active { transform: scale(0.95); }
-        
-        .btn-full-width { background: var(--primary); color: white; }
-        
-        .btn-completed { 
-            background: #E8F5E9; 
-            color: var(--green); 
-            border: 1.5px solid var(--green); 
-            pointer-events: none; 
-        }
-        [data-theme="dark"] .btn-completed { background: rgba(0, 200, 83, 0.2); }
-        
-        .btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
-        .btn-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
-        
-        .btn-secondary { 
-            background: var(--surface); 
-            color: var(--text-main); 
-            border: 1.5px solid var(--border); 
-        }
+     /* --- Professional Action Buttons --- */
+.row-btn { 
+    width: 100%; 
+    padding: 14px; 
+    border-radius: 12px; 
+    border: 1px solid transparent; 
+    font-weight: 700; 
+    font-size: 0.95rem; 
+    cursor: pointer; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    text-decoration: none; 
+    transition: all 0.2s ease; 
+}
+
+/* Edit: Calm Blue */
+.sample-card button[onclick*="openModal"] {
+    background: #eef7ff !important;
+    color: #007aff !important;
+    border-color: #d0e7ff !important;
+}
+
+/* Delete: Warning Red */
+.sample-card button[onclick*="deleteSample"] {
+    background: #fff5f5 !important;
+    color: #ff3b30 !important;
+    border-color: #ffe0e0 !important;
+}
+
+/* Product Link: Soft Purple */
+.sample-card button[onclick*="openBrowser"] {
+    background: #fdf5ff !important;
+    color: #9c27b0 !important;
+    border-color: #f3e0ff !important;
+}
+
+.btn-full-width { background: var(--primary); color: white; }
+
+.btn-completed { 
+    background: #f8f9fa; 
+    color: #6c757d; 
+    border: 1px solid #dee2e6; 
+    pointer-events: none; 
+    font-style: italic;
+}
+
+[data-theme="dark"] .btn-completed { background: #2c2c2c; color: #888; border-color: #444; }
+
+.btn-row-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 5px; }
+
+/* Feedback when tapped */
+.row-btn:active { 
+    transform: scale(0.97); 
+    filter: brightness(0.9);
+}
         
         .modal { 
             display: none; 
@@ -1135,7 +1157,7 @@
             <strong><span id="selectedCount">0</span> selected</strong>
         </div>
         <div class="batch-actions">
-            <button class="batch-btn" style="background: var(--green); color: white;" onclick="batchMarkDone()">✓ Mark Done</button>
+            <button class="batch-btn" style="background: var(--green); color: white;" onclick="batchMarkDone()">🏁 Archive Selected</button>
             <button class="batch-btn" style="background: var(--red); color: white;" onclick="batchDelete()">🗑 Delete</button>
             <button class="batch-btn" style="background: white; color: var(--dark);" onclick="clearSelection()">Cancel</button>
         </div>
@@ -1555,7 +1577,7 @@
                 <div style="background: var(--surface); padding: 15px; border-radius: 8px; border-left: 3px solid var(--primary);">
                     <p style="margin-bottom: 8px;"><strong>Add a Sample:</strong> Tap the + button, enter brand name, product, and posting deadline.</p>
                     <p style="margin-bottom: 8px;"><strong>Track Progress:</strong> Check off tasks as you film, edit, and post content.</p>
-                    <p style="margin-bottom: 0;"><strong>Mark Complete:</strong> Tap ✓ when you've posted to move samples to your archive.</p>
+                    <p style="margin-bottom: 0;"><strong>Mark Complete:</strong> Simply tap the 📱 Posted icon in the checklist to automatically archive your sample.</p>
                 </div>
             </div>
             
@@ -1589,7 +1611,7 @@
                     <p style="margin-bottom: 8px;"><span style="color: var(--red); font-weight: 600;">● Overdue:</span> Posting deadline has passed</p>
                     <p style="margin-bottom: 8px;"><span style="color: var(--orange); font-weight: 600;">● Due Soon:</span> Less than 7 days remaining</p>
                     <p style="margin-bottom: 8px;"><span style="color: var(--green); font-weight: 600;">● On Track:</span> 7+ days remaining</p>
-                    <p style="margin-bottom: 0;"><span style="color: var(--blue); font-weight: 600;">✓ Done:</span> Content posted successfully</p>
+                    <p style="margin-bottom: 0;"><span style="color: var(--text-secondary); font-weight: 600;">✓ Done/Archived:</span> Tapping the 📱 Posted icon automatically moves samples to your archive.</p>
                 </div>
             </div>
             
@@ -2970,15 +2992,23 @@ function closeTikTokLaunchModal() {
         }
 
         async function batchMarkDone() {
-            triggerHaptic();
-            selectedSamples.forEach(id => {
-                samples = samples.map(s => s.id === id ? {...s, done: true} : s);
-            });
-            selectedSamples.clear();
-            await saveSamples();
-            render();
-            updateBatchBar();
+    triggerHaptic();
+    samples = samples.map(s => {
+        if (selectedSamples.has(s.id)) {
+            // Sync both statuses: Mark as Done AND check the 'posted' box
+            return {
+                ...s, 
+                done: true, 
+                checklist: { ...s.checklist, posted: true }
+            };
         }
+        return s;
+    });
+    selectedSamples.clear();
+    await saveSamples();
+    render();
+    updateBatchBar();
+}
 
         async function batchDelete() {
             triggerHaptic();
@@ -3118,10 +3148,7 @@ function closeTikTokLaunchModal() {
                                 '<button class="row-btn" style="background: linear-gradient(135deg, #9C27B0, #BA68C8); color: white; margin-bottom: 8px;" onclick="generateScript(\''+s.id+'\')">✨ Generate Script</button>' 
                                 : ''
                             }
-                            ${s.done ? 
-                                '<button class="row-btn btn-completed">✓ Posted</button>' :
-                                '<button class="row-btn btn-full-width" onclick="markDone(\''+s.id+'\')">✓ Mark as Posted</button>'
-                            }
+                           ${s.done ? '<button class="row-btn btn-completed">✓ Content Archived</button>' : ''}
                             ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
                             <div class="btn-row-2">
                                 <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
@@ -3152,16 +3179,25 @@ function closeTikTokLaunchModal() {
         }
         
         async function toggleCheckbox(id, field) {
-            triggerHaptic();
-            samples = samples.map(s => {
-                if (s.id === id) {
-                    return {...s, checklist: {...s.checklist, [field]: !s.checklist[field]}};
-                }
-                return s;
-            });
-            render();
-            saveSamples();
+    triggerHaptic();
+    samples = samples.map(s => {
+        if (s.id === id) {
+            const updatedChecklist = {...s.checklist, [field]: !s.checklist[field]};
+            
+            // Logic: If they check "Posted", the card is automatically marked "Done" (Archived).
+            // If they uncheck it, it comes back to the active list.
+            let isDone = s.done;
+            if (field === 'posted') {
+                isDone = updatedChecklist.posted;
+            }
+
+            return {...s, checklist: updatedChecklist, done: isDone};
         }
+        return s;
+    });
+    render();
+    saveSamples();
+}
         
         // ==================== MODAL ====================
         function openModal(id = null) {
