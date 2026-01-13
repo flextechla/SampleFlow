@@ -2477,7 +2477,12 @@ function closeTikTokLaunchModal() {
                     
                     if (mode === 'signup') {
                         await migrateToCloud();
-                        setTimeout(() => checkAndShowInstallPrompt(), 3000); 
+                        setTimeout(() => {
+    const btn = document.getElementById('floatingInstallBtn');
+    if (btn && !window.matchMedia('(display-mode: standalone)').matches) {
+        btn.style.display = 'block';
+    }
+}, 3000); 
                     } else {
                         closeAuthModal();
                         await loadUserTier();
