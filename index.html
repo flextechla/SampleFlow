@@ -2421,90 +2421,61 @@ function closeTikTokLaunchModal() {
             document.body.appendChild(modal);
         }
 
-        async function handleAuth(mode) {
-            const email = document.getElementById('authEmail').value;
-            const password = document.getElementById('authPassword').value;
-            const rememberMe = document.getElementById('rememberMe').checked;
-            const errorDiv = document.getElementById('authError');
-            
-            if (!email || !password) {
-                errorDiv.textContent = 'Please enter email and password';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (password.length < 6) {
-                errorDiv.textContent = 'Password must be at least 6 characters';
-                errorDiv.style.display = 'block';
-                return;
-            }
-
-            if (mode === 'signup') {
-                const confirmPassword = document.getElementById('authConfirm').value;
-                if (password !== confirmPassword) {
-                    errorDiv.textContent = 'Passwords do not match';
-                    errorDiv.style.display = 'block';
-                    return;
-                }
-            }
-            
-            try {
-                let data, error;
-                
-                if (mode === 'signup') {
-                    const result = await sb_client.auth.signUp({ email, password });
-                    data = result.data;
-                    error = result.error;
-                } else {
-                    const result = await sb_client.auth.signInWithPassword({ email, password });
-                    data = result.data;
-                    error = result.error;
-                }
-                
-                if (error) throw error;
-                
-                if (data.user) {
-                    if (rememberMe) {
-                        localStorage.setItem('user_email', email);
-                        localStorage.setItem('user_password', password);
-                    } else {
-                        localStorage.removeItem('user_email');
-                        localStorage.removeItem('user_password');
-                    }
-                    
-                    currentUser = data.user;
-                    useCloud = true;
-                    
-                    if (mode === 'signup') {
-                        await migrateToCloud();
-                        setTimeout(() => {
-    const btn = document.getElementById('floatingInstallBtn');
-    if (btn && !window.matchMedia('(display-mode: standalone)').matches) {
-        btn.style.display = 'block';
+      async function handleAuth(mode) {
+    const email = document.getElementById('authEmail').value;
+    const password = document.getElementById('authPassword').value;
+    const rememberMe = document.getElementById('rememberMe').checked;
+    const errorDiv = document.getElementById('authError');
+    
+    if (!email || !password) {
+        errorDiv.textContent = 'Please enter email and password';
+        errorDiv.style.display = 'block';
+        return;
     }
-}, 3000); 
-                    } else {
-                        closeAuthModal();
-                        await loadUserTier();
-                        await loadFromCloud();
-                        showApp();
-                        render();
-                        renderCalendar();
-                        return;
-                    }
-                }
-            } catch (e) {
-                console.error('Auth error:', e);
-                errorDiv.textContent = mode === 'signup' ? 'Sign up failed. Email may already be in use.' : 'Invalid email or password';
-                errorDiv.style.display = 'block';
+    
+    if (password.length < 6) {
+        errorDiv.textContent = 'Password must be at least 6 characters';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    if (mode === 'signup') {
+        const confirmPassword = document.getElementById('authConfirm').value;
+        if (password !== confirmPassword) {
+            errorDiv.textContent = 'Passwords do not match';
+            errorDiv.style.display = 'block';
+            return;
+        }
+    }
+    
+    try {
+        let data, error;
+        
+        if (mode === 'signup') {
+            const result = await sb_client.auth.signUp({ email, password });
+            data = result.data;
+            error = result.error;
+            
+            // Check if user was actually created (even if Supabase returns an error)
+            if (error && data?.user) {
+                // User exists but got an error - likely already registered, try signing in
+                console.log('User may exist, attempting sign in...');
+                const signInResult = await sb_client.auth.signInWithPassword({ email, password });
+                data = signInResult.data;
+                error = signInResult.error;
             }
+        } else {
+            const result = await sb_client.auth.signInWithPassword({ email, password });
+            data = result.data;
+            error = result.error;
         }
-
-        function closeAuthModal() {
-            const modal = document.getElementById('authModal');
-            if (modal) modal.remove();
-        }
-
+        
+        if (error) throw error;
+        
+        if (data.user) {
+            if (rememberMe) {
+                localStorage.setItem('user_email', email);
+                localStor
         async function signOut() {
             if (confirm('Sign out? Your data will remain safely in the cloud.')) {
                 await sb_client.auth.signOut();
