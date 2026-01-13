@@ -2547,7 +2547,29 @@ function refreshNotifications() {
     localStorage.removeItem('notification_dismissed_date');
     checkDueNotifications();
 }
-        
+
+// ==================== BANNER NOTIFICATION TOGGLE ====================
+function toggleBannerNotifications(enabled) {
+    triggerHaptic();
+    localStorage.setItem('banner_notifications_enabled', enabled ? 'true' : 'false');
+    
+    if (enabled) {
+        localStorage.removeItem('notification_dismissed_date');
+        checkDueNotifications();
+        showToast('Reminders enabled');
+    } else {
+        const banner = document.getElementById('notificationBanner');
+        if (banner) banner.classList.remove('active');
+        showToast('Reminders disabled');
+    }
+}
+
+function loadBannerNotificationSetting() {
+    const enabled = localStorage.getItem('banner_notifications_enabled') !== 'false';
+    const toggle = document.getElementById('bannerNotificationsToggle');
+    if (toggle) toggle.checked = enabled;
+    return enabled;
+}
     </script>
     
     <script>
