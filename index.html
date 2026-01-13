@@ -2421,6 +2421,11 @@ function closeTikTokLaunchModal() {
             document.body.appendChild(modal);
         }
 
+        function closeAuthModal() {
+    const modal = document.getElementById('authModal');
+    if (modal) modal.remove();
+}
+        
      async function handleAuth(mode) {
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
