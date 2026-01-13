@@ -1009,10 +1009,123 @@
 #floatingInstallBtn:active {
     transform: scale(0.95);
 }
+  
+    /* In-App Notification Banner */
+.notification-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(135deg, #FF3B30 0%, #FF6B6B 100%);
+    color: white;
+    padding: calc(15px + env(safe-area-inset-top)) 15px 15px 15px;
+    z-index: 9999;
+    display: none;
+    align-items: center;
+    justify-content: space-between;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    animation: slideDownBanner 0.3s ease;
+}
+
+.notification-banner.active {
+    display: flex;
+}
+
+.notification-banner.urgent {
+    background: linear-gradient(135deg, #FFB300 0%, #FFC107 100%);
+}
+
+.notification-banner.good {
+    background: linear-gradient(135deg, #00C853 0%, #69F0AE 100%);
+}
+
+@keyframes slideDownBanner {
+    from { transform: translateY(-100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+.banner-content {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex: 1;
+}
+
+.banner-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.banner-text {
+    flex: 1;
+}
+
+.banner-title {
+    font-weight: 700;
+    font-size: 0.95rem;
+    margin-bottom: 2px;
+}
+
+.banner-subtitle {
+    font-size: 0.8rem;
+    opacity: 0.9;
+}
+
+.banner-dismiss {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    font-size: 1.2rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: background 0.2s;
+}
+
+.banner-dismiss:hover {
+    background: rgba(255,255,255,0.3);
+}
+
+.banner-action {
+    background: rgba(255,255,255,0.2);
+    border: none;
+    color: white;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 10px;
+    flex-shrink: 0;
+}
+
+
+
+        
+    
+    
     </style>
 </head>
 <body>
-      <!-- Floating Install Button -->
+    <!-- In-App Notification Banner -->
+<div id="notificationBanner" class="notification-banner">
+    <div class="banner-content">
+        <span class="banner-icon" id="bannerIcon">🔔</span>
+        <div class="banner-text">
+            <div class="banner-title" id="bannerTitle">Items Due Today</div>
+            <div class="banner-subtitle" id="bannerSubtitle">You have samples that need attention</div>
+        </div>
+    </div>
+    <button class="banner-action" onclick="scrollToFilter('overdue')">View</button>
+    <button class="banner-dismiss" onclick="dismissNotificationBanner()">×</button>
+</div>
+    
+    <!-- Floating Install Button -->
 <button
     id="floatingInstallBtn"
     class="floatingInstallBtn"
@@ -2236,6 +2349,120 @@ function closeTikTokLaunchModal() {
                 setTimeout(() => toast.remove(), 300);
             }, duration);
         }
+            // ==================== IN-APP NOTIFICATIONS ====================
+function checkDueNotifications() {
+    // Don't show if not logged in or no samples
+    if (!currentUser || samples.length === 0) return;
+    
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+    const todayStr = today.toISOString().split('T')[0];
+    
+    // Check if already dismissed today
+    const dismissedDate = localStorage.getItem('notification_dismissed_date');
+    if (dismissedDate === todayStr) return;
+    
+    // Count items by status
+    let overdueCount = 0;
+    let dueTodayCount = 0;
+    let dueSoonCount = 0; // Due in next 3 days
+    
+    samples.filter(s => !s.done).forEach(s => {
+        const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
+        dueDate.setHours(0, 0, 0, 0);
+        const dueDateStr = dueDate.toISOString().split('T')[0];
+        
+        const daysUntilDue = Math.floor((dueDate - today) / 86400000);
+        
+        if (daysUntilDue < 0) {
+            overdueCount++;
+        } else if (dueDateStr === todayStr) {
+            dueTodayCount++;
+        } else if (daysUntilDue <= 3) {
+            dueSoonCount++;
+        }
+    });
+    
+    // Determine what to show
+    const banner = document.getElementById('notificationBanner');
+    const icon = document.getElementById('bannerIcon');
+    const title = document.getElementById('bannerTitle');
+    const subtitle = document.getElementById('bannerSubtitle');
+    
+    // Remove previous state classes
+    banner.classList.remove('urgent', 'good');
+    
+    if (overdueCount > 0) {
+        // Critical - Overdue items (red)
+        icon.textContent = '🔥';
+        title.textContent = `${overdueCount} Overdue Sample${overdueCount > 1 ? 's' : ''}!`;
+        subtitle.textContent = dueTodayCount > 0 
+            ? `Plus ${dueTodayCount} due today` 
+            : 'These need your attention now';
+        banner.classList.add('active');
+        
+    } else if (dueTodayCount > 0) {
+        // Urgent - Due today (yellow/orange)
+        icon.textContent = '⏰';
+        title.textContent = `${dueTodayCount} Sample${dueTodayCount > 1 ? 's' : ''} Due Today`;
+        subtitle.textContent = dueSoonCount > 0 
+            ? `Plus ${dueSoonCount} due soon` 
+            : 'Don\'t forget to post!';
+        banner.classList.add('urgent', 'active');
+        
+    } else if (dueSoonCount > 0) {
+        // Info - Due soon (green)
+        icon.textContent = '📋';
+        title.textContent = `${dueSoonCount} Sample${dueSoonCount > 1 ? 's' : ''} Due Soon`;
+        subtitle.textContent = 'Coming up in the next 3 days';
+        banner.classList.add('good', 'active');
+        
+    } else {
+        // Nothing urgent - don't show banner
+        banner.classList.remove('active');
+    }
+}
+
+function dismissNotificationBanner() {
+    const banner = document.getElementById('notificationBanner');
+    banner.style.animation = 'none';
+    banner.style.transform = 'translateY(-100%)';
+    banner.style.opacity = '0';
+    banner.style.transition = 'all 0.3s ease';
+    
+    setTimeout(() => {
+        banner.classList.remove('active');
+        banner.style.transform = '';
+        banner.style.opacity = '';
+        banner.style.transition = '';
+        banner.style.animation = '';
+    }, 300);
+    
+    // Remember dismissal for today
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem('notification_dismissed_date', today);
+}
+
+function scrollToFilter(filterType) {
+    // Dismiss the banner
+    dismissNotificationBanner();
+    
+    // Apply the filter
+    setFilter(filterType === 'overdue' ? 'overdue' : 'urgent');
+    
+    // Scroll to the sample grid
+    setTimeout(() => {
+        document.getElementById('sampleGrid').scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+}
+
+// Function to manually trigger notification check (can be called from settings)
+function refreshNotifications() {
+    // Clear today's dismissal to show again
+    localStorage.removeItem('notification_dismissed_date');
+    checkDueNotifications();
+}
+        
     </script>
     
     <script>
@@ -3015,16 +3242,21 @@ async function submitBetaFeedback() {
         }
 
         function showApp() {
-            document.getElementById('landingPage').classList.add('hidden');
-            document.getElementById('landingPage').classList.remove('active');
-            document.getElementById('appContainer').classList.add('active');
-            
-            loadUserTier().then(() => {
-                render();
-                renderCalendar();
-                updateStats();
-            });
-        }
+    document.getElementById('landingPage').classList.add('hidden');
+    document.getElementById('landingPage').classList.remove('active');
+    document.getElementById('appContainer').classList.add('active');
+    
+    loadUserTier().then(() => {
+        render();
+        renderCalendar();
+        updateStats();
+        
+        // Check for due notifications after a short delay
+        setTimeout(() => {
+            checkDueNotifications();
+        }, 500);
+    });
+}
 
         async function checkExistingSession() {
             try {
@@ -3456,18 +3688,26 @@ async function submitBetaFeedback() {
 
         // ==================== RENDER ====================
         function render() {
-            updateStats();
-            updateCloudStatus();
-            const filtered = getFilteredSamples();
-            const grid = document.getElementById('sampleGrid');
-            
-            if (filtered.length === 0) {
-                grid.innerHTML = '<div class="empty-state"><p style="font-size: 3rem; margin-bottom: 10px;">📦</p><p>No samples match this filter</p><p style="font-size: 0.9rem; margin-top: 5px;">Try a different filter or add a new sample</p></div>';
-                return;
-            }
-            
-            grid.innerHTML = filtered.map(s => renderSampleCard(s)).join('');
-        }
+    updateStats();
+    updateCloudStatus();
+    const filtered = getFilteredSamples();
+    const grid = document.getElementById('sampleGrid');
+    
+    if (filtered.length === 0) {
+        grid.innerHTML = '<div class="empty-state"><p style="font-size: 3rem; margin-bottom: 10px;">📦</p><p>No samples match this filter</p><p style="font-size: 0.9rem; margin-top: 5px;">Try a different filter or add a new sample</p></div>';
+        return;
+    }
+    
+    grid.innerHTML = filtered.map(s => renderSampleCard(s)).join('');
+    
+    // Re-check notifications (but don't override dismissal)
+    // Only show if not already dismissed today
+    const today = new Date().toISOString().split('T')[0];
+    const dismissedDate = localStorage.getItem('notification_dismissed_date');
+    if (dismissedDate !== today) {
+        checkDueNotifications();
+    }
+}
 
         function renderSampleCard(s) {
             if (!s.checklist) s.checklist = { filmed: false, edited: false, posted: false };
