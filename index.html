@@ -1104,7 +1104,15 @@
     flex-shrink: 0;
 }
 
+/* Flashing banner for due today */
+@keyframes flashBanner {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.7; }
+}
 
+.notification-banner.flash {
+    animation: flashBanner 1s ease-in-out 3;
+}
 
         
     
@@ -1112,13 +1120,14 @@
     </style>
 </head>
 <body>
-    <!-- In-App Notification Banner -->
+   <!-- In-App Notification Banner -->
 <div id="notificationBanner" class="notification-banner">
     <div class="banner-content">
         <span class="banner-icon" id="bannerIcon">🔔</span>
         <div class="banner-text">
             <div class="banner-title" id="bannerTitle">Items Due Today</div>
             <div class="banner-subtitle" id="bannerSubtitle">You have samples that need attention</div>
+            <div class="banner-details" id="bannerDetails" style="font-size: 0.75rem; margin-top: 4px; opacity: 0.9;"></div>
         </div>
     </div>
     <button class="banner-action" onclick="scrollToFilter('overdue')">View</button>
@@ -1328,7 +1337,7 @@
                 </div>
                 <span id="dueCalcDisplay" class="due-calc-text"></span>
 
-                <div class="form-group">
+               <div style="display: none;"> <div class="form-group">
                     <label class="form-label">Reminder Settings</label>
                     <select id="sampleReminderDays" class="form-input">
                         <option value="">Use default reminder (from Settings)</option>
@@ -1339,7 +1348,8 @@
                         <option value="5">Remind me 5 days before</option>
                         <option value="7">Remind me 7 days before</option>
                     </select>
-                </div>
+               </div>
+                    </div>
 
                 <div class="form-group">
                     <label class="form-label">Product Link (Optional)</label>
@@ -2418,67 +2428,88 @@ function checkDueNotifications() {
     const dismissedDate = localStorage.getItem('notification_dismissed_date');
     if (dismissedDate === todayStr) return;
     
-    // Count items by status
+    // Count items by days until due
     let overdueCount = 0;
     let dueTodayCount = 0;
-    let dueSoonCount = 0; // Due in next 3 days
+    let due1DayCount = 0;
+    let due2DayCount = 0;
+    let due3DayCount = 0;
     
     samples.filter(s => !s.done).forEach(s => {
         const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
         dueDate.setHours(0, 0, 0, 0);
-        const dueDateStr = dueDate.toISOString().split('T')[0];
         
         const daysUntilDue = Math.floor((dueDate - today) / 86400000);
         
         if (daysUntilDue < 0) {
             overdueCount++;
-        } else if (dueDateStr === todayStr) {
+        } else if (daysUntilDue === 0) {
             dueTodayCount++;
-        } else if (daysUntilDue <= 3) {
-            dueSoonCount++;
+        } else if (daysUntilDue === 1) {
+            due1DayCount++;
+        } else if (daysUntilDue === 2) {
+            due2DayCount++;
+        } else if (daysUntilDue === 3) {
+            due3DayCount++;
         }
     });
     
-    // Determine what to show
     const banner = document.getElementById('notificationBanner');
     const icon = document.getElementById('bannerIcon');
     const title = document.getElementById('bannerTitle');
     const subtitle = document.getElementById('bannerSubtitle');
+    const details = document.getElementById('bannerDetails');
     
     // Remove previous state classes
-    banner.classList.remove('urgent', 'good');
+    banner.classList.remove('urgent', 'good', 'flash');
     
+    // Build details string
+    let detailParts = [];
+    if (overdueCount > 0) detailParts.push(`🔥 ${overdueCount} overdue`);
+    if (dueTodayCount > 0) detailParts.push(`⏰ ${dueTodayCount} today`);
+    if (due1DayCount > 0) detailParts.push(`📅 ${due1DayCount} tomorrow`);
+    if (due2DayCount > 0) detailParts.push(`📋 ${due2DayCount} in 2 days`);
+    if (due3DayCount > 0) detailParts.push(`📋 ${due3DayCount} in 3 days`);
+    
+    // Nothing to show
+    if (detailParts.length === 0) {
+        banner.classList.remove('active');
+        return;
+    }
+    
+    details.textContent = detailParts.join('  •  ');
+    
+    // Determine banner style based on urgency
     if (overdueCount > 0) {
-        // Critical - Overdue items (red)
+        // Critical - Overdue (red, flashing)
         icon.textContent = '🔥';
         title.textContent = `${overdueCount} Overdue Sample${overdueCount > 1 ? 's' : ''}!`;
-        subtitle.textContent = dueTodayCount > 0 
-            ? `Plus ${dueTodayCount} due today` 
-            : 'These need your attention now';
-        banner.classList.add('active');
+        subtitle.textContent = 'These need your attention NOW';
+        banner.classList.add('active', 'flash');
         
     } else if (dueTodayCount > 0) {
-        // Urgent - Due today (yellow/orange)
+        // Urgent - Due today (yellow, flashing)
         icon.textContent = '⏰';
-        title.textContent = `${dueTodayCount} Sample${dueTodayCount > 1 ? 's' : ''} Due Today`;
-        subtitle.textContent = dueSoonCount > 0 
-            ? `Plus ${dueSoonCount} due soon` 
-            : 'Don\'t forget to post!';
+        title.textContent = `${dueTodayCount} Sample${dueTodayCount > 1 ? 's' : ''} Due Today!`;
+        subtitle.textContent = 'Post these before the day ends';
+        banner.classList.add('urgent', 'active', 'flash');
+        
+    } else if (due1DayCount > 0) {
+        // Tomorrow (yellow, no flash)
+        icon.textContent = '📅';
+        title.textContent = `${due1DayCount} Sample${due1DayCount > 1 ? 's' : ''} Due Tomorrow`;
+        subtitle.textContent = 'Get ready for these';
         banner.classList.add('urgent', 'active');
         
-    } else if (dueSoonCount > 0) {
-        // Info - Due soon (green)
-        icon.textContent = '📋';
-        title.textContent = `${dueSoonCount} Sample${dueSoonCount > 1 ? 's' : ''} Due Soon`;
-        subtitle.textContent = 'Coming up in the next 3 days';
-        banner.classList.add('good', 'active');
-        
     } else {
-        // Nothing urgent - don't show banner
-        banner.classList.remove('active');
+        // 2-3 days out (green, no flash)
+        const upcomingCount = due2DayCount + due3DayCount;
+        icon.textContent = '📋';
+        title.textContent = `${upcomingCount} Sample${upcomingCount > 1 ? 's' : ''} Coming Up`;
+        subtitle.textContent = 'Due in the next few days';
+        banner.classList.add('good', 'active');
     }
 }
-
 function dismissNotificationBanner() {
     const banner = document.getElementById('notificationBanner');
     banner.style.animation = 'none';
