@@ -2103,41 +2103,36 @@ if ('serviceWorker' in navigator) {
         }
 
         async function handleChangePassword() {
-            const newPassword = document.getElementById('newPassword').value;
-            const confirmPassword = document.getElementById('confirmNewPassword').value;
-            const errorDiv = document.getElementById('changePasswordError');
-            
-            if (!newPassword || newPassword.length < 6) {
-                errorDiv.textContent = 'Password must be at least 6 characters';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            if (newPassword !== confirmPassword) {
-                errorDiv.textContent = 'Passwords do not match';
-                errorDiv.style.display = 'block';
-                return;
-            }
-            
-            try {
-                const { error } = await sb_client.auth.updateUser({
-                    password: newPassword
-                });
-                
-                if (error) throw error;
-                
-                // Update stored password if "Keep me logged in" was checked
-                if (localStorage.getItem('user_password')) {
-                    localStorage.setItem('user_password', newPassword);
-                }
-                
-                alert('Password updated successfully!');
-                closeChangePassword();
-            } catch (e) {
-                errorDiv.textContent = 'Failed to update password: ' + e.message;
-                errorDiv.style.display = 'block';
-            }
-        }
+    const newPassword = document.getElementById('newPassword').value;
+    const confirmPassword = document.getElementById('confirmNewPassword').value;
+    const errorDiv = document.getElementById('changePasswordError');
+    
+    if (!newPassword || newPassword.length < 6) {
+        errorDiv.textContent = 'Password must be at least 6 characters';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    if (newPassword !== confirmPassword) {
+        errorDiv.textContent = 'Passwords do not match';
+        errorDiv.style.display = 'block';
+        return;
+    }
+    
+    try {
+        const { error } = await sb_client.auth.updateUser({
+            password: newPassword
+        });
+        
+        if (error) throw error;
+        
+        alert('Password updated successfully!');
+        closeChangePassword();
+    } catch (e) {
+        errorDiv.textContent = 'Failed to update password: ' + e.message;
+        errorDiv.style.display = 'block';
+    }
+}
 
         // ==================== CHANGE EMAIL ====================
         function openChangeEmail() {
@@ -3108,38 +3103,12 @@ async function submitBetaFeedback() {
         }
 
         // ==================== AUTHENTICATION ====================
-        async function signInAnonymously() {
-            const storedEmail = localStorage.getItem('user_email');
-            
-            if (storedEmail) {
-                try {
-                    const storedPassword = localStorage.getItem('user_password');
-                    const { data, error } = await sb_client.auth.signInWithPassword({
-                        email: storedEmail,
-                        password: storedPassword
-                    });
-                    
-                    if (!error && data.user) {
-                        currentUser = data.user;
-                        useCloud = true;
-                        console.log('✓ Auto-signed in');
-                        await loadUserTier();
-                        await loadFromCloud();
-                        showApp();
-                        return;
-                    } else {
-                        localStorage.removeItem('user_email');
-                        localStorage.removeItem('user_password');
-                    }
-                } catch (e) {
-                    console.log('Auto-sign in error, clearing credentials');
-                    localStorage.removeItem('user_email');
-                    localStorage.removeItem('user_password');
-                }
-            }
-            
-            document.getElementById('landingPage').classList.remove('hidden');
-        }
+     async function signInAnonymously() {
+    const hasSession = await checkExistingSession();
+    if (!hasSession) {
+        document.getElementById('landingPage').classList.remove('hidden');
+    }
+}
 
         function showAuth(mode) {
             const modal = document.createElement('div');
@@ -3176,10 +3145,7 @@ async function submitBetaFeedback() {
                             </div>
                         </div>
                         ` : ''}
-                        <div class="form-group" style="display: flex; align-items: center; gap: 8px;">
-                            <input type="checkbox" id="rememberMe" checked style="width: 18px; height: 18px; cursor: pointer;">
-                            <label for="rememberMe" style="margin: 0; cursor: pointer; font-size: 0.9rem; color: var(--text-main);">Keep me logged in</label>
-                        </div>
+                        
                         <div id="authError" style="color: var(--red); font-size: 0.85rem; margin-bottom: 10px; display: none;"></div>
                         <button class="row-btn btn-full-width" onclick="handleAuth('${mode}')" style="margin-bottom: 10px;">
                             ${mode === 'signup' ? 'Create Account' : 'Sign In'}
@@ -3201,7 +3167,6 @@ async function submitBetaFeedback() {
      async function handleAuth(mode) {
     const email = document.getElementById('authEmail').value;
     const password = document.getElementById('authPassword').value;
-    const rememberMe = document.getElementById('rememberMe').checked;
     const errorDiv = document.getElementById('authError');
     
     if (!email || !password) {
@@ -3248,13 +3213,8 @@ async function submitBetaFeedback() {
         if (error) throw error;
         
         if (data.user) {
-            if (rememberMe) {
-                localStorage.setItem('user_email', email);
-                localStorage.setItem('user_password', password);
-            } else {
-                localStorage.removeItem('user_email');
-                localStorage.removeItem('user_password');
-            }
+            // Store email for display purposes only
+            localStorage.setItem('user_email', email);
             
             currentUser = data.user;
             useCloud = true;
@@ -3288,17 +3248,15 @@ async function submitBetaFeedback() {
 }
         
         async function signOut() {
-            if (confirm('Sign out? Your data will remain safely in the cloud.')) {
-                await sb_client.auth.signOut();
-                localStorage.removeItem('user_email');
-                localStorage.removeItem('user_password');
-                currentUser = null;
-                useCloud = false;
-                samples = [];
-                window.location.reload();
-            }
-        }
-
+    if (confirm('Sign out? Your data will remain safely in the cloud.')) {
+        await sb_client.auth.signOut();
+        localStorage.removeItem('user_email');
+        currentUser = null;
+        useCloud = false;
+        samples = [];
+        window.location.reload();
+    }
+}
         // ==================== CLOUD SYNC ====================
      async function migrateToCloud() {
             if (!useCloud || !currentUser) return;
