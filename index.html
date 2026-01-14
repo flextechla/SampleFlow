@@ -1219,14 +1219,17 @@
             <input type="text" class="search-bar" id="searchBar" placeholder="Search brands or products..." oninput="handleSearch()">
             
             <div class="view-toggle">
-                <button class="view-btn active" id="view-list" onclick="setView('list')">📋 List View</button>
-                <button class="view-btn" id="view-calendar" onclick="setView('calendar')">📅 Calendar View</button>
-            </div>
-            
-            <div class="view-toggle" style="margin-top: 12px;">
-                <button class="view-btn" id="filterToggleBtn" onclick="toggleFilterDropdown()">🔍 Filter</button>
-                <button class="view-btn" id="sortToggleBtn" onclick="toggleSortDropdown()">📊 Sort</button>
-            </div>
+    <button class="view-btn active" id="view-list" onclick="setView('list')">📋 List</button>
+    <button class="view-btn" id="view-calendar" onclick="setView('calendar')">📅 Calendar</button>
+    <div style="width: 1px; height: 24px; background: var(--border); margin: 0 4px;"></div>
+    <button class="view-btn active" id="expandedViewBtn" onclick="setCardView('expanded')">📂 Expanded</button>
+    <button class="view-btn" id="condensedViewBtn" onclick="setCardView('condensed')">📄 Condensed</button>
+</div>
+
+<div class="view-toggle" style="margin-top: 12px;">
+    <button class="view-btn" id="filterToggleBtn" onclick="toggleFilterDropdown()">🔍 Filter</button>
+    <button class="view-btn" id="sortToggleBtn" onclick="toggleSortDropdown()">📊 Sort</button>
+</div>
             
             <div id="filterDropdown" class="dropdown-panel" style="display: none; margin-top: 8px;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
@@ -1243,15 +1246,7 @@
                 <button class="filter-btn" onclick="setSort('brand')">🏷️ Brand Name</button>
                 <button class="filter-btn" onclick="setSort('received')">📦 Received Date</button>
             </div>
-            <div class="view-toggle" style="margin-top: 12px;">
-    <button class="view-btn" id="condensedViewBtn" onclick="toggleCondensedView()">
-        <span id="condensedViewIcon">📋</span> Condensed
-    </button>
-    <button class="view-btn" id="expandAllBtn" onclick="toggleExpandAll()" style="display: none;">
-        <span id="expandAllIcon">📂</span> <span id="expandAllText">Expand All</span>
-    </button>
-</div>
-            
+                     
             <div id="filterHeading" style="position: sticky; top: 0; z-index: 50; background: var(--bg); padding: 12px 15px; margin: 0 -15px; font-weight: 700; font-size: 1.1rem; color: var(--text-main); border-bottom: 2px solid var(--border); display: none;">
                 📦 All Samples
             </div>
@@ -3416,49 +3411,24 @@ async function submitBetaFeedback() {
               
         
         // ==================== CONDENSED VIEW FUNCTIONS ====================
-        function toggleCondensedView() {
-            triggerHaptic();
-            condensedView = !condensedView;
-            const btn = document.getElementById('condensedViewBtn');
-            const expandBtn = document.getElementById('expandAllBtn');
-            const icon = document.getElementById('condensedViewIcon');
-            
-            if (condensedView) {
-                btn.classList.add('active');
-                icon.textContent = '📄';
-                expandBtn.style.display = 'block';
-            } else {
-                btn.classList.remove('active');
-                icon.textContent = '📋';
-                expandBtn.style.display = 'none';
-                expandedCards.clear();
-            }
-            
-            render();
-        }
-
-        function toggleExpandAll() {
-            triggerHaptic();
-            const filtered = getFilteredSamples();
-            const expandBtn = document.getElementById('expandAllBtn');
-            const expandIcon = document.getElementById('expandAllIcon');
-            const expandText = document.getElementById('expandAllText');
-            
-            if (expandedCards.size === filtered.length) {
-                // Collapse all
-                expandedCards.clear();
-                expandIcon.textContent = '📂';
-                expandText.textContent = 'Expand All';
-            } else {
-                // Expand all
-                filtered.forEach(s => expandedCards.add(s.id));
-                expandIcon.textContent = '📁';
-                expandText.textContent = 'Collapse All';
-            }
-            
-            render();
-        }
-
+        function setCardView(mode) {
+    triggerHaptic();
+    const expandedBtn = document.getElementById('expandedViewBtn');
+    const condensedBtn = document.getElementById('condensedViewBtn');
+    
+    if (mode === 'condensed') {
+        condensedView = true;
+        expandedCards.clear();
+        condensedBtn.classList.add('active');
+        expandedBtn.classList.remove('active');
+    } else {
+        condensedView = false;
+        expandedBtn.classList.add('active');
+        condensedBtn.classList.remove('active');
+    }
+    
+    render();
+}
         function toggleCard(id) {
             triggerHaptic();
             if (expandedCards.has(id)) {
