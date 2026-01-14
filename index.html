@@ -2598,6 +2598,7 @@ const BETA_TEST_SECTIONS = [
             { id: "sample_add", label: "Add new sample" },
             { id: "sample_edit", label: "Edit existing sample" },
             { id: "sample_delete", label: "Delete sample" },
+            { id: "sample_cancel", label: "Cancel button discards changes" },
             { id: "sample_mark_posted", label: "Mark as Posted (via checklist)" },
             { id: "sample_auto_archive", label: "Posted samples auto-archive" },
             { id: "sample_search_brand", label: "Search by brand name" },
@@ -2623,7 +2624,6 @@ const BETA_TEST_SECTIONS = [
             { id: "field_photo_upload", label: "Upload photos" },
             { id: "field_photo_remove", label: "Remove photos" },
             { id: "field_photo_view", label: "View photo fullscreen" },
-            { id: "field_reminder", label: "Per-sample reminder setting" },
             { id: "field_checklist_filmed", label: "Filmed checkbox works" },
             { id: "field_checklist_edited", label: "Edited checkbox works" },
             { id: "field_checklist_posted", label: "Posted checkbox works" },
@@ -2662,8 +2662,25 @@ const BETA_TEST_SECTIONS = [
         ]
     },
     {
+        id: "notifications",
+        title: "6. In-App Notifications",
+        items: [
+            { id: "notif_banner_shows", label: "Banner shows on app open" },
+            { id: "notif_overdue_red", label: "Overdue shows red banner" },
+            { id: "notif_today_yellow", label: "Due today shows yellow banner" },
+            { id: "notif_tomorrow", label: "Due tomorrow shows in banner" },
+            { id: "notif_details", label: "Banner shows breakdown (overdue, today, tomorrow, etc.)" },
+            { id: "notif_flash", label: "Banner flashes for overdue/due today" },
+            { id: "notif_dismiss", label: "Dismiss banner (X button)" },
+            { id: "notif_stays_dismissed", label: "Banner stays dismissed for the day" },
+            { id: "notif_view_button", label: "View button filters to relevant samples" },
+            { id: "notif_toggle_off", label: "Settings toggle disables banner" },
+            { id: "notif_toggle_on", label: "Settings toggle enables banner" },
+        ]
+    },
+    {
         id: "tiers",
-        title: "6. Subscription & Tiers",
+        title: "7. Subscription & Tiers",
         items: [
             { id: "tier_free_limit", label: "Free: 5 sample limit enforced" },
             { id: "tier_free_photo", label: "Free: 1 photo limit enforced" },
@@ -2675,7 +2692,7 @@ const BETA_TEST_SECTIONS = [
     },
     {
         id: "pro",
-        title: "7. Pro Features",
+        title: "8. Pro Features",
         items: [
             { id: "pro_film", label: "Ready to Film button" },
             { id: "pro_film_tiktok", label: "TikTok opens from Ready to Film" },
@@ -2689,14 +2706,13 @@ const BETA_TEST_SECTIONS = [
     },
     {
         id: "settings",
-        title: "8. Settings",
+        title: "9. Settings",
         items: [
             { id: "setting_dark_toggle", label: "Dark mode toggle" },
             { id: "setting_dark_persist", label: "Dark mode persists on reload" },
             { id: "setting_haptic", label: "Haptic feedback toggle" },
             { id: "setting_compact", label: "Compact mode toggle" },
-            { id: "setting_notifications", label: "Push notifications permission" },
-            { id: "setting_reminder_days", label: "Reminder days setting" },
+            { id: "setting_banner_notif", label: "Due date reminders toggle" },
             { id: "setting_default_days", label: "Default days to post" },
             { id: "setting_clear_completed", label: "Clear completed samples" },
             { id: "setting_reset", label: "Reset app data" },
@@ -2705,7 +2721,7 @@ const BETA_TEST_SECTIONS = [
     },
     {
         id: "pwa",
-        title: "9. PWA & Installation",
+        title: "10. PWA & Installation",
         items: [
             { id: "pwa_floating_btn", label: "Floating install button appears" },
             { id: "pwa_menu_btn", label: "Menu install button appears" },
@@ -2717,7 +2733,7 @@ const BETA_TEST_SECTIONS = [
     },
     {
         id: "ui",
-        title: "10. General UI",
+        title: "11. General UI",
         items: [
             { id: "ui_landing", label: "Landing page displays" },
             { id: "ui_modals_open", label: "Modals open correctly" },
