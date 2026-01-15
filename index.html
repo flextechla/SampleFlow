@@ -4148,7 +4148,12 @@ async function submitBetaFeedback() {
             calendarDate.setMonth(calendarDate.getMonth() + delta);
             renderCalendar();
         }
-
+        function formatDateLocal(date) {
+    const d = new Date(date);
+    return d.getFullYear() + '-' + 
+           String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+           String(d.getDate()).padStart(2, '0');
+}
         function renderCalendar() {
             const year = calendarDate.getFullYear();
             const month = calendarDate.getMonth();
@@ -4166,10 +4171,10 @@ async function submitBetaFeedback() {
             
             for (let day = 1; day <= daysInMonth; day++) {
                 const date = new Date(year, month, day);
-                const dateStr = date.toISOString().split('T')[0];
+                const dateStr = formatDateLocal(date);
                 const dueSamples = samples.filter(s => {
                     const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
-                    return dueDate.toISOString().split('T')[0] === dateStr && !s.done;
+                    return formatDateLocal(dueDate) === dateStr && !s.done;
                 });
                 
                 const hasOverdue = dueSamples.some(s => getStatusInfo(s).status === 'overdue');
@@ -4187,7 +4192,7 @@ async function submitBetaFeedback() {
         function showDayDetails(dateStr) {
             const dueSamples = samples.filter(s => {
                 const dueDate = new Date(new Date(s.date).getTime() + s.limit * 86400000);
-                return dueDate.toISOString().split('T')[0] === dateStr && !s.done;
+                return formatDateLocal(dueDate) === dateStr && !s.done;
             });
             
             const details = document.getElementById('calendarDayDetails');
