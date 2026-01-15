@@ -2319,7 +2319,6 @@ async function confirmDeleteAccount() {
         return;
     }
     
-    // Show launch instructions modal
     const modal = document.createElement('div');
     modal.className = 'modal active';
     modal.id = 'tiktokLaunchModal';
@@ -2327,12 +2326,15 @@ async function confirmDeleteAccount() {
         <div class="modal-content" style="text-align: center;">
             <div style="font-size: 3rem; margin-bottom: 15px;">🎬</div>
             <h2 style="margin-bottom: 15px;">Ready to Film!</h2>
-            <p style="color: var(--text-secondary); margin-bottom: 20px;">TikTok will open in a new window</p>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">TikTok will open. When done filming:</p>
             
-            <div style="background: #E3F2FD; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
-                <p style="font-size: 0.9rem; font-weight: 600; margin-bottom: 8px;">📱 To Return to SampleFlow:</p>
-                <p style="font-size: 0.85rem; color: #666; margin: 0;">• Tap your back button 2 times</p>
-                <p style="font-size: 0.85rem; color: #666; margin: 0;">• Or swipe up and select SampleFlow</p>
+            <div style="background: #E8F5E9; padding: 15px; border-radius: 8px; margin-bottom: 12px; text-align: left; border-left: 4px solid var(--green);">
+                <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 5px;">✅ Fastest Way Back:</p>
+                <p style="font-size: 0.85rem; color: #333; margin: 0;">Swipe up from bottom → Tap SampleFlow</p>
+            </div>
+            
+            <div style="background: var(--bg); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Or tap back button multiple times</p>
             </div>
             
             <button onclick="launchTikTokNow()" style="
@@ -2347,17 +2349,16 @@ async function confirmDeleteAccount() {
                 cursor: pointer;
                 margin-bottom: 12px;
             ">
-                🎥 Continue to TikTok
+                🎥 Open TikTok
             </button>
             
             <button onclick="closeTikTokLaunchModal()" class="row-btn btn-secondary" style="width: 100%;">
-                ← Stay in App
+                Cancel
             </button>
         </div>
     `;
     document.body.appendChild(modal);
 }
-
 function launchTikTokNow() {
     closeTikTokLaunchModal();
     
@@ -3877,17 +3878,56 @@ async function submitBetaFeedback() {
                             </div>
                         </div>
                         
-                        <div class="action-container">
-                            ${!s.done && userTier === 'pro' ? 
-                                '<button class="row-btn" style="background: linear-gradient(135deg, #FE2C55, #FF6B8A); color: white; margin-bottom: 8px;" onclick="readyToFilm(\''+s.id+'\')">🎥 Ready to Film</button>' 
-                                : ''
-                            }
-                            ${(userTier === 'basic' || userTier === 'pro') && !s.done ? 
-                                '<button class="row-btn" style="background: linear-gradient(135deg, #9C27B0, #BA68C8); color: white; margin-bottom: 8px;" onclick="generateScript(\''+s.id+'\')">✨ Generate Script</button>' 
-                                : ''
-                            }
-                           ${s.done ? '<button class="row-btn btn-completed">✓ Content Archived</button>' : ''}
-                            ${s.link ? `<button class="row-btn btn-secondary" onclick="openBrowser('${s.link}')">🔗 View Product</button>` : ''}
+                        function readyToFilm(id) {
+    if (userTier !== 'pro') {
+        showUpgradeModal(
+            'Ready-to-Film is a Pro feature!',
+            'One-tap access to TikTok camera saves you time on every video',
+            'pro'
+        );
+        return;
+    }
+    
+    const modal = document.createElement('div');
+    modal.className = 'modal active';
+    modal.id = 'tiktokLaunchModal';
+    modal.innerHTML = `
+        <div class="modal-content" style="text-align: center;">
+            <div style="font-size: 3rem; margin-bottom: 15px;">🎬</div>
+            <h2 style="margin-bottom: 15px;">Ready to Film!</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 20px;">TikTok will open. When done filming:</p>
+            
+            <div style="background: #E8F5E9; padding: 15px; border-radius: 8px; margin-bottom: 12px; text-align: left; border-left: 4px solid var(--green);">
+                <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 5px;">✅ Fastest Way Back:</p>
+                <p style="font-size: 0.85rem; color: #333; margin: 0;">Swipe up from bottom → Tap SampleFlow</p>
+            </div>
+            
+            <div style="background: var(--bg); padding: 12px; border-radius: 8px; margin-bottom: 20px; text-align: left;">
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0;">Or tap back button multiple times</p>
+            </div>
+            
+            <button onclick="launchTikTokNow()" style="
+                width: 100%;
+                padding: 18px;
+                font-size: 1.1rem;
+                background: linear-gradient(135deg, #ff0050 0%, #00f2ea 100%);
+                color: white;
+                border: none;
+                border-radius: 12px;
+                font-weight: bold;
+                cursor: pointer;
+                margin-bottom: 12px;
+            ">
+                🎥 Open TikTok
+            </button>
+            
+            <button onclick="closeTikTokLaunchModal()" class="row-btn btn-secondary" style="width: 100%;">
+                Cancel
+            </button>
+        </div>
+    `;
+    document.body.appendChild(modal);
+}
                             <div class="btn-row-2">
                                 <button class="row-btn btn-secondary" onclick="openModal('${s.id}')">✏️ Edit</button>
                                 <button class="row-btn btn-secondary" onclick="deleteSample('${s.id}')">🗑 Delete</button>
